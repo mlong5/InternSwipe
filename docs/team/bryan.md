@@ -16,8 +16,8 @@ Bryan serves as the product owner and technical lead for InternSwipe. He is resp
 
 ### Week 1 (February 16 - February 22, 2026)
 
-- Lead Session B with Matt: design and implement the database schema covering all seven MVP tables, configure the Supabase project, write the Prisma schema file, run the first migration, and seed the Jobs table with 20 to 30 curated internship postings that include eligibility flags.
-- Pair on Session D: connect the authentication, profile, swipe, and history features into a working vertical slice that demonstrates the core user flow end to end.
+- Lead Session B with Matt: design and implement the database schema covering all seven MVP tables, configure the Supabase project, write the Prisma schema file, run the first migration, and seed the Jobs table with 20 to 30 curated internship postings that include eligibility flags. (Done)
+- Pair on Session D: connect the authentication, profile, swipe, and history features into a working vertical slice that demonstrates the core user flow end to end. (In progress)
 - Deliverables: the Prisma schema is committed to the repository, the first migration has been applied successfully, the seed script runs without errors, and 20 or more jobs are present in the database with correct eligibility flags.
 
 ### Week 2 (February 23 - March 1, 2026)
