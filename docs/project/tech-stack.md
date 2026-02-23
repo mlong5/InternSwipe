@@ -1,0 +1,31 @@
+# Tech stack
+
+| Field        | Value                                |
+|--------------|--------------------------------------|
+| Project      | InternSwipe                          |
+| Course       | CS 250                               |
+| Owner        | Bryan                                |
+| Last updated | February 16, 2026                    |
+| Version      | 1.0                                  |
+
+## Overview
+
+This document provides a complete reference of every technology used in the InternSwipe project. Each choice was made to balance development speed, type safety, deployment simplicity, and the team's existing familiarity with the tools. The stack is intentionally consolidated around the JavaScript and TypeScript ecosystem to minimize context switching and allow all four team members to contribute across the full application.
+
+## Technology reference
+
+| Layer | Technology | Version or configuration | Rationale |
+|-------|-----------|--------------------------|-----------|
+| Frontend framework | Next.js | Latest stable (App Router) | Next.js provides server-side rendering, API routes, and file-based routing in a single framework. The App Router enables modern React patterns including server components and streaming. This eliminates the need for a separate backend server and simplifies deployment. |
+| Language | TypeScript | Strict mode enabled | TypeScript provides compile-time type checking that catches entire classes of bugs before they reach production. Strict mode is enabled to maximize the safety guarantees. Every team member writes TypeScript for both frontend and backend code. |
+| Styling | Tailwind CSS | Default configuration with custom design tokens | Tailwind CSS enables rapid UI development with utility classes and eliminates the need to write and maintain custom CSS files. The design token configuration ensures visual consistency across all screens and components. |
+| API layer | Next.js API Routes | App Router route handlers | Using Next.js API Routes keeps the backend logic colocated with the frontend in a single repository and deployment. This avoids the complexity of managing a separate backend service and simplifies the development workflow for a four-person team. |
+| ORM | Prisma | Version 7 with PostgreSQL provider | Prisma provides a type-safe database client generated from the schema file, eliminating raw SQL queries and reducing the risk of data access bugs. The schema file serves as the single source of truth for the database structure, and migrations are version-controlled alongside the application code. |
+| Database | PostgreSQL via Supabase | Managed PostgreSQL instance | PostgreSQL is a mature, full-featured relational database that supports the complex queries required for job filtering, eligibility rules, and application tracking. Supabase provides a managed PostgreSQL instance with connection pooling, eliminating the need to operate database infrastructure. |
+| Authentication | Supabase Auth | Email and password provider | Supabase Auth provides a complete authentication system with session management, token refresh, and secure cookie handling out of the box. Using the same platform for authentication and the database simplifies credential management and reduces integration overhead. |
+| File storage | Supabase Storage | Private bucket with signed URLs | Supabase Storage provides secure file storage for user resumes with built-in support for signed URLs that expire after a configurable time window. Using the same platform for storage, authentication, and the database keeps the infrastructure consolidated and simplifies access control. |
+| Deployment | Vercel | Production and preview deployments | Vercel provides zero-configuration deployment for Next.js applications with automatic preview deployments on every pull request. This gives the team immediate feedback on how changes will look and behave in a production-like environment before merging. |
+| CI/CD | GitHub Actions | Lint, typecheck, and test on every PR | GitHub Actions integrates directly with the repository and runs automated checks on every pull request. The pipeline is configured to block merge if any check fails, ensuring that the main branch always contains code that passes lint, typecheck, and all tests. |
+| End-to-end testing | Playwright | Chromium browser target | Playwright enables automated browser testing that verifies complete user flows from login through application submission. Smoke tests run in the CI pipeline to catch regressions before they are merged. |
+| Unit testing | Vitest | Default configuration with TypeScript support | Vitest is a fast, Vite-compatible test runner that supports TypeScript natively. It is used for testing business logic, utility functions, and API route handlers in isolation. |
+| Version control | GitHub | Protected main branch with PR-based workflow | GitHub hosts the repository and provides issue tracking, pull request reviews, and branch protection rules. The main branch is protected to ensure all changes go through the review and CI process before merging. |
