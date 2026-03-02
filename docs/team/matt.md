@@ -16,15 +16,15 @@ Matt is the backend systems lead for InternSwipe. He owns the job ingestion pipe
 
 ### Week 1 (February 16 - February 22, 2026)
 
-- Pair with Bryan on Session B: implement the database schema covering all seven MVP tables and configure the Supabase project. This includes writing the Prisma schema file, running the first migration, and building the seed script that populates the Jobs table.
-- Pair on Session D: wire the vertical slice by connecting the backend endpoints to the frontend components so that the core user flow is functional end to end.
-- Deliverables: the Prisma schema is committed to the repository, the first migration has been applied successfully, and the seed script runs without errors.
+- Pair with Bryan on Session B: implement the database schema covering all seven MVP tables and configure the Supabase project. This includes writing the Prisma schema file, running the first migration, and building the seed script that populates the Jobs table. — **done**
+- Pair on Session D: wire the vertical slice by connecting the backend endpoints to the frontend components so that the core user flow is functional end to end. — **done** (backend endpoints implemented; UI wiring still needed)
+- Deliverables: the Prisma schema is committed to the repository, the first migration has been applied successfully, and the seed script runs without errors. — **done**
 
 ### Week 2 (February 23 - March 1, 2026)
 
 - Lead Session A with Bryan: build the job ingestion MVP by choosing between a seed JSON file or a jobs API integration as the data source. Implement the eligibility flag rule that marks each job as ELIGIBLE or NOT_ELIGIBLE based on whether the job supports resume-only submission. Create the `GET /api/jobs` endpoint with pagination and filter support so the frontend can request jobs in batches with optional criteria.
-- Lead Session C with Bryan: build the apply pipeline stub, implementing the `POST /api/apply` endpoint with validation, record creation, and duplicate prevention.
-- Deliverables: the job ingestion pipeline is working and populating the database, eligibility flags are accurate for all ingested jobs, and the `GET /api/jobs` endpoint returns filtered and paginated results correctly.
+- Lead Session C with Bryan: build the apply pipeline stub, implementing the `POST /api/apply` endpoint with validation, record creation, and duplicate prevention. — **done**
+- Deliverables: the job ingestion pipeline is working and populating the database — **done** (seed script with 25 jobs and eligibility flags), eligibility flags are accurate for all ingested jobs — **done**, and the `GET /api/jobs` endpoint returns filtered and paginated results correctly.
 
 ### Week 3 (March 2 - March 8, 2026)
 
@@ -69,7 +69,7 @@ Before the v1.0 tag is created, Matt must personally verify that the following a
 - The `GET /api/jobs` endpoint returns filtered and paginated results correctly, and excludes jobs that the current user has already swiped on.
 - The eligibility rules engine correctly marks resume-only postings as ELIGIBLE and all other postings as NOT_ELIGIBLE. Swiping right on a NOT_ELIGIBLE job is blocked at both the UI level (the swipe-right gesture is disabled) and the API level (the endpoint rejects the request).
 - The job detail view shows the full job description, the list of requirements, and the original posting URL for every job in the database.
-- SubmissionLog records are created for every apply attempt, including retries, so that the team has a complete audit trail of all submission activity.
+- SubmissionLog records are created for every apply attempt, including retries, so that the team has a complete audit trail of all submission activity. — **done** (apply route creates SubmissionLog for both success and failure)
 - Retry logic allows a user to re-submit an application only when the prior Application status is FAILED and the user explicitly triggers the retry action.
 - All data displayed in the history view (Applied, Failed, and Skipped statuses) is accurate and matches the corresponding records in the database.
 
@@ -77,10 +77,10 @@ Before the v1.0 tag is created, Matt must personally verify that the following a
 
 | Week | Session | Partner | Focus |
 |------|---------|---------|-------|
-| Week 1 | Session B | Bryan | Database schema, Supabase configuration, Prisma migration, and seed script. |
+| Week 1 | Session B | Bryan | Database schema, Supabase configuration, Prisma migration, and seed script. — **done** |
 | Week 1 | Session D | All | Vertical slice integration connecting backend to frontend. |
 | Week 2 | Session A | Bryan | Job ingestion MVP, eligibility flags, and `GET /api/jobs` endpoint. |
-| Week 2 | Session C | Bryan | Apply pipeline stub and `POST /api/apply` endpoint. |
+| Week 2 | Session C | Bryan | Apply pipeline stub and `POST /api/apply` endpoint. — **done** |
 | Week 3 | Session B | Brandon | Eligibility rules tightening, job detail view, and ineligible swipe blocking. |
 | Week 3 | Session D | All | Midterm demo rehearsal. |
 | Week 4 | Session A | Brandon | Bug bash: file and fix Critical and High priority bugs. |

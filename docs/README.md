@@ -37,17 +37,17 @@ If you are a new team member joining mid-project, begin by reading the following
 
 ### Project-level documentation
 
-| Document | Description |
-|----------|-------------|
-| [project/definition-of-done.md](project/definition-of-done.md) | The Definition of Done checklist that applies to every story, pull request, and bug fix across the project. |
-| [project/weekly-ceremonies.md](project/weekly-ceremonies.md) | The format, schedule, and purpose of the three recurring team ceremonies: async standup, review and demo, and retrospective. |
-| [project/milestones.md](project/milestones.md) | The four-week milestone summary with session-by-session breakdowns and exit criteria for each week. |
-| [project/tech-stack.md](project/tech-stack.md) | A complete reference of every technology used in the project, including version information and rationale for each choice. |
+| Document | Description | Status |
+|----------|-------------|--------|
+| [project/definition-of-done.md](project/definition-of-done.md) | The Definition of Done checklist that applies to every story, pull request, and bug fix across the project. | **done** — process defined |
+| [project/weekly-ceremonies.md](project/weekly-ceremonies.md) | The format, schedule, and purpose of the three recurring team ceremonies: async standup, review and demo, and retrospective. | **done** — process defined |
+| [project/milestones.md](project/milestones.md) | The four-week milestone summary with session-by-session breakdowns and exit criteria for each week. | **done** — updated with implementation status per exit criterion |
+| [project/tech-stack.md](project/tech-stack.md) | A complete reference of every technology used in the project, including version information and rationale for each choice. | **done** — updated with per-technology implementation status |
 
 ### Process documentation
 
-| Document | Description |
-|----------|-------------|
-| [process/branching-strategy.md](process/branching-strategy.md) | The Git branch naming convention, pull request rules, commit message format, and merge policy. |
-| [process/environment-setup.md](process/environment-setup.md) | A step-by-step guide for setting up the InternSwipe project locally from scratch, including all prerequisites and verification steps. |
-| [process/release-checklist.md](process/release-checklist.md) | The formal pre-launch release checklist organized into code quality, security, data integrity, user experience, and launch artifact sections. |
+| Document | Description | Status |
+|----------|-------------|--------|
+| [process/branching-strategy.md](process/branching-strategy.md) | The Git branch naming convention, pull request rules, commit message format, and merge policy. | **done** — process defined, repo configured |
+| [process/environment-setup.md](process/environment-setup.md) | A step-by-step guide for setting up the InternSwipe project locally from scratch, including all prerequisites and verification steps. | **done** — all setup steps implemented (steps 1-6 verified working) |
+| [process/release-checklist.md](process/release-checklist.md) | The formal pre-launch release checklist organized into code quality, security, data integrity, user experience, and launch artifact sections. | In progress — data integrity items partially done, most items pending |
