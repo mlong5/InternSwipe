@@ -14,11 +14,11 @@ The InternSwipe team follows three recurring ceremonies to maintain alignment, d
 
 ## Ceremony summary
 
-| Ceremony | Frequency | Duration | Format | Purpose |
-|----------|-----------|----------|--------|---------|
-| Async standup | Every session day (4 times per week) | 10 minutes | Written post in team channel | Share progress, declare intent, and surface blockers before starting work. |
-| Review and demo | End of Session D each week | 20 minutes | Live browser demo | Each pair demonstrates what they built during the week to the full team. |
-| Retrospective | Immediately after review and demo | 15 minutes | Structured discussion | Reflect on what went well, what could improve, and commit to one action item per person. |
+| Ceremony | Frequency | Duration | Format | Purpose | Status |
+|----------|-----------|----------|--------|---------|--------|
+| Async standup | Every session day (4 times per week) | 10 minutes | Written post in team channel | Share progress, declare intent, and surface blockers before starting work. | **done** — process defined and adopted |
+| Review and demo | End of Session D each week | 20 minutes | Live browser demo | Each pair demonstrates what they built during the week to the full team. | **done** — process defined and adopted |
+| Retrospective | Immediately after review and demo | 15 minutes | Structured discussion | Reflect on what went well, what could improve, and commit to one action item per person. | **done** — process defined and adopted |
 
 ## Async standup
 

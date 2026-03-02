@@ -24,7 +24,7 @@ Before you begin, ensure you have the following installed on your machine:
 
 If you do not have Node.js installed, download it from the official Node.js website and install the LTS version. npm is included with the Node.js installation.
 
-## Step 1: Clone the repository
+## Step 1: Clone the repository — **done**
 
 Clone the InternSwipe repository from GitHub to your local machine:
 
@@ -38,7 +38,7 @@ Navigate into the project directory:
 cd InternSwipe
 ```
 
-## Step 2: Install dependencies
+## Step 2: Install dependencies — **done**
 
 Install all project dependencies using npm:
 
@@ -48,7 +48,7 @@ npm install
 
 This command reads the `package.json` file and installs all required packages into the `node_modules` directory. The installation may take a few minutes on the first run.
 
-## Step 3: Configure environment variables
+## Step 3: Configure environment variables — **done**
 
 Copy the example environment file to create your local configuration:
 
@@ -67,7 +67,7 @@ Open the `.env.local` file in your editor and fill in the Supabase credentials. 
 
 If you do not have access to the Supabase project, ask Bryan to add you as a team member in the Supabase dashboard.
 
-## Step 4: Run Prisma migrations
+## Step 4: Run Prisma migrations — **done**
 
 Apply all database migrations to set up the schema in your Supabase database:
 
@@ -83,7 +83,7 @@ After running migrations, generate the Prisma client:
 npx prisma generate
 ```
 
-## Step 5: Seed the database
+## Step 5: Seed the database — **done**
 
 Populate the database with initial data, including curated job postings:
 
@@ -93,7 +93,7 @@ npx prisma db seed
 
 This command runs the seed script defined in the project configuration and inserts the initial set of jobs with eligibility flags into the database.
 
-## Step 6: Start the development server
+## Step 6: Start the development server — **done**
 
 Start the Next.js development server:
 
@@ -107,9 +107,9 @@ The server will start on `http://localhost:3000` by default. You should see outp
 
 Open your browser and navigate to `http://localhost:3000`. Verify that the application loads correctly by completing the following steps:
 
-1. Confirm that the landing page renders without errors.
-2. Create a new account using the sign-up flow.
-3. Log in with the account you just created.
+1. Confirm that the landing page renders without errors. — **done**
+2. Create a new account using the sign-up flow. — **done** (API route implemented; UI sign-up page not yet built)
+3. Log in with the account you just created. — **done** (API route implemented; UI login page not yet built)
 4. Navigate to the swipe deck and confirm that job cards are displayed.
 
 If any step fails, check the terminal output for error messages and verify that your environment variables are set correctly in the `.env.local` file.

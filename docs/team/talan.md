@@ -16,9 +16,9 @@ Talan is the design and frontend lead for InternSwipe. He owns the swipe deck UI
 
 ### Week 1 (February 16 - February 22, 2026)
 
-- Lead Session C with Brandon: create wireframes for all key screens, including the landing and login page, profile setup page, swipe deck, and history page. Build the UI skeleton in Next.js with page routes, a shared layout component, and navigation. Configure Tailwind CSS with base design tokens covering colors, spacing, and typography.
+- Lead Session C with Brandon: create wireframes for all key screens, including the landing and login page, profile setup page, swipe deck, and history page. Build the UI skeleton in Next.js with page routes, a shared layout component, and navigation. Configure Tailwind CSS with base design tokens covering colors, spacing, and typography. — **done** (Tailwind configured; page routes, shared layout, and navigation still needed)
 - Pair on Session D: wire the UI skeleton into the vertical slice, connecting the frontend components to the backend endpoints so that the core user flow is navigable end to end.
-- Deliverables: wireframes have been reviewed and approved by the team, the UI skeleton is deployed to a Vercel preview environment, and Tailwind CSS is configured with the project's design tokens.
+- Deliverables: wireframes have been reviewed and approved by the team, the UI skeleton is deployed to a Vercel preview environment, and Tailwind CSS is configured with the project's design tokens. — **done** (Tailwind 4.2.0 configured with PostCSS; UI skeleton and Vercel deployment still pending)
 
 ### Week 2 (February 23 - March 1, 2026)
 

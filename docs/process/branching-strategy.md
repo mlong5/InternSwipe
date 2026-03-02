@@ -12,7 +12,7 @@
 
 This document defines the Git branching strategy, commit message format, pull request rules, and merge policy for the InternSwipe project. Every team member must follow these conventions to maintain a clean, traceable commit history and to ensure that the main branch always contains production-ready code.
 
-## Branch protection
+## Branch protection — **done** (GitHub repository configured)
 
 The `main` branch is protected. No direct pushes are allowed. All changes must be submitted as pull requests with at least one reviewer approval before they can be merged. This rule applies to all team members without exception, including the product owner.
 
@@ -36,7 +36,7 @@ docs/short-description
 
 Branch names must be lowercase, use hyphens to separate words, and be descriptive enough that a teammate can understand the purpose of the branch without reading the code.
 
-## Commit message format
+## Commit message format — **done** (in use, e.g. `feat(week1):`, `docs:`)
 
 All commit messages must follow the Conventional Commits specification. The format is:
 
@@ -72,11 +72,11 @@ refactor(db): simplify seed script to use batch insert
 
 Every pull request must satisfy the following requirements before it can be merged:
 
-1. The pull request must have a clear, descriptive title that follows the same Conventional Commits format used for commit messages.
-2. The pull request description must explain what the change does, why it is needed, what testing was performed, and any known limitations or follow-up work.
-3. At least one teammate must review and approve the pull request. The reviewer must read the code and leave substantive feedback.
-4. All CI checks must pass. The GitHub Actions pipeline runs ESLint, the TypeScript compiler, and Vitest tests on every pull request, and merge is blocked if any check fails.
-5. The branch must be up to date with the main branch before merging. If the main branch has moved ahead, the author must rebase or merge main into the feature branch and resolve any conflicts before the pull request can be merged.
+1. The pull request must have a clear, descriptive title that follows the same Conventional Commits format used for commit messages. — **done** (convention adopted)
+2. The pull request description must explain what the change does, why it is needed, what testing was performed, and any known limitations or follow-up work. — **done** (convention adopted)
+3. At least one teammate must review and approve the pull request. The reviewer must read the code and leave substantive feedback. — **done** (convention adopted)
+4. All CI checks must pass. The GitHub Actions pipeline runs ESLint, the TypeScript compiler, and Vitest tests on every pull request, and merge is blocked if any check fails. (GitHub Actions CI pipeline not yet set up)
+5. The branch must be up to date with the main branch before merging. If the main branch has moved ahead, the author must rebase or merge main into the feature branch and resolve any conflicts before the pull request can be merged. — **done** (convention adopted)
 
 ## Merge policy
 

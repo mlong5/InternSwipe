@@ -16,9 +16,9 @@ Brandon is the infrastructure and quality lead for InternSwipe. He owns the repo
 
 ### Week 1 (February 16 - February 22, 2026)
 
-- Lead Session C with Talan: create wireframes for all key screens (landing and login, profile setup, swipe deck, and history page), build the UI skeleton in Next.js with page routes, a shared layout component, and navigation, and configure Tailwind CSS with base design tokens covering colors, spacing, and typography.
+- Lead Session C with Talan: create wireframes for all key screens (landing and login, profile setup, swipe deck, and history page), build the UI skeleton in Next.js with page routes, a shared layout component, and navigation, and configure Tailwind CSS with base design tokens covering colors, spacing, and typography. — **done** (Tailwind configured; page routes, shared layout, and navigation still needed)
 - Pair on Session D: participate in vertical slice integration, connecting the UI skeleton and backend endpoints into a working end-to-end flow.
-- Deliverables: the UI skeleton is deployed to a Vercel preview environment, and Tailwind CSS is configured with the project's design tokens.
+- Deliverables: the UI skeleton is deployed to a Vercel preview environment, and Tailwind CSS is configured with the project's design tokens. — **done** (Tailwind 4.2.0 configured; UI skeleton and Vercel deployment still pending)
 
 ### Week 2 (February 23 - March 1, 2026)
 

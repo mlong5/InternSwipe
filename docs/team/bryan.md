@@ -16,16 +16,16 @@ Bryan serves as the product owner and technical lead for InternSwipe. He is resp
 
 ### Week 1 (February 16 - February 22, 2026)
 
-- Lead Session B with Matt: design and implement the database schema covering all seven MVP tables, configure the Supabase project, write the Prisma schema file, run the first migration, and seed the Jobs table with 20 to 30 curated internship postings that include eligibility flags.
-- Pair on Session D: connect the authentication, profile, swipe, and history features into a working vertical slice that demonstrates the core user flow end to end.
-- Deliverables: the Prisma schema is committed to the repository, the first migration has been applied successfully, the seed script runs without errors, and 20 or more jobs are present in the database with correct eligibility flags.
+- Lead Session B with Matt: design and implement the database schema covering all seven MVP tables, configure the Supabase project, write the Prisma schema file, run the first migration, and seed the Jobs table with 20 to 30 curated internship postings that include eligibility flags. — **done**
+- Pair on Session D: connect the authentication, profile, swipe, and history features into a working vertical slice that demonstrates the core user flow end to end. — **done** (backend API routes for auth, profile, swipe, apply, and applications all implemented)
+- Deliverables: the Prisma schema is committed to the repository, the first migration has been applied successfully, the seed script runs without errors, and 20 or more jobs are present in the database with correct eligibility flags. — **done** (all 7 tables in schema, 25 jobs seeded)
 
 ### Week 2 (February 23 - March 1, 2026)
 
 - Lead Sessions A and C, paired with Matt.
 - Session A: support Matt on the job ingestion MVP and the `GET /api/jobs` endpoint, ensuring the endpoint returns paginated and filtered results.
-- Session C: build the apply pipeline stub by implementing the `POST /api/apply` endpoint. This endpoint must validate that the user has a resume and that the job is eligible, create an Application record, create a SubmissionLog entry, and block duplicate submissions for the same user-job pair.
-- Deliverables: the `POST /api/apply` endpoint is working correctly, Application and SubmissionLog records are created for every submission attempt, and duplicate submissions are blocked with an appropriate error message.
+- Session C: build the apply pipeline stub by implementing the `POST /api/apply` endpoint. This endpoint must validate that the user has a resume and that the job is eligible, create an Application record, create a SubmissionLog entry, and block duplicate submissions for the same user-job pair. — **done**
+- Deliverables: the `POST /api/apply` endpoint is working correctly, Application and SubmissionLog records are created for every submission attempt, and duplicate submissions are blocked with an appropriate error message. — **done**
 
 ### Week 3 (March 2 - March 8, 2026)
 
@@ -67,9 +67,9 @@ By the end of each week's final session (Session D), Bryan must ensure the follo
 
 Before the v1.0 tag is created, Bryan must personally verify that the following are complete:
 
-- The Prisma schema and all seven MVP tables are correctly deployed in the production Supabase instance, with no schema drift between the migration files and the live database.
-- The `POST /api/apply` endpoint correctly creates an Application record and a SubmissionLog entry for every attempt, including failed attempts where the submission did not succeed.
-- All API routes that Bryan owns return the standard `{ data, error }` response envelope, with appropriate HTTP status codes for success, validation failure, and server error cases.
+- The Prisma schema and all seven MVP tables are correctly deployed in the production Supabase instance, with no schema drift between the migration files and the live database. — **done** (schema committed with all 7 tables)
+- The `POST /api/apply` endpoint correctly creates an Application record and a SubmissionLog entry for every attempt, including failed attempts where the submission did not succeed. — **done**
+- All API routes that Bryan owns return the standard `{ data, error }` response envelope, with appropriate HTTP status codes for success, validation failure, and server error cases. — **done** (all routes use `ApiResponse<T>` type with `{ data, error }` envelope)
 - Auth guards are active on every protected route and return a 401 status code for unauthenticated requests.
 - Signed URLs for resume file access expire correctly after 15 minutes, and no resume file is accessible without a valid signed URL.
 - Rate limiting on the `POST /api/apply` endpoint is verified at 10 requests per minute per user, and requests exceeding the limit receive a 429 status code.
@@ -82,10 +82,10 @@ Before the v1.0 tag is created, Bryan must personally verify that the following 
 
 | Week | Session | Partner | Focus |
 |------|---------|---------|-------|
-| Week 1 | Session B | Matt | Database schema, Supabase configuration, Prisma migration, and seed script. |
+| Week 1 | Session B | Matt | Database schema, Supabase configuration, Prisma migration, and seed script. — **done** |
 | Week 1 | Session D | All | Vertical slice integration connecting auth, profile, swipe, and history. |
 | Week 2 | Session A | Matt | Job ingestion MVP and `GET /api/jobs` endpoint. |
-| Week 2 | Session C | Matt | Apply pipeline stub and `POST /api/apply` endpoint. |
+| Week 2 | Session C | Matt | Apply pipeline stub and `POST /api/apply` endpoint. — **done** |
 | Week 3 | Session A | Talan | Profile and resume upload flow polish. |
 | Week 3 | Session C | Brandon | Security baseline: signed URLs, auth guards, and rate limiting. |
 | Week 3 | Session D | All | Midterm demo rehearsal. |
