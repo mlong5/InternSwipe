@@ -5,8 +5,19 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Brandon                              |
-| Last updated | February 16, 2026                    |
-| Version      | 1.0                                  |
+| Last updated | March 5, 2026                        |
+| Version      | 2.0                                  |
+
+## Contribution status (as of March 5, 2026)
+
+| Week | Expected deliverables | Actual status |
+|------|----------------------|---------------|
+| Week 1 | Wireframes with Talan, UI skeleton, Tailwind design tokens, vertical slice | **No commits.** Tailwind was configured as part of the project setup, but wireframes, UI skeleton, and design tokens have not been built. |
+| Week 2 | Swipe UI with Talan, CI/CD pipeline (GitHub Actions), Playwright smoke test | **No commits.** No GitHub Actions workflow files exist. No testing infrastructure has been set up. |
+| Week 3 | Eligibility tightening with Matt, security baseline with Bryan | Not yet started (current week) |
+
+**Git commits:** 0
+**Week 1 completion:** NOT COMPLETE
 
 ## Role summary
 

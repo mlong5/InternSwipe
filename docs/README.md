@@ -5,14 +5,18 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Bryan                                |
-| Last updated | February 16, 2026                    |
-| Version      | 1.0                                  |
+| Last updated | March 5, 2026                        |
+| Version      | 2.0                                  |
 
 ## Purpose
 
 This folder contains all project documentation for InternSwipe, a Tinder-style internship discovery and application tracker built by a four-person team for CS 250. The documentation covers individual team member responsibilities, project-level standards, and engineering processes. Every document is written to a professional standard and can be presented to a professor, stakeholder, or new team member without modification.
 
 This documentation is maintained alongside the codebase and updated during weekly retrospectives. If any process, responsibility, or technical decision changes, the corresponding document must be updated in the same sprint.
+
+## Current project status (as of March 5, 2026)
+
+The project is currently in **Week 3** of the four-week timeline. The backend foundation is solid: all 7 API routes are implemented, the database schema is deployed with 25 seeded jobs, and Supabase Auth is fully integrated. The frontend UI (page routes, components, swipe animations) is not yet built. CI/CD, testing, and deployment infrastructure have not been started. See `project/milestones.md` for a detailed exit criteria checklist.
 
 ## Where to start
 
