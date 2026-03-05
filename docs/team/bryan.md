@@ -5,8 +5,19 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Bryan                                |
-| Last updated | February 16, 2026                    |
-| Version      | 1.0                                  |
+| Last updated | March 5, 2026                        |
+| Version      | 2.0                                  |
+
+## Contribution status (as of March 5, 2026)
+
+| Week | Expected deliverables | Actual status |
+|------|----------------------|---------------|
+| Week 1 | DB schema, Prisma migrations, seed script, vertical slice integration | **Done** -- all backend deliverables completed (schema, migrations, seed, all 7 API routes, Supabase Auth) |
+| Week 2 | Job ingestion, `GET /api/jobs`, apply pipeline | **Partial** -- apply pipeline done (POST /api/apply with validation, duplicate prevention, submission logging); `GET /api/jobs` not yet started |
+| Week 3 | Profile/resume polish, security baseline, midterm demo | Not yet started (current week) |
+
+**Git commits:** 9 commits (Bryan) + 3 commits (Claude, assisted by Bryan)
+**Blocked items:** Vertical slice (Session D) blocked because UI skeleton was not built by Talan/Brandon
 
 ## Role summary
 

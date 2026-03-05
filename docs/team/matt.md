@@ -5,8 +5,19 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Matt                                 |
-| Last updated | February 16, 2026                    |
-| Version      | 1.0                                  |
+| Last updated | March 5, 2026                        |
+| Version      | 2.0                                  |
+
+## Contribution status (as of March 5, 2026)
+
+| Week | Expected deliverables | Actual status |
+|------|----------------------|---------------|
+| Week 1 | Pair with Bryan on DB schema and seed script, vertical slice wiring | **No commits.** Bryan completed the DB schema, migrations, and seed script. Matt has not contributed code to the repository. |
+| Week 2 | Job ingestion MVP, `GET /api/jobs` endpoint, apply pipeline with Bryan | **No commits.** Bryan completed the apply pipeline. `GET /api/jobs` with pagination/filtering not started. |
+| Week 3 | Eligibility tightening, job detail view, ineligible swipe blocking | Not yet started (current week) |
+
+**Git commits:** 0
+**Week 1 completion:** NOT COMPLETE
 
 ## Role summary
 

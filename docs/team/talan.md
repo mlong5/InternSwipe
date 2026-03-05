@@ -5,8 +5,19 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Talan                                |
-| Last updated | February 16, 2026                    |
-| Version      | 1.0                                  |
+| Last updated | March 5, 2026                        |
+| Version      | 2.0                                  |
+
+## Contribution status (as of March 5, 2026)
+
+| Week | Expected deliverables | Actual status |
+|------|----------------------|---------------|
+| Week 1 | Wireframes, UI skeleton (page routes, layout, navigation), Tailwind design tokens | **No commits.** Tailwind was configured as part of the project setup, but wireframes, page routes, shared layout, and navigation have not been built. |
+| Week 2 | Swipe interaction UI (card animations, overlays, optimistic updates, toasts) | **No commits.** None of the swipe UI has been started. |
+| Week 3 | Profile/resume upload flows, midterm demo rehearsal | Not yet started (current week) |
+
+**Git commits:** 0
+**Week 1 completion:** NOT COMPLETE
 
 ## Role summary
 

@@ -5,8 +5,8 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Brandon                              |
-| Last updated | February 16, 2026                    |
-| Version      | 1.0                                  |
+| Last updated | March 5, 2026                        |
+| Version      | 2.0                                  |
 
 ## Overview
 
