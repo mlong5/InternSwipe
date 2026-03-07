@@ -13,7 +13,7 @@
 | Week | Expected deliverables | Actual status |
 |------|----------------------|---------------|
 | Week 1 | DB schema, Prisma migrations, seed script, vertical slice integration | **Done** -- all backend deliverables completed (schema, migrations, seed, all 7 API routes, Supabase Auth) |
-| Week 2 | Job ingestion, `GET /api/jobs`, apply pipeline | **Partial** -- apply pipeline done (POST /api/apply with validation, duplicate prevention, submission logging); `GET /api/jobs` not yet started |
+| Week 2 | Job ingestion, `GET /api/jobs`, apply pipeline | **Done** -- apply pipeline done (POST /api/apply with validation, duplicate prevention, submission logging); `GET /api/jobs` implemented with pagination, eligibility/company/search filtering, and sorting |
 | Week 3 | Profile/resume polish, security baseline, midterm demo | Not yet started (current week) |
 
 **Git commits:** 9 commits (Bryan) + 3 commits (Claude, assisted by Bryan)

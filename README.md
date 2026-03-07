@@ -130,7 +130,7 @@ The app will be available at `http://localhost:3000`.
 | POST | `/api/swipe` | Record a swipe action | Done |
 | POST | `/api/apply` | Submit a job application | Done |
 | GET | `/api/applications` | Get user's applications | Done |
-| GET | `/api/jobs` | Get paginated/filtered jobs | Not started |
+| GET | `/api/jobs` | Get paginated/filtered jobs | Done |
 
 ## Current status (as of March 5, 2026)
 
