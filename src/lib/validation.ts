@@ -27,8 +27,19 @@ export const applySchema = z.object({
   resumeId: z.string().uuid('A valid resume ID is required'),
 })
 
+export const jobsQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+  eligibility: z.enum(['ELIGIBLE', 'NOT_ELIGIBLE']).optional(),
+  company: z.string().min(1).optional(),
+  search: z.string().min(1).optional(),
+  sort: z.enum(['created_at', 'company', 'title']).default('created_at'),
+  order: z.enum(['asc', 'desc']).default('desc'),
+})
+
 export type SignupInput = z.infer<typeof signupSchema>
 export type LoginInput = z.infer<typeof loginSchema>
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>
 export type SwipeInput = z.infer<typeof swipeSchema>
 export type ApplyInput = z.infer<typeof applySchema>
+export type JobsQueryInput = z.infer<typeof jobsQuerySchema>
