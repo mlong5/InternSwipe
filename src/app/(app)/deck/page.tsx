@@ -15,8 +15,8 @@ export default function DeckPage() {
   const [expanded, setExpanded] = useState(false)
   const [swiping, setSwiping] = useState<'left' | 'right' | 'bookmark' | null>(null)
 
-  const card = LISTINGS[idx]
   const done = idx >= LISTINGS.length
+  const card = LISTINGS[idx]
 
   const handleSwipe = (dir: 'left' | 'right' | 'bookmark') => {
     setSwiping(dir)
@@ -38,6 +38,8 @@ export default function DeckPage() {
       </div>
     )
   }
+
+  if (!card) return null
 
   const cardTransform =
     swiping === 'right' ? 'translateX(60px) rotate(3deg)' :
