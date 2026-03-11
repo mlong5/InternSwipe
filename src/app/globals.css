@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #F5F5F5;
+  --color-ink: #1A1A1A;
+  --color-muted: #666666;
+  --color-faint: #999999;
+  --color-hairline: #E0E0E0;
+  --color-border: #D0D0D0;
+  --color-border-dark: #999999;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #ffffff;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+input::placeholder {
+  color: #999999;
+}
