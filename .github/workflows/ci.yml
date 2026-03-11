@@ -21,6 +21,8 @@ jobs:
 
             - name: Generate Primsa client
               run: npx prisma generate
+              env:
+                  DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
             - name: Lint
               run: npm run lint
@@ -30,5 +32,3 @@ jobs:
 
             - name: Test
               run: npm test
-
-
