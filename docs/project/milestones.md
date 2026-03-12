@@ -5,8 +5,8 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Bryan                                |
-| Last updated | March 5, 2026                        |
-| Version      | 2.0                                  |
+| Last updated | March 12, 2026                       |
+| Version      | 3.0                                  |
 
 ## Overview
 
@@ -48,7 +48,7 @@ The following must all be true before the team considers Week 1 complete:
 ## Week 2: Core features
 
 **Date range:** February 23 - March 1, 2026
-**Actual status:** INCOMPLETE -- apply pipeline and GET /api/jobs done by Bryan; swipe UI and CI/CD not completed
+**Actual status:** INCOMPLETE -- apply pipeline and GET /api/jobs done by Bryan; CI pipeline partially done by Brandon (no Playwright, no branch protection); swipe UI not completed
 
 **Sprint focus:** Build the core features that define the InternSwipe experience: the job ingestion pipeline, the swipe interaction UI, the apply pipeline, and the CI/CD infrastructure.
 
@@ -59,7 +59,7 @@ The following must all be true before the team considers Week 1 complete:
 | Session A | Bryan and Matt | Build the job ingestion MVP by choosing between a seed JSON file or a jobs API integration. Implement the eligibility flag rule (ELIGIBLE or NOT_ELIGIBLE based on resume-only submission support). Create the `GET /api/jobs` endpoint with pagination and filter support. | **done** -- seed data with eligibility flags done; `GET /api/jobs` implemented with pagination, filtering (eligibility, company, search), and sorting. Completed by Bryan. No commits from Matt. |
 | Session B | Talan and Brandon | Build the complete swipe interaction UI with card animations (left slides left, right slides right), visual overlay states (green for applied, gray for skipped), optimistic UI updates, and toast notifications for apply results. | **not done** -- no commits from Talan or Brandon |
 | Session C | Bryan and Matt | Build the apply pipeline stub: implement the `POST /api/apply` endpoint that validates resume and job eligibility, creates an Application record, creates a SubmissionLog entry, and blocks duplicate submissions. | **done** -- completed by Bryan |
-| Session D | Talan and Brandon | Set up the full CI/CD pipeline in GitHub Actions (ESLint, TypeScript compiler, Vitest on every PR). Write the first Playwright smoke test covering login, swipe, and history verification. Configure the pipeline to block merge on failure. Conduct the review and demo, followed by the retrospective. | **not done** -- no commits from Talan or Brandon |
+| Session D | Talan and Brandon | Set up the full CI/CD pipeline in GitHub Actions (ESLint, TypeScript compiler, Vitest on every PR). Write the first Playwright smoke test covering login, swipe, and history verification. Configure the pipeline to block merge on failure. Conduct the review and demo, followed by the retrospective. | **partial** -- Brandon added CI pipeline (lint, typecheck, vitest) and a basic validation test. Playwright smoke test NOT written. Branch protection NOT configured. |
 
 ### Exit criteria
 
@@ -72,9 +72,9 @@ The following must all be true before the team considers Week 2 complete:
 - Optimistic UI updates reflect swipe results instantly. — **not done** -- assigned to Talan and Brandon
 - The `POST /api/apply` endpoint correctly creates Application and SubmissionLog records. — **done** (validates resume, checks eligibility, creates both records) -- completed by Bryan
 - Duplicate submissions are blocked with an appropriate error response. — **done** (returns 409 for duplicate user-job applications) -- completed by Bryan
-- The GitHub Actions CI pipeline runs lint, typecheck, and tests on every pull request. — **not done** -- assigned to Brandon
+- The GitHub Actions CI pipeline runs lint, typecheck, and tests on every pull request. — **partial** (CI pipeline created by Brandon; runs lint, typecheck, vitest on PRs to main)
 - The Playwright smoke test is green. — **not done** -- assigned to Brandon
-- The CI pipeline blocks merge when any check fails. — **not done** -- assigned to Brandon
+- The CI pipeline blocks merge when any check fails. — **not done** (branch protection rules not configured) -- assigned to Brandon
 - The review and demo has been conducted, and the retrospective action items have been recorded. — **not done**
 
 ---

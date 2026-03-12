@@ -5,19 +5,23 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Brandon                              |
-| Last updated | March 5, 2026                        |
-| Version      | 2.0                                  |
+| Last updated | March 12, 2026                       |
+| Version      | 3.0                                  |
 
-## Contribution status (as of March 5, 2026)
+## Contribution status (as of March 12, 2026)
 
 | Week | Expected deliverables | Actual status |
 |------|----------------------|---------------|
 | Week 1 | Wireframes with Talan, UI skeleton, Tailwind design tokens, vertical slice | **No commits.** Tailwind was configured as part of the project setup, but wireframes, UI skeleton, and design tokens have not been built. |
-| Week 2 | Swipe UI with Talan, CI/CD pipeline (GitHub Actions), Playwright smoke test | **No commits.** No GitHub Actions workflow files exist. No testing infrastructure has been set up. |
-| Week 3 | Eligibility tightening with Matt, security baseline with Bryan | Not yet started (current week) |
+| Week 2 | Swipe UI with Talan, CI/CD pipeline (GitHub Actions), Playwright smoke test | **Partial.** CI pipeline added (lint, typecheck, vitest). Basic validation test written (2 cases). Bug fix on deck page. Playwright smoke test NOT done. Branch protection rules NOT configured. Swipe UI pairing with Talan NOT done. |
+| Week 3 | Eligibility tightening with Matt, security baseline with Bryan | **Not done.** No commits for security baseline (signed URLs, auth guards, rate limiting). |
+| Week 4 | Bug bash with Matt, error messages, release checklist sign-off | Not yet started |
 
-**Git commits:** 0
+**Git commits:** 6 (on feature/brandonw/week2 branch, 2 CI iteration commits, 2 CI fix commits, 1 bug fix, 1 test)
 **Week 1 completion:** NOT COMPLETE
+**Week 2 completion:** PARTIAL (CI pipeline exists but incomplete, no Playwright, no branch protection)
+**Week 3 completion:** NOT COMPLETE
+**Week 4 completion:** NOT STARTED
 
 ## Role summary
 
@@ -33,9 +37,9 @@ Brandon is the infrastructure and quality lead for InternSwipe. He owns the repo
 
 ### Week 2 (February 23 - March 1, 2026)
 
-- Lead Session D with Talan: set up the full CI/CD pipeline in GitHub Actions. The pipeline must run ESLint, the TypeScript compiler, and Vitest tests on every pull request. Write the first Playwright smoke test that covers the following flow: log in, navigate to the swipe deck, perform a swipe, and verify that the swipe appears in the history. Configure the pipeline to block merge on any check failure.
-- Pair on Session B with Talan: support the swipe interaction UI build.
-- Deliverables: the GitHub Actions CI pipeline is passing on the main branch, the Playwright smoke test is green, and the pipeline blocks merge when any check fails.
+- Lead Session D with Talan: set up the full CI/CD pipeline in GitHub Actions. The pipeline must run ESLint, the TypeScript compiler, and Vitest tests on every pull request. Write the first Playwright smoke test that covers the following flow: log in, navigate to the swipe deck, perform a swipe, and verify that the swipe appears in the history. Configure the pipeline to block merge on any check failure. — **partial** (CI pipeline created with lint, typecheck, vitest; Playwright smoke test NOT written; branch protection NOT configured)
+- Pair on Session B with Talan: support the swipe interaction UI build. — **not done** (no pairing on swipe UI)
+- Deliverables: the GitHub Actions CI pipeline is passing on the main branch, the Playwright smoke test is green, and the pipeline blocks merge when any check fails. — **partial** (CI pipeline runs on PRs; Playwright and merge blocking not done)
 
 ### Week 3 (March 2 - March 8, 2026)
 
