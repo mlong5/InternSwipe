@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "test": "vitest run"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
@@ -45,6 +46,7 @@
     "prisma": "^7.4.1",
     "tailwindcss": "^4.2.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }
