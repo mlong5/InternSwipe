@@ -5,8 +5,8 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Bryan                                |
-| Last updated | March 5, 2026                        |
-| Version      | 2.0                                  |
+| Last updated | March 12, 2026                       |
+| Version      | 3.0                                  |
 
 ## Overview
 
@@ -22,11 +22,11 @@ Every story and bug fix must have clearly defined acceptance criteria written in
 
 Every change must be submitted as a pull request and reviewed by at least one other team member before it can be merged. The reviewer must read the code changes, verify that the implementation matches the described intent, and leave written feedback. Rubber-stamp approvals (approving without reading the code) are not acceptable. The reviewer is responsible for checking correctness, readability, and consistency with the project's conventions.
 
-### 3. Lint and typecheck pass (GitHub Actions enforced) — (ESLint and TypeScript configured locally; GitHub Actions CI pipeline not yet set up)
+### 3. Lint and typecheck pass (GitHub Actions enforced) — **partial** (CI pipeline added by Brandon; runs ESLint and TypeScript on PRs to main; branch protection not yet configured to block merges)
 
 Every pull request must pass the automated lint (ESLint) and typecheck (TypeScript compiler) checks in the GitHub Actions CI pipeline. These checks run automatically on every push to a pull request branch, and the pipeline is configured to block merge if any check fails. The pull request author is responsible for fixing all lint and typecheck errors before requesting review. No exceptions or manual overrides are permitted.
 
-### 4. Tests added or updated where applicable — (Vitest and Playwright not yet configured)
+### 4. Tests added or updated where applicable — **partial** (Vitest configured by Brandon with one basic test; Playwright not yet configured)
 
 When a change introduces new functionality, modifies existing behavior, or fixes a bug, the author must add or update tests to cover the changed behavior. This includes unit tests (Vitest) for business logic and integration or end-to-end tests (Playwright) for user-facing flows where appropriate. The reviewer is responsible for verifying that the test coverage is adequate and that the tests actually assert the correct behavior rather than simply running without errors.
 

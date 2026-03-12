@@ -5,8 +5,8 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Bryan                                |
-| Last updated | March 5, 2026                        |
-| Version      | 2.0                                  |
+| Last updated | March 12, 2026                       |
+| Version      | 3.0                                  |
 
 ## Purpose
 
@@ -16,7 +16,7 @@ This documentation is maintained alongside the codebase and updated during weekl
 
 ## Current project status (as of March 5, 2026)
 
-The project is currently in **Week 3** of the four-week timeline. The backend foundation is solid: all 7 API routes are implemented, the database schema is deployed with 25 seeded jobs, and Supabase Auth is fully integrated. The frontend UI (page routes, components, swipe animations) is not yet built. CI/CD, testing, and deployment infrastructure have not been started. See `project/milestones.md` for a detailed exit criteria checklist.
+The project is currently in **Week 4** of the four-week timeline. The backend foundation is solid: all 7 API routes are implemented, the database schema is deployed with 25 seeded jobs, and Supabase Auth is fully integrated. The frontend UI skeleton has been built (page routes, layout, navigation, deck, history, profile, login). CI pipeline is partially set up (lint, typecheck, vitest on PRs) but Playwright tests and branch protection are not configured. Security baseline (signed URLs, auth guards, rate limiting) has not been started. Deadline is March 15, 2026. See `project/milestones.md` for a detailed exit criteria checklist.
 
 ## Where to start
 
