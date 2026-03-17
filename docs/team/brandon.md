@@ -5,19 +5,19 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Brandon                              |
-| Last updated | March 5, 2026                        |
+| Last updated | March 17, 2026                       |
 | Version      | 2.0                                  |
 
 ## Contribution status (as of March 5, 2026)
 
 | Week | Expected deliverables | Actual status |
 |------|----------------------|---------------|
-| Week 1 | Wireframes with Talan, UI skeleton, Tailwind design tokens, vertical slice | **No commits.** Tailwind was configured as part of the project setup, but wireframes, UI skeleton, and design tokens have not been built. |
-| Week 2 | Swipe UI with Talan, CI/CD pipeline (GitHub Actions), Playwright smoke test | **No commits.** No GitHub Actions workflow files exist. No testing infrastructure has been set up. |
-| Week 3 | Eligibility tightening with Matt, security baseline with Bryan | Not yet started (current week) |
+| Week 1 | Wireframes with Talan, UI skeleton, Tailwind design tokens, vertical slice | **Complete.** Wireframes created, page routes and shared layout built, Tailwind configured with design tokens, login and deck UI implemented. Merged via PR #7. |
+| Week 2 | Swipe UI with Talan, CI/CD pipeline (GitHub Actions), Playwright smoke test | **In progress.** CI pipeline done (.github/workflows/ci.yml) — runs lint, typecheck, and tests on PRs, blocks merge on failure. Playwright smoke test done (e2e/smoke.spec.ts) — covers login, deck swipe, and history. Swipe UI support with Talan pending. |
+| Week 3 | Eligibility tightening with Matt, security baseline with Bryan | Not yet started |
 
-**Git commits:** 0
-**Week 1 completion:** NOT COMPLETE
+**Week 1 completion:** COMPLETE
+**Week 2 completion:** IN PROGRESS
 
 ## Role summary
 
@@ -33,9 +33,9 @@ Brandon is the infrastructure and quality lead for InternSwipe. He owns the repo
 
 ### Week 2 (February 23 - March 1, 2026)
 
-- Lead Session D with Talan: set up the full CI/CD pipeline in GitHub Actions. The pipeline must run ESLint, the TypeScript compiler, and Vitest tests on every pull request. Write the first Playwright smoke test that covers the following flow: log in, navigate to the swipe deck, perform a swipe, and verify that the swipe appears in the history. Configure the pipeline to block merge on any check failure.
-- Pair on Session B with Talan: support the swipe interaction UI build.
-- Deliverables: the GitHub Actions CI pipeline is passing on the main branch, the Playwright smoke test is green, and the pipeline blocks merge when any check fails.
+- Lead Session D with Talan: set up the full CI/CD pipeline in GitHub Actions. The pipeline must run ESLint, the TypeScript compiler, and Vitest tests on every pull request. Write the first Playwright smoke test that covers the following flow: log in, navigate to the swipe deck, perform a swipe, and verify that the swipe appears in the history. Configure the pipeline to block merge on any check failure. — **done** (CI pipeline passing, Playwright smoke test green)
+- Pair on Session B with Talan: support the swipe interaction UI build. — **pending**
+- Deliverables: the GitHub Actions CI pipeline is passing on the main branch, the Playwright smoke test is green, and the pipeline blocks merge when any check fails. — **done**
 
 ### Week 3 (March 2 - March 8, 2026)
 
