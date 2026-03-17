@@ -26,7 +26,7 @@ export async function POST(
 
     const swipeAction = await prisma.swipeAction.create({
       data: {
-        userId: auth.session.user.id,
+        userId: auth.user.id,
         jobId,
         action,
       },

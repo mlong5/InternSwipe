@@ -10,7 +10,7 @@ export async function GET(): Promise<NextResponse<ApiResponse<Application[]>>> {
     if (auth.response) return auth.response
 
     const applications = await prisma.application.findMany({
-      where: { userId: auth.session.user.id },
+      where: { userId: auth.user.id },
       include: {
         job: true,
         submissionLogs: true,
