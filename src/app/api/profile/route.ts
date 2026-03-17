@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { requireAuth } from '@/lib/auth-guard'
 import { prisma } from '@/lib/prisma'
 import { profileUpdateSchema } from '@/lib/validation'
 import type { ApiResponse } from '@/types'
@@ -7,16 +7,11 @@ import type { Profile } from '@/generated/prisma'
 
 export async function GET(): Promise<NextResponse<ApiResponse<Profile>>> {
   try {
-    const supabase = await createSupabaseServerClient()
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-    if (!session) {
-      return NextResponse.json({ data: null, error: 'Unauthorized' }, { status: 401 })
-    }
+    const auth = await requireAuth()
+    if (auth.response) return auth.response
 
     const profile = await prisma.profile.findUnique({
-      where: { userId: session.user.id },
+      where: { userId: auth.session.user.id },
     })
 
     if (!profile) {
@@ -42,13 +37,8 @@ export async function PUT(
   }
 
   try {
-    const supabase = await createSupabaseServerClient()
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-    if (!session) {
-      return NextResponse.json({ data: null, error: 'Unauthorized' }, { status: 401 })
-    }
+    const auth = await requireAuth()
+    if (auth.response) return auth.response
 
     const { name, phone, links, preferencesJson } = parseResult.data
 
@@ -61,14 +51,14 @@ export async function PUT(
     }
 
     const profile = await prisma.profile.upsert({
-      where: { userId: session.user.id },
+      where: { userId: auth.session.user.id },
       update: {
         name,
         phone: phone ?? null,
         ...jsonFields,
       },
       create: {
-        userId: session.user.id,
+        userId: auth.session.user.id,
         name,
         phone: phone ?? null,
         ...jsonFields,

@@ -1,9 +1,10 @@
 // NOTE: v1 stub — logs apply attempt only. Real ATS automation is out of scope.
 
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { requireAuth } from '@/lib/auth-guard'
 import { prisma } from '@/lib/prisma'
 import { applySchema } from '@/lib/validation'
+import { applyRateLimiter } from '@/lib/rate-limit'
 import type { ApiResponse } from '@/types'
 import type { Application, SubmissionLog } from '@/generated/prisma'
 
@@ -21,16 +22,28 @@ export async function POST(
   }
 
   try {
-    const supabase = await createSupabaseServerClient()
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-    if (!session) {
-      return NextResponse.json({ data: null, error: 'Unauthorized' }, { status: 401 })
+    const auth = await requireAuth()
+    if (auth.response) return auth.response
+
+    const userId = auth.session.user.id
+
+    // Rate limit: 10 requests per minute per user
+    const rateLimitResult = applyRateLimiter.check(userId)
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { data: null, error: 'Too many apply requests. Please try again later.' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(rateLimitResult.retryAfterSeconds),
+            'X-RateLimit-Limit': '10',
+            'X-RateLimit-Remaining': '0',
+          },
+        },
+      )
     }
 
     const { jobId, resumeId } = parseResult.data
-    const userId = session.user.id
 
     // Validate that the resume exists and belongs to this user
     const resume = await prisma.resume.findFirst({

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { requireAuth } from '@/lib/auth-guard'
 import { prisma } from '@/lib/prisma'
 import { jobsQuerySchema } from '@/lib/validation'
 import type { ApiResponse } from '@/types'
@@ -17,13 +17,8 @@ export async function GET(
   request: NextRequest,
 ): Promise<NextResponse<ApiResponse<PaginatedJobs>>> {
   try {
-    const supabase = await createSupabaseServerClient()
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-    if (!session) {
-      return NextResponse.json({ data: null, error: 'Unauthorized' }, { status: 401 })
-    }
+    const auth = await requireAuth()
+    if (auth.response) return auth.response
 
     const params = Object.fromEntries(request.nextUrl.searchParams)
     const parseResult = jobsQuerySchema.safeParse(params)
