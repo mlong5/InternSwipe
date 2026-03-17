@@ -5,19 +5,19 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Bryan                                |
-| Last updated | March 5, 2026                        |
-| Version      | 2.0                                  |
+| Last updated | March 17, 2026                       |
+| Version      | 3.0                                  |
 
-## Contribution status (as of March 5, 2026)
+## Contribution status (as of March 17, 2026)
 
 | Week | Expected deliverables | Actual status |
 |------|----------------------|---------------|
 | Week 1 | DB schema, Prisma migrations, seed script, vertical slice integration | **Done** -- all backend deliverables completed (schema, migrations, seed, all 7 API routes, Supabase Auth) |
 | Week 2 | Job ingestion, `GET /api/jobs`, apply pipeline | **Done** -- apply pipeline done (POST /api/apply with validation, duplicate prevention, submission logging); `GET /api/jobs` implemented with pagination, eligibility/company/search filtering, and sorting |
-| Week 3 | Profile/resume polish, security baseline, midterm demo | Not yet started (current week) |
+| Week 3 | Profile/resume polish, security baseline, midterm demo | **Partial** -- security baseline **done** (auth guards on all protected routes, rate limiting on POST /api/apply at 10 req/min/user, signed URLs for resume access with 15-min expiry). Profile/resume upload polish blocked (requires Talan). Midterm demo rehearsal not done. |
 
 **Git commits:** 9 commits (Bryan) + 3 commits (Claude, assisted by Bryan)
-**Blocked items:** Vertical slice (Session D) blocked because UI skeleton was not built by Talan/Brandon
+**Blocked items:** Vertical slice (Session D) blocked because UI skeleton was not built by Talan/Brandon. Profile/resume upload polish blocked on Talan.
 
 ## Role summary
 
@@ -42,9 +42,9 @@ Bryan serves as the product owner and technical lead for InternSwipe. He is resp
 
 - Lead Sessions A and C, paired with Talan and Brandon respectively.
 - Session A: polish the profile and resume upload flows with Talan, ensuring that the upload experience is smooth and that validation errors are clearly communicated to the user.
-- Session C: implement the security baseline with Brandon. This includes signed URLs for resume file access with a 15-minute expiry, auth guard middleware on all API routes that returns a 401 status for unauthenticated requests, and rate limiting on the `POST /api/apply` endpoint at 10 requests per minute per user.
+- Session C: implement the security baseline with Brandon. This includes signed URLs for resume file access with a 15-minute expiry, auth guard middleware on all API routes that returns a 401 status for unauthenticated requests, and rate limiting on the `POST /api/apply` endpoint at 10 requests per minute per user. — **done** (all three implemented: `requireAuth()` guard on all 5 protected routes, `RateLimiter` class with sliding window on apply endpoint, `GET /api/resume/signed-url` with 15-min Supabase Storage signed URLs)
 - Session D: participate in the midterm demo rehearsal with all four team members, walking through every key flow in a live browser.
-- Deliverables: signed URLs are working and expiring correctly after 15 minutes, auth guards are active on all protected routes, rate limiting is enforced on the apply endpoint, security measures have been verified through manual testing, and the midterm demo rehearsal has been completed.
+- Deliverables: signed URLs are working and expiring correctly after 15 minutes, auth guards are active on all protected routes, rate limiting is enforced on the apply endpoint, security measures have been verified through manual testing, and the midterm demo rehearsal has been completed. — **security baseline done; midterm demo not done**
 
 ### Week 4 (March 9 - March 15, 2026)
 
@@ -81,9 +81,9 @@ Before the v1.0 tag is created, Bryan must personally verify that the following 
 - The Prisma schema and all seven MVP tables are correctly deployed in the production Supabase instance, with no schema drift between the migration files and the live database. — **done** (schema committed with all 7 tables)
 - The `POST /api/apply` endpoint correctly creates an Application record and a SubmissionLog entry for every attempt, including failed attempts where the submission did not succeed. — **done**
 - All API routes that Bryan owns return the standard `{ data, error }` response envelope, with appropriate HTTP status codes for success, validation failure, and server error cases. — **done** (all routes use `ApiResponse<T>` type with `{ data, error }` envelope)
-- Auth guards are active on every protected route and return a 401 status code for unauthenticated requests.
-- Signed URLs for resume file access expire correctly after 15 minutes, and no resume file is accessible without a valid signed URL.
-- Rate limiting on the `POST /api/apply` endpoint is verified at 10 requests per minute per user, and requests exceeding the limit receive a 429 status code.
+- Auth guards are active on every protected route and return a 401 status code for unauthenticated requests. — **done** (centralized `requireAuth()` helper in `src/lib/auth-guard.ts`; applied to profile, jobs, swipe, apply, applications, and resume/signed-url routes)
+- Signed URLs for resume file access expire correctly after 15 minutes, and no resume file is accessible without a valid signed URL. — **done** (`GET /api/resume/signed-url` endpoint generates 15-min signed URLs via Supabase Storage service role client; ownership validated before URL generation)
+- Rate limiting on the `POST /api/apply` endpoint is verified at 10 requests per minute per user, and requests exceeding the limit receive a 429 status code. — **done** (in-memory sliding-window `RateLimiter` in `src/lib/rate-limit.ts`; returns 429 with `Retry-After` header)
 - The README includes setup instructions, environment variable documentation, and an architecture overview that accurately reflects the deployed system.
 - The handoff document explains how to deploy the application, how to add new jobs to the database, and how to extend the system with new features.
 - The v1.0 Git tag is created on the main branch after all checks have passed.
@@ -98,7 +98,7 @@ Before the v1.0 tag is created, Bryan must personally verify that the following 
 | Week 2 | Session A | Matt | Job ingestion MVP and `GET /api/jobs` endpoint. |
 | Week 2 | Session C | Matt | Apply pipeline stub and `POST /api/apply` endpoint. — **done** |
 | Week 3 | Session A | Talan | Profile and resume upload flow polish. |
-| Week 3 | Session C | Brandon | Security baseline: signed URLs, auth guards, and rate limiting. |
+| Week 3 | Session C | Brandon | Security baseline: signed URLs, auth guards, and rate limiting. — **done** |
 | Week 3 | Session D | All | Midterm demo rehearsal. |
 | Week 4 | Session C | Matt | End-to-end flow verification. |
 | Week 4 | Session D | All | Final demo, v1.0 tag, release notes, README, and handoff document. |

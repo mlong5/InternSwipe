@@ -5,8 +5,8 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Bryan                                |
-| Last updated | March 12, 2026                       |
-| Version      | 3.0                                  |
+| Last updated | March 17, 2026                       |
+| Version      | 4.0                                  |
 
 ## Overview
 
@@ -82,6 +82,7 @@ The following must all be true before the team considers Week 2 complete:
 ## Week 3: Polish and security
 
 **Date range:** March 2 - March 8, 2026
+**Actual status:** INCOMPLETE -- security baseline done by Bryan (auth guards, rate limiting, signed URLs); profile/resume upload polish not done (Talan MIA); eligibility tightening not done (Matt/Brandon); midterm demo not done
 
 **Sprint focus:** Polish the user experience, tighten data accuracy, implement the security baseline, and rehearse the midterm demo.
 
@@ -91,7 +92,7 @@ The following must all be true before the team considers Week 2 complete:
 |---------|--------|------|
 | Session A | Bryan and Talan | Polish the profile and resume upload flows. Implement resume upload to Supabase Storage with PDF-only and 5 MB validation, upload progress display, and uploaded resume listing with filename, size, master or alternate badge, and delete option. Validate required profile fields (name, email, phone) with clear error messages. |
 | Session B | Matt and Brandon | Tighten eligibility rules and accuracy. Review all seeded jobs and fix incorrect eligibility flags. Add a job detail view (tap a card to see full description, requirements, and original posting URL). Ensure swiping right on a NOT_ELIGIBLE job is impossible at both the UI and API levels. |
-| Session C | Bryan and Brandon | Implement the security baseline: signed URLs for resume file access with 15-minute expiry, auth guard middleware on all API routes (401 for unauthenticated requests), rate limiting on `POST /api/apply` (10 requests per minute per user), and verification that no resume file is accessible without a valid session. |
+| Session C | Bryan and Brandon | Implement the security baseline: signed URLs for resume file access with 15-minute expiry, auth guard middleware on all API routes (401 for unauthenticated requests), rate limiting on `POST /api/apply` (10 requests per minute per user), and verification that no resume file is accessible without a valid session. — **done** (completed by Bryan: `requireAuth()` guard, `RateLimiter` class, `GET /api/resume/signed-url` endpoint) |
 | Session D | All | Midterm demo rehearsal. Walk through every key flow in a live browser as a team. Identify and fix any issues discovered during the rehearsal. Conduct the review and demo, followed by the retrospective. |
 
 ### Exit criteria
@@ -104,10 +105,10 @@ The following must all be true before the team considers Week 3 complete:
 - Eligibility flags are 100 percent accurate on all seeded data, verified by manual review.
 - The job detail view displays the full description, requirements, and original posting URL.
 - Swiping right on a NOT_ELIGIBLE job is blocked at both the UI and API levels. — **done** (API-level block implemented in `POST /api/apply`; UI-level block still needed)
-- Signed URLs for resume access are working and expire after 15 minutes.
-- Auth guards are active on all protected API routes and return 401 for unauthenticated requests.
-- Rate limiting is enforced on the `POST /api/apply` endpoint at 10 requests per minute per user.
-- No resume file is accessible without a valid authenticated session.
+- Signed URLs for resume access are working and expire after 15 minutes. — **done** (`GET /api/resume/signed-url` generates 15-min signed URLs via Supabase Storage; ownership validated) -- completed by Bryan
+- Auth guards are active on all protected API routes and return 401 for unauthenticated requests. — **done** (centralized `requireAuth()` helper applied to all 5 protected routes + signed-url route) -- completed by Bryan
+- Rate limiting is enforced on the `POST /api/apply` endpoint at 10 requests per minute per user. — **done** (in-memory sliding-window rate limiter; returns 429 with Retry-After header) -- completed by Bryan
+- No resume file is accessible without a valid authenticated session. — **done** (signed-url endpoint requires auth; direct storage access blocked by Supabase RLS) -- completed by Bryan
 - The midterm demo rehearsal has been completed and any issues discovered have been addressed.
 - The review and demo has been conducted, and the retrospective action items have been recorded.
 

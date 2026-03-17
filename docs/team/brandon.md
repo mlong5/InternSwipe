@@ -14,7 +14,7 @@
 |------|----------------------|---------------|
 | Week 1 | Wireframes with Talan, UI skeleton, Tailwind design tokens, vertical slice | **No commits.** Tailwind was configured as part of the project setup, but wireframes, UI skeleton, and design tokens have not been built. |
 | Week 2 | Swipe UI with Talan, CI/CD pipeline (GitHub Actions), Playwright smoke test | **Partial.** CI pipeline added (lint, typecheck, vitest). Basic validation test written (2 cases). Bug fix on deck page. Playwright smoke test NOT done. Branch protection rules NOT configured. Swipe UI pairing with Talan NOT done. |
-| Week 3 | Eligibility tightening with Matt, security baseline with Bryan | **Not done.** No commits for security baseline (signed URLs, auth guards, rate limiting). |
+| Week 3 | Eligibility tightening with Matt, security baseline with Bryan | **Partial.** Security baseline completed by Bryan solo (auth guards, rate limiting, signed URLs). Brandon did not contribute commits. Eligibility tightening with Matt NOT done. |
 | Week 4 | Bug bash with Matt, error messages, release checklist sign-off | Not yet started |
 
 **Git commits:** 6 (on feature/brandonw/week2 branch, 2 CI iteration commits, 2 CI fix commits, 1 bug fix, 1 test)
@@ -96,7 +96,7 @@ Before the v1.0 tag is created, Brandon must personally verify that the followin
 | Week 2 | Session B | Talan | Swipe interaction UI: card animations, visual states, optimistic updates, and toasts. |
 | Week 2 | Session D | Talan | CI/CD pipeline setup in GitHub Actions and first Playwright smoke test. |
 | Week 3 | Session B | Matt | Eligibility rules tightening, job detail view, and ineligible swipe blocking. |
-| Week 3 | Session C | Bryan | Security baseline: signed URLs, auth guards, and rate limiting. |
+| Week 3 | Session C | Bryan | Security baseline: signed URLs, auth guards, and rate limiting. — **done** (completed by Bryan solo) |
 | Week 3 | Session D | All | Midterm demo rehearsal. |
 | Week 4 | Session A | Matt | Bug bash: file and fix Critical and High priority bugs. |
 | Week 4 | Session D | All | Final demo, v1.0 tag, release notes, and launch readiness. |

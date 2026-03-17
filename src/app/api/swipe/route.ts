@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { requireAuth } from '@/lib/auth-guard'
 import { prisma } from '@/lib/prisma'
 import { swipeSchema } from '@/lib/validation'
 import type { ApiResponse } from '@/types'
@@ -14,13 +14,8 @@ export async function POST(
   }
 
   try {
-    const supabase = await createSupabaseServerClient()
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-    if (!session) {
-      return NextResponse.json({ data: null, error: 'Unauthorized' }, { status: 401 })
-    }
+    const auth = await requireAuth()
+    if (auth.response) return auth.response
 
     const { jobId, action } = parseResult.data
 
@@ -31,7 +26,7 @@ export async function POST(
 
     const swipeAction = await prisma.swipeAction.create({
       data: {
-        userId: session.user.id,
+        userId: auth.session.user.id,
         jobId,
         action,
       },
