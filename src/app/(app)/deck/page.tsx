@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 
 const LISTINGS = [
   { id: 1, company: 'Acme Corp', role: 'Software Engineer Intern', location: 'San Francisco, CA', pay: '$X,XXX/mo', match: 87, deadline: 'Oct 15', tag: 'STRONG MATCH', skills: ['Python', 'SQL', 'APIs'], scores: { technical: 92, experience: 78, gpa: 88, coursework: 84 }, peer: '72% of similar students get interviews' },
@@ -10,22 +10,81 @@ const LISTINGS = [
   { id: 5, company: 'LearnApp', role: 'ML Engineering Intern', location: 'Pittsburgh, PA', pay: '$X,XXX/mo', match: 68, deadline: 'Nov 15', tag: 'STRETCH', skills: ['Python', 'NLP', 'TensorFlow'], scores: { technical: 74, experience: 60, gpa: 82, coursework: 72 }, peer: '52% of similar students get interviews' },
 ]
 
+type ToastItem = { id: number; msg: string; variant: 'apply' | 'skip' | 'save' }
+
+const SWIPE_THRESHOLD = 80
+const SWIPE_EXIT_X = 380
+
 export default function DeckPage() {
   const [idx, setIdx] = useState(0)
   const [expanded, setExpanded] = useState(false)
-  const [swiping, setSwiping] = useState<'left' | 'right' | 'bookmark' | null>(null)
+  const [exitDir, setExitDir] = useState<'left' | 'right' | 'bookmark' | null>(null)
+  const [dragX, setDragX] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const [toasts, setToasts] = useState<ToastItem[]>([])
+
+  const dragStartX = useRef(0)
+  const toastCounter = useRef(0)
 
   const card = LISTINGS[idx]
   const done = idx >= LISTINGS.length
 
-  const handleSwipe = (dir: 'left' | 'right' | 'bookmark') => {
-    setSwiping(dir)
+  const addToast = useCallback((msg: string, variant: ToastItem['variant']) => {
+    const id = ++toastCounter.current
+    setToasts(prev => [...prev, { id, msg, variant }])
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 2800)
+  }, [])
+
+  const commitSwipe = useCallback((dir: 'left' | 'right' | 'bookmark') => {
+    // Optimistic: update UI immediately, fire-and-forget server call
+    setExitDir(dir)
+    setDragX(0)
+
+    if (dir === 'right') addToast('Applied!', 'apply')
+    else if (dir === 'left') addToast('Skipped', 'skip')
+    else addToast('Saved for later', 'save')
+
+    // TODO: server action here — UI already advanced
     setTimeout(() => {
-      setSwiping(null)
+      setExitDir(null)
       setExpanded(false)
-      setIdx((i) => i + 1)
-    }, 250)
+      setIdx(i => i + 1)
+    }, 320)
+  }, [addToast])
+
+  // Drag handlers (mouse + touch)
+  const onDragStart = (clientX: number) => {
+    if (exitDir) return
+    dragStartX.current = clientX
+    setIsDragging(true)
   }
+  const onDragMove = (clientX: number) => {
+    if (!isDragging || exitDir) return
+    setDragX(clientX - dragStartX.current)
+  }
+  const onDragEnd = () => {
+    if (!isDragging) return
+    setIsDragging(false)
+    if (dragX > SWIPE_THRESHOLD) commitSwipe('right')
+    else if (dragX < -SWIPE_THRESHOLD) commitSwipe('left')
+    else setDragX(0)
+  }
+
+  // Card transform
+  const tx = exitDir
+    ? exitDir === 'right' ? SWIPE_EXIT_X : exitDir === 'left' ? -SWIPE_EXIT_X : 0
+    : dragX
+  const ty = exitDir === 'bookmark' ? -60 : 0
+  const rotate = exitDir
+    ? exitDir === 'right' ? 18 : exitDir === 'left' ? -18 : 0
+    : dragX * 0.06
+  const cardOpacity = exitDir ? 0 : 1
+
+  // Overlay: show when dragging past 30px or on exit
+  const overlayDir = exitDir ?? (dragX > 30 ? 'right' : dragX < -30 ? 'left' : null)
+  const overlayOpacity = exitDir
+    ? 1
+    : Math.min(Math.abs(dragX) / SWIPE_THRESHOLD, 1)
 
   if (done) {
     return (
@@ -39,15 +98,29 @@ export default function DeckPage() {
     )
   }
 
-  const cardTransform =
-    swiping === 'right' ? 'translateX(60px) rotate(3deg)' :
-    swiping === 'left' ? 'translateX(-60px) rotate(-3deg)' :
-    swiping === 'bookmark' ? 'translateY(-10px)' : 'none'
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-4 font-mono">
-      <div className="w-full max-w-[400px]">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-4 font-mono select-none">
+      {/* Toasts */}
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 items-center pointer-events-none">
+        {toasts.map(t => (
+          <div
+            key={t.id}
+            className="px-4 py-2 rounded-full text-xs font-bold tracking-widest text-white shadow-lg"
+            style={{
+              background:
+                t.variant === 'apply' ? '#16a34a' :
+                t.variant === 'skip'  ? '#525252' :
+                                        '#2563eb',
+              animation: 'toast-in 0.22s ease-out',
+            }}
+          >
+            {t.variant === 'apply' ? '✓ ' : t.variant === 'skip' ? '✕ ' : '☆ '}
+            {t.msg}
+          </div>
+        ))}
+      </div>
 
+      <div className="w-full max-w-[400px]">
         {/* Header */}
         <div className="flex justify-between items-center mb-3.5">
           <h2 className="text-lg font-bold text-ink">InternSwipe</h2>
@@ -56,9 +129,53 @@ export default function DeckPage() {
 
         {/* Card */}
         <div
-          className="border-2 border-ink rounded-lg overflow-hidden bg-white transition-all duration-[250ms]"
-          style={{ opacity: swiping ? 0.4 : 1, transform: cardTransform }}
+          className="relative border-2 border-ink rounded-lg overflow-hidden bg-white cursor-grab active:cursor-grabbing"
+          style={{
+            transform: `translateX(${tx}px) translateY(${ty}px) rotate(${rotate}deg)`,
+            opacity: cardOpacity,
+            transition: isDragging
+              ? 'none'
+              : 'transform 0.32s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.32s ease',
+            willChange: 'transform, opacity',
+          }}
+          onMouseDown={e => onDragStart(e.clientX)}
+          onMouseMove={e => onDragMove(e.clientX)}
+          onMouseUp={onDragEnd}
+          onMouseLeave={onDragEnd}
+          onTouchStart={e => e.touches[0] && onDragStart(e.touches[0].clientX)}
+          onTouchMove={e => { e.preventDefault(); e.touches[0] && onDragMove(e.touches[0].clientX) }}
+          onTouchEnd={onDragEnd}
         >
+          {/* Apply overlay (green) */}
+          {overlayDir === 'right' && (
+            <div
+              className="absolute inset-0 z-10 flex items-center justify-center rounded-lg pointer-events-none"
+              style={{ background: `rgba(22,163,74,${0.18 + overlayOpacity * 0.22})` }}
+            >
+              <span
+                className="border-[3px] border-green-600 text-green-600 font-bold text-2xl tracking-widest px-4 py-1 rounded rotate-[-12deg]"
+                style={{ opacity: overlayOpacity }}
+              >
+                APPLY
+              </span>
+            </div>
+          )}
+
+          {/* Skip overlay (gray) */}
+          {overlayDir === 'left' && (
+            <div
+              className="absolute inset-0 z-10 flex items-center justify-center rounded-lg pointer-events-none"
+              style={{ background: `rgba(82,82,82,${0.12 + overlayOpacity * 0.18})` }}
+            >
+              <span
+                className="border-[3px] border-neutral-500 text-neutral-500 font-bold text-2xl tracking-widest px-4 py-1 rounded rotate-[12deg]"
+                style={{ opacity: overlayOpacity }}
+              >
+                SKIP
+              </span>
+            </div>
+          )}
+
           {/* Tag row */}
           <div className="px-4 pt-4 flex justify-between items-start">
             <span className="text-[10px] font-bold tracking-widest px-2 py-0.5 border border-border-dark rounded-sm">
@@ -126,20 +243,23 @@ export default function DeckPage() {
         {/* Action buttons */}
         <div className="flex justify-center items-center gap-5 mt-5">
           <button
-            onClick={() => handleSwipe('left')}
-            className="w-14 h-14 rounded-full border-2 border-ink bg-white flex items-center justify-center text-xl cursor-pointer"
+            onClick={() => commitSwipe('left')}
+            disabled={!!exitDir}
+            className="w-14 h-14 rounded-full border-2 border-ink bg-white flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90"
           >
             ✕
           </button>
           <button
-            onClick={() => handleSwipe('bookmark')}
-            className="w-11 h-11 rounded-full border-2 border-border-dark bg-white flex items-center justify-center text-base cursor-pointer"
+            onClick={() => commitSwipe('bookmark')}
+            disabled={!!exitDir}
+            className="w-11 h-11 rounded-full border-2 border-border-dark bg-white flex items-center justify-center text-base cursor-pointer disabled:opacity-40 transition-transform active:scale-90"
           >
             ☆
           </button>
           <button
-            onClick={() => handleSwipe('right')}
-            className="w-14 h-14 rounded-full border-2 border-ink bg-ink text-white flex items-center justify-center text-xl cursor-pointer"
+            onClick={() => commitSwipe('right')}
+            disabled={!!exitDir}
+            className="w-14 h-14 rounded-full border-2 border-ink bg-ink text-white flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90"
           >
             ✓
           </button>
@@ -150,8 +270,14 @@ export default function DeckPage() {
           <span className="w-11 text-center">SAVE</span>
           <span className="w-14 text-center">APPLY</span>
         </div>
-
       </div>
+
+      <style>{`
+        @keyframes toast-in {
+          from { opacity: 0; transform: translateY(-8px) scale(0.95); }
+          to   { opacity: 1; transform: translateY(0)   scale(1); }
+        }
+      `}</style>
     </div>
   )
 }
