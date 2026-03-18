@@ -11,7 +11,7 @@ export async function GET(): Promise<NextResponse<ApiResponse<Profile>>> {
     if (auth.response) return auth.response
 
     const profile = await prisma.profile.findUnique({
-      where: { userId: auth.session.user.id },
+      where: { userId: auth.user.id },
     })
 
     if (!profile) {
@@ -51,14 +51,14 @@ export async function PUT(
     }
 
     const profile = await prisma.profile.upsert({
-      where: { userId: auth.session.user.id },
+      where: { userId: auth.user.id },
       update: {
         name,
         phone: phone ?? null,
         ...jsonFields,
       },
       create: {
-        userId: auth.session.user.id,
+        userId: auth.user.id,
         name,
         phone: phone ?? null,
         ...jsonFields,

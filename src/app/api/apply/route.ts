@@ -25,7 +25,7 @@ export async function POST(
     const auth = await requireAuth()
     if (auth.response) return auth.response
 
-    const userId = auth.session.user.id
+    const userId = auth.user.id
 
     // Rate limit: 10 requests per minute per user
     const rateLimitResult = applyRateLimiter.check(userId)

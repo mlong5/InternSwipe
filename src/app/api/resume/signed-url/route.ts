@@ -35,7 +35,7 @@ export async function GET(
 
     // Verify the resume exists and belongs to the authenticated user
     const resume = await prisma.resume.findFirst({
-      where: { id: resumeId, userId: auth.session.user.id },
+      where: { id: resumeId, userId: auth.user.id },
     })
     if (!resume) {
       return NextResponse.json(
