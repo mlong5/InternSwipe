@@ -16,14 +16,14 @@ interface ApplyResponse {
 export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<ApiResponse<ApplyResponse>>> {
-  const parseResult = applySchema.safeParse(await request.json())
-  if (!parseResult.success) {
-    return NextResponse.json({ data: null, error: parseResult.error.message }, { status: 400 })
-  }
-
   try {
     const auth = await requireAuth()
     if (auth.response) return auth.response
+
+    const parseResult = applySchema.safeParse(await request.json())
+    if (!parseResult.success) {
+      return NextResponse.json({ data: null, error: parseResult.error.issues[0]?.message ?? 'Invalid input' }, { status: 400 })
+    }
 
     const userId = auth.user.id
 
@@ -80,26 +80,45 @@ export async function POST(
       )
     }
 
-    // Check for duplicate application
-    const existingApplication = await prisma.application.findFirst({
-      where: { userId, jobId, status: 'APPLIED' },
+    // Block duplicate APPLIED or PENDING applications
+    const blockingApplication = await prisma.application.findFirst({
+      where: { userId, jobId, status: { in: ['APPLIED', 'PENDING'] } },
     })
-    if (existingApplication) {
+    if (blockingApplication) {
       return NextResponse.json(
         { data: null, error: 'You have already applied to this job' },
         { status: 409 },
       )
     }
 
-    // Create application and submission log
-    const application = await prisma.application.create({
-      data: { userId, jobId, resumeId, status: 'APPLIED' },
+    // Check for a FAILED application — allow retry
+    const failedApplication = await prisma.application.findFirst({
+      where: { userId, jobId, status: 'FAILED' },
+      include: { submissionLogs: true },
     })
+
+    let application
+    let attemptNo: number
+
+    if (failedApplication) {
+      // Retry: update the existing FAILED application to APPLIED
+      attemptNo = failedApplication.submissionLogs.length + 1
+      application = await prisma.application.update({
+        where: { id: failedApplication.id },
+        data: { status: 'APPLIED', resumeId },
+      })
+    } else {
+      // New application
+      attemptNo = 1
+      application = await prisma.application.create({
+        data: { userId, jobId, resumeId, status: 'APPLIED' },
+      })
+    }
 
     const submissionLog = await prisma.submissionLog.create({
       data: {
         applicationId: application.id,
-        attemptNo: 1,
+        attemptNo,
         result: 'success',
         errorMessage: null,
       },

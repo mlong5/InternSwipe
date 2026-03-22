@@ -5,8 +5,8 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Bryan                                |
-| Last updated | March 17, 2026                       |
-| Version      | 4.0                                  |
+| Last updated | March 21, 2026                       |
+| Version      | 4.1                                  |
 
 ## Overview
 
@@ -91,7 +91,7 @@ The following must all be true before the team considers Week 2 complete:
 | Session | Owners | Work |
 |---------|--------|------|
 | Session A | Bryan and Talan | Polish the profile and resume upload flows. Implement resume upload to Supabase Storage with PDF-only and 5 MB validation, upload progress display, and uploaded resume listing with filename, size, master or alternate badge, and delete option. Validate required profile fields (name, email, phone) with clear error messages. |
-| Session B | Matt and Brandon | Tighten eligibility rules and accuracy. Review all seeded jobs and fix incorrect eligibility flags. Add a job detail view (tap a card to see full description, requirements, and original posting URL). Ensure swiping right on a NOT_ELIGIBLE job is impossible at both the UI and API levels. |
+| Session B | Matt and Brandon | Tighten eligibility rules and accuracy. Review all seeded jobs and fix incorrect eligibility flags. Add a job detail view (tap a card to see full description, requirements, and original posting URL). Ensure swiping right on a NOT_ELIGIBLE job is impossible at both the UI and API levels. | **done** (completed by Matt solo — eligibility flags verified across all 25 seed jobs; job detail sheet added to `deck/page.tsx` showing full summary and original URL; NOT_ELIGIBLE right-swipe blocked at UI level via disabled button and BLOCKED overlay, and at API level via 422 in `POST /api/apply`) |
 | Session C | Bryan and Brandon | Implement the security baseline: signed URLs for resume file access with 15-minute expiry, auth guard middleware on all API routes (401 for unauthenticated requests), rate limiting on `POST /api/apply` (10 requests per minute per user), and verification that no resume file is accessible without a valid session. — **done** (completed by Bryan: `requireAuth()` guard, `RateLimiter` class, `GET /api/resume/signed-url` endpoint) |
 | Session D | All | Midterm demo rehearsal. Walk through every key flow in a live browser as a team. Identify and fix any issues discovered during the rehearsal. Conduct the review and demo, followed by the retrospective. |
 
@@ -104,7 +104,7 @@ The following must all be true before the team considers Week 3 complete:
 - The profile form validates all required fields with clear error messages.
 - Eligibility flags are 100 percent accurate on all seeded data, verified by manual review.
 - The job detail view displays the full description, requirements, and original posting URL.
-- Swiping right on a NOT_ELIGIBLE job is blocked at both the UI and API levels. — **done** (API-level block implemented in `POST /api/apply`; UI-level block still needed)
+- Swiping right on a NOT_ELIGIBLE job is blocked at both the UI and API levels. — **done** (UI: apply button disabled, BLOCKED overlay shown, drag-to-right gesture rejected in `deck/page.tsx`; API: `POST /api/apply` returns 422 and logs a FAILED SubmissionLog)
 - Signed URLs for resume access are working and expire after 15 minutes. — **done** (`GET /api/resume/signed-url` generates 15-min signed URLs via Supabase Storage; ownership validated) -- completed by Bryan
 - Auth guards are active on all protected API routes and return 401 for unauthenticated requests. — **done** (centralized `requireAuth()` helper applied to all 5 protected routes + signed-url route) -- completed by Bryan
 - Rate limiting is enforced on the `POST /api/apply` endpoint at 10 requests per minute per user. — **done** (in-memory sliding-window rate limiter; returns 429 with Retry-After header) -- completed by Bryan
@@ -124,7 +124,7 @@ The following must all be true before the team considers Week 3 complete:
 
 | Session | Owners | Work |
 |---------|--------|------|
-| Session A | Matt and Brandon | Run a structured bug bash: each team member tests all flows and files bugs in GitHub Issues with priority labels (Critical, High, Medium, Low). Fix all Critical and High priority bugs. Improve error messages to be user-friendly. Verify the CI pipeline is fully green. |
+| Session A | Matt and Brandon | Run a structured bug bash: each team member tests all flows and files bugs in GitHub Issues with priority labels (Critical, High, Medium, Low). Fix all Critical and High priority bugs. Improve error messages to be user-friendly. Verify the CI pipeline is fully green. | **partial** (Matt: Playwright API test suite written — `e2e/api.spec.ts` covering auth protection on all routes, input validation, response envelope shape, and query param validation; bugs fixed: Zod error serialization in 4 API routes, auth-before-parse ordering in `apply` and `swipe` routes, smoke test wrong redirect URL, SwipeAction uniqueness constraint added to schema. Brandon: not started.) |
 | Session B | Talan and Bryan | Responsive audit across mobile (375px), tablet (768px), and desktop (1280px). Accessibility pass: keyboard navigation, focus states, WCAG AA color contrast, screen reader labels. Implement all empty states. Final copy review for button labels, error messages, and page titles. |
 | Session C | Bryan and Matt | Full end-to-end flow verification: walk through the complete user journey from sign-up through history view. Retry a failed application. Verify all statuses and timestamps are correct in both the UI and the database. |
 | Session D | All | Final demo run-through. Tag v1.0 on the main branch. Write release notes. Complete the README with setup instructions, environment variable documentation, and architecture overview. Write the handoff document. Sign off on the release checklist. Conduct the final review and demo, followed by the retrospective. |
@@ -141,7 +141,7 @@ The following must all be true before the team considers Week 4 and the project 
 - The end-to-end flow has been verified with no errors from sign-up through history view.
 - Application retry works correctly for failed submissions.
 - All statuses and timestamps are accurate in both the UI and the database.
-- Error messages are user-friendly throughout the application.
+- Error messages are user-friendly throughout the application. — **done** (Zod validation errors in all API routes now return the human-readable message from `issues[0].message` instead of the raw JSON-serialized error object)
 - The CI pipeline is fully green.
 - The v1.0 Git tag has been created on the main branch.
 - Release notes have been written and committed.

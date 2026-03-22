@@ -14,7 +14,7 @@ export async function POST(
 ): Promise<NextResponse<ApiResponse<SignupResponse>>> {
   const parseResult = signupSchema.safeParse(await request.json())
   if (!parseResult.success) {
-    return NextResponse.json({ data: null, error: parseResult.error.message }, { status: 400 })
+    return NextResponse.json({ data: null, error: parseResult.error.issues[0]?.message ?? 'Invalid input' }, { status: 400 })
   }
 
   const { email, password } = parseResult.data

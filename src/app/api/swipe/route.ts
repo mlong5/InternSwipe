@@ -8,14 +8,14 @@ import type { SwipeAction } from '@/generated/prisma'
 export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<ApiResponse<SwipeAction>>> {
-  const parseResult = swipeSchema.safeParse(await request.json())
-  if (!parseResult.success) {
-    return NextResponse.json({ data: null, error: parseResult.error.message }, { status: 400 })
-  }
-
   try {
     const auth = await requireAuth()
     if (auth.response) return auth.response
+
+    const parseResult = swipeSchema.safeParse(await request.json())
+    if (!parseResult.success) {
+      return NextResponse.json({ data: null, error: parseResult.error.issues[0]?.message ?? 'Invalid input' }, { status: 400 })
+    }
 
     const { jobId, action } = parseResult.data
 
