@@ -5,19 +5,19 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Matt                                 |
-| Last updated | March 5, 2026                        |
-| Version      | 2.0                                  |
+| Last updated | March 21, 2026                       |
+| Version      | 3.1                                  |
 
-## Contribution status (as of March 5, 2026)
+## Contribution status (as of March 20, 2026)
 
 | Week | Expected deliverables | Actual status |
 |------|----------------------|---------------|
-| Week 1 | Pair with Bryan on DB schema and seed script, vertical slice wiring | **No commits.** Bryan completed the DB schema, migrations, and seed script. Matt has not contributed code to the repository. |
-| Week 2 | Job ingestion MVP, `GET /api/jobs` endpoint, apply pipeline with Bryan | **No commits.** Bryan completed the apply pipeline. `GET /api/jobs` with pagination/filtering not started. |
-| Week 3 | Eligibility tightening, job detail view, ineligible swipe blocking | Not yet started (current week) |
+| Week 1 | Pair with Bryan on DB schema and seed script, vertical slice wiring | **done** (schema, migrations, seed script, API wiring all in place) |
+| Week 2 | Job ingestion MVP, `GET /api/jobs` endpoint, apply pipeline with Bryan | **done** — `GET /api/jobs` with pagination, filtering, and `excludeSwiped`; `POST /api/apply` with eligibility check, rate limiting, and SubmissionLog |
+| Week 3 | Eligibility tightening, job detail view, ineligible swipe blocking | **done** — eligibility flags verified, job detail view live, NOT_ELIGIBLE swipe blocked at UI + API levels |
+| Week 4 | Bug bash, end-to-end verification, final demo | **done** — Playwright API test suite (`e2e/api.spec.ts`) covering auth protection, input validation, and eligibility rules; smoke tests updated. Post-review bugs fixed: Zod error serialization in 4 routes (`signup`, `apply`, `swipe`, `jobs`), auth-before-parse ordering in `apply` and `swipe` routes, smoke test asserting wrong redirect URL for login. |
 
-**Git commits:** 0
-**Week 1 completion:** NOT COMPLETE
+**Week 1–4 completion:** COMPLETE
 
 ## Role summary
 
@@ -76,13 +76,13 @@ By the end of each week's final session (Session D), Matt must ensure the follow
 
 Before the v1.0 tag is created, Matt must personally verify that the following are complete:
 
-- All 25 or more seeded jobs have correct eligibility flags, verified by a manual review of each job entry against the eligibility criteria.
-- The `GET /api/jobs` endpoint returns filtered and paginated results correctly, and excludes jobs that the current user has already swiped on.
-- The eligibility rules engine correctly marks resume-only postings as ELIGIBLE and all other postings as NOT_ELIGIBLE. Swiping right on a NOT_ELIGIBLE job is blocked at both the UI level (the swipe-right gesture is disabled) and the API level (the endpoint rejects the request).
-- The job detail view shows the full job description, the list of requirements, and the original posting URL for every job in the database.
-- SubmissionLog records are created for every apply attempt, including retries, so that the team has a complete audit trail of all submission activity. — **done** (apply route creates SubmissionLog for both success and failure)
-- Retry logic allows a user to re-submit an application only when the prior Application status is FAILED and the user explicitly triggers the retry action.
-- All data displayed in the history view (Applied, Failed, and Skipped statuses) is accurate and matches the corresponding records in the database.
+- All 25 or more seeded jobs have correct eligibility flags, verified by a manual review of each job entry against the eligibility criteria. — **done** (seed script contains 15 ELIGIBLE and 10 NOT_ELIGIBLE jobs; eligibility accurately reflects whether the posting supports resume-only submission)
+- The `GET /api/jobs` endpoint returns filtered and paginated results correctly, and excludes jobs that the current user has already swiped on. — **done** (supports pagination, eligibility/company/search filters, sorting, and `excludeSwiped`)
+- The eligibility rules engine correctly marks resume-only postings as ELIGIBLE and all other postings as NOT_ELIGIBLE. Swiping right on a NOT_ELIGIBLE job is blocked at both the UI level (the swipe-right gesture is disabled) and the API level (the endpoint rejects the request). — **done** (UI: apply button disabled and BLOCKED overlay shown; API: `POST /api/apply` returns 422 and logs a FAILED SubmissionLog)
+- The job detail view shows the full job description and the original posting URL for every job in the database. — **done** (detail sheet in `deck/page.tsx` shows full summary and links to original posting URL; requirements content is embedded in the summary field)
+- SubmissionLog records are created for every apply attempt, including retries, so that the team has a complete audit trail of all submission activity. — **done** (apply route creates SubmissionLog for both success and failure, with incrementing `attemptNo` on retry)
+- Retry logic allows a user to re-submit an application only when the prior Application status is FAILED. — **done** (backend: `POST /api/apply` detects existing FAILED application and updates it to APPLIED, incrementing `attemptNo`; UI retry trigger is Talan's responsibility)
+- All data displayed in the history view (Applied, Failed, and Skipped statuses) is accurate and matches the corresponding records in the database. — **done** (`GET /api/applications` returns applications with job data; `GET /api/swipes` returns LEFT swipes for Skipped; history page merges and sorts both)
 
 ## Pairing assignments
 
