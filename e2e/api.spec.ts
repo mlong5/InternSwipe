@@ -161,6 +161,38 @@ test.describe('GET /api/jobs — query param validation', () => {
 
 })
 
+// ── Profile route auth protection ────────────────────────────────────────────
+
+test.describe('Auth protection — profile routes return 401 without a session', () => {
+
+  test('GET /api/profile returns 401 when unauthenticated', async ({ request }) => {
+    const res = await request.get(`${BASE}/api/profile`)
+    expect(res.status()).toBe(401)
+    const body = await res.json()
+    expect(body.data).toBeNull()
+    expect(typeof body.error).toBe('string')
+  })
+
+  // NOTE: PUT /api/profile parses the request body before running the auth guard.
+  // A request with a valid body returns 401; a request with an invalid body returns 400.
+  // This is a known ordering issue — auth should run before body parsing.
+  test('PUT /api/profile with valid body returns 401 when unauthenticated', async ({ request }) => {
+    const res = await request.put(`${BASE}/api/profile`, {
+      data: { name: 'Test User' },
+    })
+    expect(res.status()).toBe(401)
+  })
+
+  test('PUT /api/profile with invalid body returns 400 before auth runs', async ({ request }) => {
+    const res = await request.put(`${BASE}/api/profile`, {
+      data: {},
+    })
+    // Body is parsed before auth — invalid body hits Zod validation first
+    expect(res.status()).toBe(400)
+  })
+
+})
+
 // ── Resume route auth protection ──────────────────────────────────────────────
 
 test.describe('Auth protection — resume routes return 401 without a session', () => {
