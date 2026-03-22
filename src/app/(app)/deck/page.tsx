@@ -162,6 +162,8 @@ export default function DeckPage() {
     )
   }
 
+  if (!card) return null
+
   const isEligible = card.eligibilityStatus === 'ELIGIBLE'
 
   return (
