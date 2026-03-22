@@ -160,3 +160,43 @@ test.describe('GET /api/jobs — query param validation', () => {
   })
 
 })
+
+// ── Resume route auth protection ──────────────────────────────────────────────
+
+test.describe('Auth protection — resume routes return 401 without a session', () => {
+
+  test('GET /api/resume returns 401 when unauthenticated', async ({ request }) => {
+    const res = await request.get(`${BASE}/api/resume`)
+    expect(res.status()).toBe(401)
+    const body = await res.json()
+    expect(body.data).toBeNull()
+    expect(typeof body.error).toBe('string')
+  })
+
+  test('POST /api/resume returns 401 when unauthenticated', async ({ request }) => {
+    const res = await request.post(`${BASE}/api/resume`)
+    expect(res.status()).toBe(401)
+    const body = await res.json()
+    expect(body.data).toBeNull()
+    expect(typeof body.error).toBe('string')
+  })
+
+  test('GET /api/resume/signed-url returns 401 when unauthenticated', async ({ request }) => {
+    const fakeId = '00000000-0000-0000-0000-000000000001'
+    const res = await request.get(`${BASE}/api/resume/signed-url?resumeId=${fakeId}`)
+    expect(res.status()).toBe(401)
+    const body = await res.json()
+    expect(body.data).toBeNull()
+    expect(typeof body.error).toBe('string')
+  })
+
+  test('DELETE /api/resume/:id returns 401 when unauthenticated', async ({ request }) => {
+    const fakeId = '00000000-0000-0000-0000-000000000001'
+    const res = await request.delete(`${BASE}/api/resume/${fakeId}`)
+    expect(res.status()).toBe(401)
+    const body = await res.json()
+    expect(body.data).toBeNull()
+    expect(typeof body.error).toBe('string')
+  })
+
+})
