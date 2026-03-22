@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { loginSchema } from '@/lib/validation'
+import { loginSchema, formatZodError, safeErrorMessage } from '@/lib/validation'
 import type { ApiResponse } from '@/types'
 
 interface LoginResponse {
@@ -13,7 +13,7 @@ export async function POST(
 ): Promise<NextResponse<ApiResponse<LoginResponse>>> {
   const parseResult = loginSchema.safeParse(await request.json())
   if (!parseResult.success) {
-    return NextResponse.json({ data: null, error: parseResult.error.message }, { status: 400 })
+    return NextResponse.json({ data: null, error: formatZodError(parseResult.error) }, { status: 400 })
   }
 
   const { email, password } = parseResult.data
@@ -38,7 +38,6 @@ export async function POST(
       { status: 200 },
     )
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-    return NextResponse.json({ data: null, error: message }, { status: 500 })
+    return NextResponse.json({ data: null, error: safeErrorMessage(err) }, { status: 500 })
   }
 }

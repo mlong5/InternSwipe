@@ -20,7 +20,9 @@ export async function POST(): Promise<NextResponse<ApiResponse<LogoutResponse>>>
       { status: 200 },
     )
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-    return NextResponse.json({ data: null, error: message }, { status: 500 })
+    return NextResponse.json(
+      { data: null, error: 'Something went wrong. Please try again later.' },
+      { status: 500 },
+    )
   }
 }

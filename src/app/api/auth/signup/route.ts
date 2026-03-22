@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
-import { signupSchema } from '@/lib/validation'
+import { signupSchema, formatZodError, safeErrorMessage } from '@/lib/validation'
 import type { ApiResponse } from '@/types'
 
 interface SignupResponse {
@@ -14,7 +14,7 @@ export async function POST(
 ): Promise<NextResponse<ApiResponse<SignupResponse>>> {
   const parseResult = signupSchema.safeParse(await request.json())
   if (!parseResult.success) {
-    return NextResponse.json({ data: null, error: parseResult.error.message }, { status: 400 })
+    return NextResponse.json({ data: null, error: formatZodError(parseResult.error) }, { status: 400 })
   }
 
   const { email, password } = parseResult.data
@@ -49,7 +49,6 @@ export async function POST(
       { status: 201 },
     )
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-    return NextResponse.json({ data: null, error: message }, { status: 500 })
+    return NextResponse.json({ data: null, error: safeErrorMessage(err) }, { status: 500 })
   }
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth-guard'
 import { prisma } from '@/lib/prisma'
-import { jobsQuerySchema } from '@/lib/validation'
+import { jobsQuerySchema, formatZodError, safeErrorMessage } from '@/lib/validation'
 import type { ApiResponse } from '@/types'
 import type { Job } from '@/generated/prisma'
 
@@ -23,7 +23,7 @@ export async function GET(
     const params = Object.fromEntries(request.nextUrl.searchParams)
     const parseResult = jobsQuerySchema.safeParse(params)
     if (!parseResult.success) {
-      return NextResponse.json({ data: null, error: parseResult.error.message }, { status: 400 })
+      return NextResponse.json({ data: null, error: formatZodError(parseResult.error) }, { status: 400 })
     }
 
     const { page, limit, eligibility, company, search, sort, order } = parseResult.data
@@ -74,7 +74,6 @@ export async function GET(
       { status: 200 },
     )
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-    return NextResponse.json({ data: null, error: message }, { status: 500 })
+    return NextResponse.json({ data: null, error: safeErrorMessage(err) }, { status: 500 })
   }
 }

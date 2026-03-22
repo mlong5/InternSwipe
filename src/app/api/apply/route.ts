@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth-guard'
 import { prisma } from '@/lib/prisma'
-import { applySchema } from '@/lib/validation'
+import { applySchema, formatZodError, safeErrorMessage } from '@/lib/validation'
 import { applyRateLimiter } from '@/lib/rate-limit'
 import type { ApiResponse } from '@/types'
 import type { Application, SubmissionLog } from '@/generated/prisma'
@@ -18,7 +18,7 @@ export async function POST(
 ): Promise<NextResponse<ApiResponse<ApplyResponse>>> {
   const parseResult = applySchema.safeParse(await request.json())
   if (!parseResult.success) {
-    return NextResponse.json({ data: null, error: parseResult.error.message }, { status: 400 })
+    return NextResponse.json({ data: null, error: formatZodError(parseResult.error) }, { status: 400 })
   }
 
   try {
@@ -110,7 +110,6 @@ export async function POST(
       { status: 201 },
     )
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-    return NextResponse.json({ data: null, error: message }, { status: 500 })
+    return NextResponse.json({ data: null, error: safeErrorMessage(err) }, { status: 500 })
   }
 }
