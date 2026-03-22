@@ -5,8 +5,8 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Bryan                                |
-| Last updated | March 12, 2026                       |
-| Version      | 3.0                                  |
+| Last updated | March 22, 2026                       |
+| Version      | 4.0                                  |
 
 ## Purpose
 
@@ -14,9 +14,9 @@ This folder contains all project documentation for InternSwipe, a Tinder-style i
 
 This documentation is maintained alongside the codebase and updated during weekly retrospectives. If any process, responsibility, or technical decision changes, the corresponding document must be updated in the same sprint.
 
-## Current project status (as of March 5, 2026)
+## Current project status (as of March 22, 2026)
 
-The project is currently in **Week 4** of the four-week timeline. The backend foundation is solid: all 7 API routes are implemented, the database schema is deployed with 25 seeded jobs, and Supabase Auth is fully integrated. The frontend UI skeleton has been built (page routes, layout, navigation, deck, history, profile, login). CI pipeline is partially set up (lint, typecheck, vitest on PRs) but Playwright tests and branch protection are not configured. Security baseline (signed URLs, auth guards, rate limiting) has not been started. Deadline is March 15, 2026. See `project/milestones.md` for a detailed exit criteria checklist.
+The project is past the **Week 4** deadline (March 15, 2026). The backend is complete: all 8 API routes are implemented (including resume signed URLs), the database schema is deployed with 25 seeded jobs, Supabase Auth is fully integrated, auth guards protect all routes, rate limiting is enforced on the apply endpoint, and error messages are user-safe across the board. 33 unit tests pass (rate limiter + validation). README, handoff document, and release notes are written. The frontend UI is incomplete (page routes exist but components are not built). CI pipeline is partially set up (lint, typecheck, vitest) but Playwright tests, branch protection, and Vercel deployment are not configured. See `project/milestones.md` for a detailed exit criteria checklist.
 
 ## Where to start
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { requireAuth } from '@/lib/auth-guard'
 import { prisma } from '@/lib/prisma'
+import { safeErrorMessage } from '@/lib/validation'
 import type { ApiResponse } from '@/types'
 
 const SIGNED_URL_EXPIRY_SECONDS = 15 * 60 // 15 minutes
@@ -56,7 +57,7 @@ export async function GET(
 
     if (error || !data?.signedUrl) {
       return NextResponse.json(
-        { data: null, error: error?.message ?? 'Failed to generate signed URL' },
+        { data: null, error: 'Unable to generate a download link for this resume. Please try again later.' },
         { status: 500 },
       )
     }
@@ -73,7 +74,6 @@ export async function GET(
       { status: 200 },
     )
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-    return NextResponse.json({ data: null, error: message }, { status: 500 })
+    return NextResponse.json({ data: null, error: safeErrorMessage(err) }, { status: 500 })
   }
 }

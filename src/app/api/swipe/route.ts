@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth-guard'
 import { prisma } from '@/lib/prisma'
-import { swipeSchema } from '@/lib/validation'
+import { swipeSchema, formatZodError, safeErrorMessage } from '@/lib/validation'
 import type { ApiResponse } from '@/types'
 import type { SwipeAction } from '@/generated/prisma'
 
@@ -14,7 +14,7 @@ export async function POST(
 
     const parseResult = swipeSchema.safeParse(await request.json())
     if (!parseResult.success) {
-      return NextResponse.json({ data: null, error: parseResult.error.issues[0]?.message ?? 'Invalid input' }, { status: 400 })
+      return NextResponse.json({ data: null, error: formatZodError(parseResult.error) }, { status: 400 })
     }
 
     const { jobId, action } = parseResult.data
@@ -34,7 +34,6 @@ export async function POST(
 
     return NextResponse.json({ data: swipeAction, error: null }, { status: 201 })
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-    return NextResponse.json({ data: null, error: message }, { status: 500 })
+    return NextResponse.json({ data: null, error: safeErrorMessage(err) }, { status: 500 })
   }
 }
