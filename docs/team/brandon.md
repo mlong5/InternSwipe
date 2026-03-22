@@ -14,13 +14,13 @@
 |------|----------------------|---------------|
 | Week 1 | Wireframes with Talan, UI skeleton, Tailwind design tokens, vertical slice | **Complete.** Wireframes created, page routes and shared layout built, Tailwind configured with design tokens, login and deck UI implemented. Merged via PR #7. |
 | Week 2 | Swipe UI with Talan, CI/CD pipeline (GitHub Actions), Playwright smoke test | **In progress.** CI pipeline done (.github/workflows/ci.yml) — runs lint, typecheck, and tests on PRs, blocks merge on failure. Playwright smoke test done (e2e/smoke.spec.ts) — covers login, deck swipe, and history. Swipe UI support with Talan pending. |
-| Week 3 | Eligibility tightening with Matt, security baseline with Bryan | **Partial.** Security baseline completed by Bryan solo (auth guards, rate limiting, signed URLs). Brandon did not contribute commits. Eligibility tightening with Matt NOT done. |
+| Week 3 | Eligibility tightening with Matt, security baseline with Bryan | **Complete.** Security baseline completed by Bryan (auth guards, rate limiting, signed URLs). Brandon added auth protection tests for all resume and profile routes, and documented the auth-before-parse ordering bug in PUT /api/profile. Eligibility tightening and ineligible swipe blocking completed by Matt. |
 | Week 4 | Bug bash with Matt, error messages, release checklist sign-off | Not yet started |
 
 **Git commits:** 6 (on feature/brandonw/week2 branch, 2 CI iteration commits, 2 CI fix commits, 1 bug fix, 1 test)
 **Week 1 completion:** COMPLETE
 **Week 2 completion:** IN PROGRESS (CI pipeline and Playwright done, swipe UI pairing pending)
-**Week 3 completion:** PARTIAL (security baseline done by Bryan solo)
+**Week 3 completion:** COMPLETE
 **Week 4 completion:** NOT STARTED
 
 ## Role summary
