@@ -40,6 +40,8 @@
   "exclude": [
     "node_modules",
     "prisma",
-    "prisma.config.ts"
+    "prisma.config.ts",
+    "e2e",
+    "playwright.config.ts"
   ]
 }

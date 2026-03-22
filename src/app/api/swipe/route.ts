@@ -8,14 +8,14 @@ import type { SwipeAction } from '@/generated/prisma'
 export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<ApiResponse<SwipeAction>>> {
-  const parseResult = swipeSchema.safeParse(await request.json())
-  if (!parseResult.success) {
-    return NextResponse.json({ data: null, error: formatZodError(parseResult.error) }, { status: 400 })
-  }
-
   try {
     const auth = await requireAuth()
     if (auth.response) return auth.response
+
+    const parseResult = swipeSchema.safeParse(await request.json())
+    if (!parseResult.success) {
+      return NextResponse.json({ data: null, error: formatZodError(parseResult.error) }, { status: 400 })
+    }
 
     const { jobId, action } = parseResult.data
 
@@ -26,7 +26,7 @@ export async function POST(
 
     const swipeAction = await prisma.swipeAction.create({
       data: {
-        userId: auth.session.user.id,
+        userId: auth.user.id,
         jobId,
         action,
       },

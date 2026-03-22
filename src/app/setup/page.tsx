@@ -15,21 +15,49 @@ const SUBS = ['Tell us about your studies', 'Select at least 2 skills', 'What fi
 export default function SetupPage() {
   const router = useRouter()
   const [step, setStep] = useState(0)
+  const [name, setName] = useState('')
   const [school, setSchool] = useState('')
   const [major, setMajor] = useState('')
   const [year, setYear] = useState('')
   const [gpa, setGpa] = useState('')
   const [skills, setSkills] = useState<string[]>([])
   const [interests, setInterests] = useState<string[]>([])
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const toggle = (list: string[], setList: (v: string[]) => void, item: string) => {
     setList(list.includes(item) ? list.filter((x) => x !== item) : [...list, item])
   }
 
   const canNext =
-    step === 0 ? school && major && year :
+    step === 0 ? name.trim() && school && major && year :
     step === 1 ? skills.length >= 2 :
     interests.length >= 1
+
+  const handleFinish = async () => {
+    setError(null)
+    setSaving(true)
+    try {
+      const res = await fetch('/api/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          preferencesJson: { school, major, year, gpa, skills, interests },
+        }),
+      })
+      const { error: apiError } = await res.json()
+      if (apiError) {
+        setError(apiError)
+        return
+      }
+      router.push('/deck')
+    } catch {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-9 font-mono">
@@ -51,6 +79,7 @@ export default function SetupPage() {
 
         {step === 0 && (
           <>
+            <Input label="Full Name" placeholder="e.g. Jane Doe" value={name} onChange={(e) => setName(e.target.value)} />
             <Input label="University" placeholder="e.g. UC Berkeley" value={school} onChange={(e) => setSchool(e.target.value)} />
             <Input label="Major" placeholder="e.g. Computer Science" value={major} onChange={(e) => setMajor(e.target.value)} />
             <div className="flex gap-3">
@@ -92,17 +121,21 @@ export default function SetupPage() {
           </div>
         )}
 
+        {error && (
+          <p className="text-xs text-red-500 mt-4">{error}</p>
+        )}
+
         <div className="flex gap-2.5 mt-9">
           {step > 0 && (
             <Button onClick={() => setStep(step - 1)} className="flex-1">← BACK</Button>
           )}
           <Button
             variant="primary"
-            disabled={!canNext}
-            onClick={() => step < 2 ? setStep(step + 1) : router.push('/deck')}
+            disabled={!canNext || saving}
+            onClick={() => step < 2 ? setStep(step + 1) : handleFinish()}
             className="flex-[2]"
           >
-            {step < 2 ? 'CONTINUE →' : 'START SWIPING →'}
+            {step < 2 ? 'CONTINUE →' : saving ? 'SAVING...' : 'START SWIPING →'}
           </Button>
         </div>
 

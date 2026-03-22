@@ -26,9 +26,20 @@ export async function GET(
       return NextResponse.json({ data: null, error: formatZodError(parseResult.error) }, { status: 400 })
     }
 
-    const { page, limit, eligibility, company, search, sort, order } = parseResult.data
+    const { page, limit, eligibility, company, search, sort, order, excludeSwiped } = parseResult.data
 
     const where: Record<string, unknown> = {}
+
+    if (excludeSwiped) {
+      const swipedActions = await prisma.swipeAction.findMany({
+        where: { userId: auth.user.id },
+        select: { jobId: true },
+      })
+      const swipedJobIds = swipedActions.map(s => s.jobId)
+      if (swipedJobIds.length > 0) {
+        where.id = { notIn: swipedJobIds }
+      }
+    }
 
     if (eligibility) {
       where.eligibilityStatus = eligibility

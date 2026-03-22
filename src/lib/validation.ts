@@ -35,6 +35,8 @@ export const jobsQuerySchema = z.object({
   search: z.string().min(1).optional(),
   sort: z.enum(['created_at', 'company', 'title']).default('created_at'),
   order: z.enum(['asc', 'desc']).default('desc'),
+  // Exclude jobs the current user has already swiped on (default: true)
+  excludeSwiped: z.string().optional().transform(v => v !== 'false'),
 })
 
 export type SignupInput = z.infer<typeof signupSchema>

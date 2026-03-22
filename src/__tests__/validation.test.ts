@@ -53,18 +53,12 @@ describe('safeErrorMessage', () => {
   })
 
   it('formats ZodError into readable messages', () => {
-    const error = new z.ZodError([
-      {
-        code: 'too_small',
-        minimum: 8,
-        type: 'string',
-        inclusive: true,
-        exact: false,
-        message: 'Password must be at least 8 characters',
-        path: ['password'],
-      },
-    ])
-    expect(safeErrorMessage(error)).toBe('Password must be at least 8 characters')
+    // Trigger a real ZodError via schema validation
+    const result = signupSchema.safeParse({ email: 'test@test.com', password: 'short' })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(safeErrorMessage(result.error)).toBe('Password must be at least 8 characters')
+    }
   })
 })
 
