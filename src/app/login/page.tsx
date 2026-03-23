@@ -10,7 +10,6 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 export default function LoginPage() {
   const router = useRouter()
   const [tab, setTab] = useState<'login' | 'signup'>('login')
-  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -71,9 +70,6 @@ export default function LoginPage() {
           ))}
         </div>
 
-        {tab === 'signup' && (
-          <Input label="Full Name" placeholder="Jane Doe" value={name} onChange={(e) => setName(e.target.value)} />
-        )}
         <Input label="Email" placeholder="jane@university.edu" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <Input label="Password" placeholder="••••••••" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 

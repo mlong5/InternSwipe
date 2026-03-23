@@ -166,6 +166,8 @@ export default function ProfilePage() {
       const res = await fetch(`/api/resume/${id}`, { method: 'DELETE' })
       if (res.ok) {
         setResumes((prev) => prev.filter((r) => r.id !== id))
+      } else {
+        setUploadError('Failed to delete resume. Please try again.')
       }
     } finally {
       setDeletingId(null)
