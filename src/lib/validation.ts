@@ -45,3 +45,31 @@ export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>
 export type SwipeInput = z.infer<typeof swipeSchema>
 export type ApplyInput = z.infer<typeof applySchema>
 export type JobsQueryInput = z.infer<typeof jobsQuerySchema>
+
+/**
+ * Formats a Zod error into a user-friendly string.
+ * Instead of dumping the raw JSON error, returns a comma-separated
+ * list of human-readable messages like:
+ *   "A valid email address is required, Password must be at least 8 characters"
+ */
+export function formatZodError(error: z.ZodError): string {
+  return error.issues.map((issue) => issue.message).join(', ')
+}
+
+/**
+ * Returns a safe error message for API responses.
+ * Prevents leaking internal details (stack traces, DB errors) to the client.
+ */
+export function safeErrorMessage(err: unknown): string {
+  if (err instanceof z.ZodError) {
+    return formatZodError(err)
+  }
+  if (err instanceof Error) {
+    // Only surface messages that are clearly user-facing.
+    // Prisma and other internal errors get a generic message.
+    if (err.message.startsWith('Invalid') || err.message.startsWith('Unauthorized')) {
+      return err.message
+    }
+  }
+  return 'Something went wrong. Please try again later.'
+}

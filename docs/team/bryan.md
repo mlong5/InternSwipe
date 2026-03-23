@@ -5,19 +5,20 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Bryan                                |
-| Last updated | March 17, 2026                       |
-| Version      | 3.0                                  |
+| Last updated | March 22, 2026                       |
+| Version      | 4.0                                  |
 
-## Contribution status (as of March 17, 2026)
+## Contribution status (as of March 22, 2026)
 
 | Week | Expected deliverables | Actual status |
 |------|----------------------|---------------|
 | Week 1 | DB schema, Prisma migrations, seed script, vertical slice integration | **Done** -- all backend deliverables completed (schema, migrations, seed, all 7 API routes, Supabase Auth) |
 | Week 2 | Job ingestion, `GET /api/jobs`, apply pipeline | **Done** -- apply pipeline done (POST /api/apply with validation, duplicate prevention, submission logging); `GET /api/jobs` implemented with pagination, eligibility/company/search filtering, and sorting |
 | Week 3 | Profile/resume polish, security baseline, midterm demo | **Partial** -- security baseline **done** (auth guards on all protected routes, rate limiting on POST /api/apply at 10 req/min/user, signed URLs for resume access with 15-min expiry). Profile/resume upload polish blocked (requires Talan). Midterm demo rehearsal not done. |
+| Week 4 | E2E verification, README, handoff doc, release notes, tests, error messages | **Done** (solo tasks) -- README rewritten with full setup/architecture/API/security docs; handoff document written; release notes written; error messages improved across all routes with `formatZodError` and `safeErrorMessage`; 33 unit tests passing (rate limiter + validation); vitest configured. Blocked: final demo, v1.0 tag, release checklist sign-off (requires full team). |
 
 **Git commits:** 9 commits (Bryan) + 3 commits (Claude, assisted by Bryan)
-**Blocked items:** Vertical slice (Session D) blocked because UI skeleton was not built by Talan/Brandon. Profile/resume upload polish blocked on Talan.
+**Blocked items:** Vertical slice (Session D) blocked because UI skeleton was not built by Talan/Brandon. Profile/resume upload polish blocked on Talan. Final demo and v1.0 tag require full team.
 
 ## Role summary
 
@@ -51,8 +52,9 @@ Bryan serves as the product owner and technical lead for InternSwipe. He is resp
 - Lead Session C, paired with Matt.
 - Session C: conduct full end-to-end flow verification by walking through the complete user journey from sign-up through the history view. This includes retrying a failed application and verifying that all statuses and timestamps are correct in the database and in the UI.
 - Participate in Sessions B and D.
-- Session D: perform the final demo run-through with the full team, tag v1.0 on the main branch, write release notes, complete the README with setup instructions and architecture overview, and write the handoff document.
+- Session D: perform the final demo run-through with the full team, tag v1.0 on the main branch, write release notes, complete the README with setup instructions and architecture overview, and write the handoff document. — **partial** (README, release notes, and handoff document **done**; v1.0 tag and final demo require full team)
 - Deliverables: the end-to-end flow has been verified with no errors, all application statuses are correct, retry logic works for failed applications, and all timestamps are accurate.
+- Pull tasks completed: improved error messages across all API routes — **done** (`formatZodError` for user-friendly validation errors, `safeErrorMessage` to prevent internal error leakage); wrote 33 unit tests for rate limiter and validation — **done**
 
 ## Daily responsibilities
 
@@ -84,10 +86,10 @@ Before the v1.0 tag is created, Bryan must personally verify that the following 
 - Auth guards are active on every protected route and return a 401 status code for unauthenticated requests. — **done** (centralized `requireAuth()` helper in `src/lib/auth-guard.ts`; applied to profile, jobs, swipe, apply, applications, and resume/signed-url routes)
 - Signed URLs for resume file access expire correctly after 15 minutes, and no resume file is accessible without a valid signed URL. — **done** (`GET /api/resume/signed-url` endpoint generates 15-min signed URLs via Supabase Storage service role client; ownership validated before URL generation)
 - Rate limiting on the `POST /api/apply` endpoint is verified at 10 requests per minute per user, and requests exceeding the limit receive a 429 status code. — **done** (in-memory sliding-window `RateLimiter` in `src/lib/rate-limit.ts`; returns 429 with `Retry-After` header)
-- The README includes setup instructions, environment variable documentation, and an architecture overview that accurately reflects the deployed system.
-- The handoff document explains how to deploy the application, how to add new jobs to the database, and how to extend the system with new features.
+- The README includes setup instructions, environment variable documentation, and an architecture overview that accurately reflects the deployed system. — **done** (README rewritten with full architecture diagram, request lifecycle, API reference with auth/rate-limit columns, env var table, security section, and scripts reference)
+- The handoff document explains how to deploy the application, how to add new jobs to the database, and how to extend the system with new features. — **done** (`docs/HANDOFF.md` covers Vercel deployment, Supabase cloud setup, three methods for adding jobs, and extension patterns for new routes/tables/features)
 - The v1.0 Git tag is created on the main branch after all checks have passed.
-- Release notes are written and committed to the repository, summarizing the features delivered, known limitations, and next steps.
+- Release notes are written and committed to the repository, summarizing the features delivered, known limitations, and next steps. — **done** (`docs/RELEASE-NOTES-v1.0.md` covers all features, known limitations, and recommended next steps)
 
 ## Pairing assignments
 
