@@ -31,14 +31,14 @@ export async function GET(): Promise<NextResponse<ApiResponse<Profile>>> {
 export async function PUT(
   request: NextRequest,
 ): Promise<NextResponse<ApiResponse<Profile>>> {
-  const parseResult = profileUpdateSchema.safeParse(await request.json())
-  if (!parseResult.success) {
-    return NextResponse.json({ data: null, error: parseResult.error.message }, { status: 400 })
-  }
-
   try {
     const auth = await requireAuth()
     if (auth.response) return auth.response
+
+    const parseResult = profileUpdateSchema.safeParse(await request.json())
+    if (!parseResult.success) {
+      return NextResponse.json({ data: null, error: parseResult.error.message }, { status: 400 })
+    }
 
     const { name, phone, links, preferencesJson } = parseResult.data
 

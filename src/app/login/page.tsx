@@ -88,7 +88,34 @@ export default function LoginPage() {
         </div>
 
         {tab === 'login' && (
-          <p className="text-xs text-faint text-center mt-4 underline cursor-pointer">Forgot password?</p>
+          <button
+            type="button"
+            onClick={async () => {
+              if (!email) {
+                setError('Please enter your email address first.')
+                return
+              }
+              setLoading(true)
+              setError(null)
+              try {
+                const supabase = createSupabaseBrowserClient()
+                const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+                  redirectTo: `${window.location.origin}/login`,
+                })
+                if (resetError) {
+                  setError(resetError.message)
+                } else {
+                  setError(null)
+                  alert('Password reset link sent! Check your email.')
+                }
+              } finally {
+                setLoading(false)
+              }
+            }}
+            className="text-xs text-faint text-center mt-4 underline cursor-pointer w-full"
+          >
+            Forgot password?
+          </button>
         )}
 
       </div>
