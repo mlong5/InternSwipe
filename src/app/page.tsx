@@ -11,7 +11,7 @@ const STATS = [
 export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-10 font-mono">
-      <div className="w-full max-w-[380px] text-center">
+      <div className="w-full text-center">
 
         {/* Logo */}
         <div className="w-12 h-12 border-2 border-ink rounded-lg flex items-center justify-center text-base font-bold text-ink mx-auto mb-8" aria-hidden="true">

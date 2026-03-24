@@ -93,7 +93,7 @@ export default function HistoryPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-4 font-mono">
-      <div className="w-full max-w-[400px]">
+      <div className="w-full">
 
         <h2 className="text-lg font-bold text-ink mb-1">History</h2>
         <p className="text-xs text-faint mb-4">

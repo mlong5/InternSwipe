@@ -121,7 +121,7 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-8 font-mono">
-      <div className="w-full max-w-[400px] space-y-4">
+      <div className="w-full space-y-4">
 
         <h2 className="text-lg font-bold text-ink">Settings</h2>
 
