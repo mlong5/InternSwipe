@@ -24,3 +24,14 @@ body {
 input::placeholder {
   color: #999999;
 }
+
+/* Global focus-visible ring — WCAG 2.4.7 */
+:focus-visible {
+  outline: 2px solid #1A1A1A;
+  outline-offset: 2px;
+}
+
+/* Suppress outline for mouse/touch users; keep it for keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}

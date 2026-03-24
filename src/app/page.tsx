@@ -14,8 +14,8 @@ export default function LandingPage() {
       <div className="w-full max-w-[380px] text-center">
 
         {/* Logo */}
-        <div className="w-12 h-12 border-2 border-ink rounded-lg flex items-center justify-center text-xs text-faint mx-auto mb-8">
-          LOGO
+        <div className="w-12 h-12 border-2 border-ink rounded-lg flex items-center justify-center text-base font-bold text-ink mx-auto mb-8" aria-hidden="true">
+          IS
         </div>
 
         <h1 className="text-[32px] font-bold tracking-tight text-ink mb-1">InternSwipe</h1>
@@ -39,7 +39,7 @@ export default function LandingPage() {
           ))}
         </div>
 
-        <Link href="/login">
+        <Link href="/login" aria-label="Get started — create your free account">
           <Button variant="primary">GET STARTED →</Button>
         </Link>
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import Chip from '@/components/ui/Chip'
 
 interface Job {
@@ -131,21 +132,41 @@ export default function HistoryPage() {
           </div>
         ) : (
           <div className="flex flex-col gap-2">
-            {filtered.map(item => (
-              <div key={item.id} className="flex items-center gap-3 px-3.5 py-3 border border-border rounded-md">
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-bold text-ink truncate">{item.job.title}</div>
-                  <div className="text-xs text-muted">{item.job.company}</div>
-                  <div className="text-xs text-faint">📍 {item.job.location ?? 'Remote'}</div>
-                </div>
-                <div className="text-center shrink-0">
-                  <div className="w-7 h-7 rounded-full border border-border-dark flex items-center justify-center text-sm font-bold mx-auto mb-0.5">
-                    {STATUS_ICON[item.status]}
+            {filtered.map(item => {
+              const isLinkable = item.status !== 'SKIPPED'
+              const inner = (
+                <>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-bold text-ink truncate">{item.job.title}</div>
+                    <div className="text-xs text-muted">{item.job.company}</div>
+                    <div className="text-xs text-faint">📍 {item.job.location ?? 'Remote'}</div>
                   </div>
-                  <div className="text-[9px] text-faint font-bold tracking-wide">{STATUS_LABEL[item.status]}</div>
+                  <div className="text-center shrink-0">
+                    <div
+                      className="w-7 h-7 rounded-full border border-border-dark flex items-center justify-center text-sm font-bold mx-auto mb-0.5"
+                      aria-hidden="true"
+                    >
+                      {STATUS_ICON[item.status]}
+                    </div>
+                    <div className="text-[9px] text-faint font-bold tracking-wide">{STATUS_LABEL[item.status]}</div>
+                  </div>
+                </>
+              )
+              return isLinkable ? (
+                <Link
+                  key={item.id}
+                  href={`/history/${item.id}`}
+                  className="flex items-center gap-3 px-3.5 py-3 border border-border rounded-md hover:border-ink transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                  aria-label={`${item.job.title} at ${item.job.company} — ${STATUS_LABEL[item.status]}`}
+                >
+                  {inner}
+                </Link>
+              ) : (
+                <div key={item.id} className="flex items-center gap-3 px-3.5 py-3 border border-border rounded-md">
+                  {inner}
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
 

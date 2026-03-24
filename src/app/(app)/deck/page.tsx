@@ -111,6 +111,37 @@ export default function DeckPage() {
     }, 320)
   }, [card, masterResumeId, addToast])
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      // Escape closes the detail sheet regardless of card state
+      if (e.key === 'Escape') {
+        if (detailOpen) {
+          e.preventDefault()
+          setDetailOpen(false)
+        }
+        return
+      }
+
+      // All other shortcuts require an active, non-animating card
+      if (exitDir || done || !card) return
+      if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') return
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        commitSwipe('left')
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        commitSwipe('right')
+      } else if (e.key === 'ArrowUp' || e.key === 's' || e.key === 'S' || e.key === ' ') {
+        e.preventDefault()
+        commitSwipe('bookmark')
+      }
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [exitDir, done, card, detailOpen, commitSwipe])
+
   const onDragStart = (clientX: number) => {
     if (exitDir) return
     dragStartX.current = clientX
@@ -176,6 +207,9 @@ export default function DeckPage() {
           onClick={() => setDetailOpen(false)}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${card.title} at ${card.company} — job details`}
             className="w-full max-w-[400px] bg-white border-t-2 border-ink rounded-t-lg p-5 pb-8"
             onClick={e => e.stopPropagation()}
           >
@@ -185,10 +219,11 @@ export default function DeckPage() {
                 <p className="text-sm text-muted">{card.company} · {card.location}</p>
               </div>
               <button
+                aria-label="Close job details"
                 onClick={() => setDetailOpen(false)}
-                className="text-faint text-xl leading-none ml-4"
+                className="text-faint text-xl leading-none ml-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink rounded"
               >
-                ×
+                <span aria-hidden="true">×</span>
               </button>
             </div>
             <span className={`text-[10px] font-bold tracking-widest px-2 py-0.5 border rounded-sm inline-block mb-3 ${isEligible ? 'border-green-600 text-green-700' : 'border-red-400 text-red-600'}`}>
@@ -328,8 +363,11 @@ export default function DeckPage() {
           {/* View details toggle */}
           <div className="border-t border-hairline px-4 py-2.5">
             <button
+              type="button"
+              aria-label={`View details for ${card.title} at ${card.company}`}
+              aria-haspopup="dialog"
               onClick={e => { e.stopPropagation(); setDetailOpen(true) }}
-              className="text-xs font-bold text-muted tracking-wide bg-transparent border-none cursor-pointer font-mono"
+              className="text-xs font-bold text-muted tracking-wide bg-transparent border-none cursor-pointer font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink rounded"
             >
               ▸ VIEW DETAILS
             </button>
@@ -337,36 +375,42 @@ export default function DeckPage() {
         </div>
 
         {/* Action buttons */}
-        <div className="flex justify-center items-center gap-5 mt-5">
+        <div className="flex justify-center items-center gap-5 mt-5" role="group" aria-label="Swipe actions">
           <button
+            aria-label="Skip this job"
             onClick={() => commitSwipe('left')}
             disabled={!!exitDir}
-            className="w-14 h-14 rounded-full border-2 border-ink bg-white flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90"
+            className="w-14 h-14 rounded-full border-2 border-ink bg-white flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
-            ✕
+            <span aria-hidden="true">✕</span>
           </button>
           <button
+            aria-label="Save for later"
             onClick={() => commitSwipe('bookmark')}
             disabled={!!exitDir}
-            className="w-11 h-11 rounded-full border-2 border-border-dark bg-white flex items-center justify-center text-base cursor-pointer disabled:opacity-40 transition-transform active:scale-90"
+            className="w-11 h-11 rounded-full border-2 border-border-dark bg-white flex items-center justify-center text-base cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
-            ☆
+            <span aria-hidden="true">☆</span>
           </button>
           <button
+            aria-label={!isEligible ? 'Direct apply only — visit the company portal' : 'Apply to this job'}
             onClick={() => commitSwipe('right')}
             disabled={!!exitDir || !isEligible}
-            title={!isEligible ? 'Direct apply only — visit the company portal' : undefined}
-            className="w-14 h-14 rounded-full border-2 border-ink bg-ink text-white flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90"
+            className="w-14 h-14 rounded-full border-2 border-ink bg-ink text-white flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
-            ✓
+            <span aria-hidden="true">✓</span>
           </button>
         </div>
 
-        <div className="flex justify-center gap-8 mt-2 text-[10px] text-faint font-bold tracking-wide">
+        <div className="flex justify-center gap-8 mt-2 text-[10px] text-faint font-bold tracking-wide" aria-hidden="true">
           <span className="w-14 text-center">PASS</span>
           <span className="w-11 text-center">SAVE</span>
           <span className="w-14 text-center">{isEligible ? 'APPLY' : 'LOCKED'}</span>
         </div>
+
+        <p className="text-center text-[9px] text-faint mt-3 tracking-wide hidden md:block" aria-hidden="true">
+          ← SKIP · → APPLY · ↑ / S SAVE · ESC CLOSE
+        </p>
       </div>
 
       <style>{`

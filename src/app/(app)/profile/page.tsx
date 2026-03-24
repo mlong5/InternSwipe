@@ -302,9 +302,10 @@ export default function ProfilePage() {
                     )}
                   </div>
                   <button
+                    aria-label={`Delete ${r.filename}`}
                     onClick={() => handleDelete(r.id)}
                     disabled={deletingId === r.id}
-                    className="ml-3 text-[10px] text-muted hover:text-red-500 transition-colors uppercase tracking-wide disabled:opacity-40 cursor-pointer"
+                    className="ml-3 text-[10px] text-muted hover:text-red-500 transition-colors uppercase tracking-wide disabled:opacity-40 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink rounded"
                   >
                     {deletingId === r.id ? '...' : 'Delete'}
                   </button>
