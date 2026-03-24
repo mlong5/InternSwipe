@@ -182,12 +182,21 @@ export default function DeckPage() {
   }
 
   if (done) {
+    const noJobsAtAll = jobs.length === 0
     return (
       <div className="min-h-screen flex items-center justify-center px-6 font-mono">
         <div className="text-center max-w-[300px]">
-          <div className="w-14 h-14 rounded-full border-2 border-ink flex items-center justify-center text-xl mx-auto mb-5">✓</div>
-          <h2 className="text-xl font-bold text-ink mb-2">All caught up</h2>
-          <p className="text-sm text-muted leading-relaxed">You&apos;ve reviewed all current matches. Check back for new listings.</p>
+          <div className="w-14 h-14 rounded-full border-2 border-ink flex items-center justify-center text-xl mx-auto mb-5">
+            {noJobsAtAll ? '○' : '✓'}
+          </div>
+          <h2 className="text-xl font-bold text-ink mb-2">
+            {noJobsAtAll ? 'No internships yet' : 'All caught up'}
+          </h2>
+          <p className="text-sm text-muted leading-relaxed">
+            {noJobsAtAll
+              ? 'No internships are available right now. Check back soon!'
+              : 'You\u2019ve reviewed all current matches. Check back for new listings.'}
+          </p>
         </div>
       </div>
     )
@@ -266,7 +275,7 @@ export default function DeckPage() {
         ))}
       </div>
 
-      <div className="w-full max-w-[400px]">
+      <div className="w-full max-w-[400px] mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-3.5">
           <h2 className="text-lg font-bold text-ink">InternSwipe</h2>

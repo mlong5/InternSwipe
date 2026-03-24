@@ -61,7 +61,7 @@ export default function SetupPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-9 font-mono">
-      <div className="w-full max-w-[400px]">
+      <div className="w-full">
 
         {/* Progress bar */}
         <div className="flex gap-1.5 mb-9">

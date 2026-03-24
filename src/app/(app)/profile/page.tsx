@@ -35,6 +35,7 @@ export default function ProfilePage() {
   const [uploadProgress, setUploadProgress] = useState<number | null>(null)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [settingMasterId, setSettingMasterId] = useState<string | null>(null)
 
   const [loading, setLoading] = useState(true)
 
@@ -160,6 +161,18 @@ export default function ProfilePage() {
     xhr.send(fd)
   }
 
+  async function handleSetMaster(id: string) {
+    setSettingMasterId(id)
+    try {
+      const res = await fetch(`/api/resume/${id}`, { method: 'PATCH' })
+      if (res.ok) {
+        setResumes(prev => prev.map(r => ({ ...r, isMaster: r.id === id })))
+      }
+    } finally {
+      setSettingMasterId(null)
+    }
+  }
+
   async function handleDelete(id: string) {
     setDeletingId(id)
     try {
@@ -197,7 +210,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-8 font-mono">
-      <div className="w-full max-w-[400px] space-y-4">
+      <div className="w-full space-y-4">
 
         <h2 className="text-lg font-bold text-ink">Profile</h2>
 
@@ -293,22 +306,46 @@ export default function ProfilePage() {
               {resumes.map((r) => (
                 <li
                   key={r.id}
-                  className="flex items-center justify-between border border-border rounded px-3 py-2.5"
+                  className={`border rounded px-3 py-2.5 transition-colors ${r.isMaster ? 'border-ink' : 'border-border'}`}
                 >
-                  <div className="min-w-0">
-                    <div className="text-xs font-bold text-ink truncate">{r.filename}</div>
-                    {r.fileSize && (
-                      <div className="text-[10px] text-faint">{formatSize(r.fileSize)}</div>
-                    )}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0 flex items-center gap-2">
+                      <div>
+                        <div className="text-xs font-bold text-ink truncate">{r.filename}</div>
+                        {r.fileSize && (
+                          <div className="text-[10px] text-faint">{formatSize(r.fileSize)}</div>
+                        )}
+                      </div>
+                      {r.isMaster && (
+                        <span
+                          aria-label="Primary resume"
+                          className="shrink-0 text-[9px] font-bold tracking-widest border border-ink text-ink px-1.5 py-0.5 rounded-sm"
+                        >
+                          ★ PRIMARY
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      {!r.isMaster && (
+                        <button
+                          aria-label={`Set ${r.filename} as primary resume`}
+                          onClick={() => handleSetMaster(r.id)}
+                          disabled={settingMasterId === r.id}
+                          className="text-[10px] text-muted hover:text-ink transition-colors uppercase tracking-wide disabled:opacity-40 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink rounded"
+                        >
+                          {settingMasterId === r.id ? '...' : 'Set primary'}
+                        </button>
+                      )}
+                      <button
+                        aria-label={`Delete ${r.filename}`}
+                        onClick={() => handleDelete(r.id)}
+                        disabled={deletingId === r.id}
+                        className="text-[10px] text-muted hover:text-red-500 transition-colors uppercase tracking-wide disabled:opacity-40 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink rounded"
+                      >
+                        {deletingId === r.id ? '...' : 'Delete'}
+                      </button>
+                    </div>
                   </div>
-                  <button
-                    aria-label={`Delete ${r.filename}`}
-                    onClick={() => handleDelete(r.id)}
-                    disabled={deletingId === r.id}
-                    className="ml-3 text-[10px] text-muted hover:text-red-500 transition-colors uppercase tracking-wide disabled:opacity-40 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink rounded"
-                  >
-                    {deletingId === r.id ? '...' : 'Delete'}
-                  </button>
                 </li>
               ))}
             </ul>

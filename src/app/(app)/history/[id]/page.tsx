@@ -168,7 +168,7 @@ export default function ApplicationDetailPage() {
         </div>
       )}
 
-      <div className="w-full max-w-[400px] space-y-4">
+      <div className="w-full space-y-4">
 
         {/* Back */}
         <button
