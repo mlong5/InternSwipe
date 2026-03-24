@@ -7,8 +7,7 @@ interface CookieToSet {
   options: Record<string, unknown>
 }
 
-// TODO: Replace with generated Supabase Database types
-// once `supabase gen types typescript` has been run against the project.
+// Untyped client — run `supabase gen types typescript` to generate Database types when schema stabilizes.
 export async function createSupabaseServerClient() {
   const cookieStore = await cookies()
 

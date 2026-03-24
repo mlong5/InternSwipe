@@ -1,7 +1,6 @@
 import { createBrowserClient } from '@supabase/ssr'
 
-// TODO: Replace with generated Supabase Database types
-// once `supabase gen types typescript` has been run against the project.
+// Untyped client — run `supabase gen types typescript` to generate Database types when schema stabilizes.
 export function createSupabaseBrowserClient() {
   return createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
