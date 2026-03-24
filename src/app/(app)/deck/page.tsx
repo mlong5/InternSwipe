@@ -30,6 +30,8 @@ export default function DeckPage() {
 
   const dragStartX = useRef(0)
   const toastCounter = useRef(0)
+  const detailTriggerRef = useRef<HTMLButtonElement>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     async function load() {
@@ -142,6 +144,33 @@ export default function DeckPage() {
     return () => window.removeEventListener('keydown', handleKey)
   }, [exitDir, done, card, detailOpen, commitSwipe])
 
+  // Focus trap for bottom sheet dialog
+  useEffect(() => {
+    if (!detailOpen || !dialogRef.current) return
+    const dialog = dialogRef.current
+    const focusableSelector = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+    const focusables = dialog.querySelectorAll<HTMLElement>(focusableSelector)
+    if (focusables.length > 0) focusables[0].focus()
+
+    function trapFocus(e: KeyboardEvent) {
+      if (e.key !== 'Tab') return
+      const els = dialog.querySelectorAll<HTMLElement>(focusableSelector)
+      if (els.length === 0) return
+      const first = els[0]
+      const last = els[els.length - 1]
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus() }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus() }
+      }
+    }
+    dialog.addEventListener('keydown', trapFocus)
+    return () => {
+      dialog.removeEventListener('keydown', trapFocus)
+      detailTriggerRef.current?.focus()
+    }
+  }, [detailOpen])
+
   const onDragStart = (clientX: number) => {
     if (exitDir) return
     dragStartX.current = clientX
@@ -216,6 +245,7 @@ export default function DeckPage() {
           onClick={() => setDetailOpen(false)}
         >
           <div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label={`${card.title} at ${card.company} — job details`}
@@ -255,7 +285,7 @@ export default function DeckPage() {
       )}
 
       {/* Toasts */}
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 items-center pointer-events-none">
+      <div role="status" aria-live="polite" className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 items-center pointer-events-none">
         {toasts.map(t => (
           <div
             key={t.id}
@@ -372,6 +402,7 @@ export default function DeckPage() {
           {/* View details toggle */}
           <div className="border-t border-hairline px-4 py-2.5">
             <button
+              ref={detailTriggerRef}
               type="button"
               aria-label={`View details for ${card.title} at ${card.company}`}
               aria-haspopup="dialog"
