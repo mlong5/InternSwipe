@@ -41,12 +41,9 @@ export default function LandingPage() {
 
         <p className="text-xs text-faint mt-4">Free for university students</p>
 
-        {/* Value props */}
-        <div className="flex justify-around mt-9 pt-4 border-t border-hairline">
-          {VALUES.map((v) => (
-            <span key={v} className="text-[10px] text-muted uppercase tracking-wide text-center">{v}</span>
-          ))}
-        </div>
+        <p className="text-xs text-faint mt-9 pt-4 border-t border-hairline">
+          Built for students, by students.
+        </p>
 
       </div>
     </div>

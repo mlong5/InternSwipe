@@ -31,6 +31,14 @@ export default function DeckPage() {
   const dragStartX = useRef(0)
   const toastCounter = useRef(0)
   const detailTriggerRef = useRef<HTMLButtonElement>(null)
+  const detailCloseRef = useRef<HTMLButtonElement>(null)
+
+  // Move focus into dialog on open; return it to the trigger on close
+  useEffect(() => {
+    if (detailOpen) {
+      requestAnimationFrame(() => detailCloseRef.current?.focus())
+    }
+  }, [detailOpen])
   const dialogRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -120,7 +128,7 @@ export default function DeckPage() {
       if (e.key === 'Escape') {
         if (detailOpen) {
           e.preventDefault()
-          setDetailOpen(false)
+          handleCloseDetail()
         }
         return
       }
@@ -144,32 +152,25 @@ export default function DeckPage() {
     return () => window.removeEventListener('keydown', handleKey)
   }, [exitDir, done, card, detailOpen, commitSwipe])
 
-  // Focus trap for bottom sheet dialog
-  useEffect(() => {
-    if (!detailOpen || !dialogRef.current) return
-    const dialog = dialogRef.current
-    const focusableSelector = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
-    const focusables = dialog.querySelectorAll<HTMLElement>(focusableSelector)
-    if (focusables.length > 0) focusables[0].focus()
+  function handleCloseDetail() {
+    setDetailOpen(false)
+    requestAnimationFrame(() => detailTriggerRef.current?.focus())
+  }
 
-    function trapFocus(e: KeyboardEvent) {
-      if (e.key !== 'Tab') return
-      const els = dialog.querySelectorAll<HTMLElement>(focusableSelector)
-      if (els.length === 0) return
-      const first = els[0]
-      const last = els[els.length - 1]
-      if (e.shiftKey) {
-        if (document.activeElement === first) { e.preventDefault(); last.focus() }
-      } else {
-        if (document.activeElement === last) { e.preventDefault(); first.focus() }
-      }
+  function handleDialogKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (e.key !== 'Tab') return
+    const focusable = Array.from(
+      e.currentTarget.querySelectorAll<HTMLElement>('button, a[href]')
+    ).filter(el => !el.hasAttribute('disabled'))
+    if (focusable.length === 0) return
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus() }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus() }
     }
-    dialog.addEventListener('keydown', trapFocus)
-    return () => {
-      dialog.removeEventListener('keydown', trapFocus)
-      detailTriggerRef.current?.focus()
-    }
-  }, [detailOpen])
+  }
 
   const onDragStart = (clientX: number) => {
     if (exitDir) return
@@ -242,7 +243,7 @@ export default function DeckPage() {
       {detailOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/40 flex items-end justify-center"
-          onClick={() => setDetailOpen(false)}
+          onClick={handleCloseDetail}
         >
           <div
             ref={dialogRef}
@@ -251,6 +252,7 @@ export default function DeckPage() {
             aria-label={`${card.title} at ${card.company} — job details`}
             className="w-full max-w-[400px] bg-white border-t-2 border-ink rounded-t-lg p-5 pb-8"
             onClick={e => e.stopPropagation()}
+            onKeyDown={handleDialogKeyDown}
           >
             <div className="flex justify-between items-start mb-3">
               <div>
@@ -258,8 +260,9 @@ export default function DeckPage() {
                 <p className="text-sm text-muted">{card.company} · {card.location}</p>
               </div>
               <button
+                ref={detailCloseRef}
                 aria-label="Close job details"
-                onClick={() => setDetailOpen(false)}
+                onClick={handleCloseDetail}
                 className="text-faint text-xl leading-none ml-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink rounded"
               >
                 <span aria-hidden="true">×</span>
@@ -285,7 +288,12 @@ export default function DeckPage() {
       )}
 
       {/* Toasts */}
-      <div role="status" aria-live="polite" className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 items-center pointer-events-none">
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="false"
+        className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 items-center pointer-events-none"
+      >
         {toasts.map(t => (
           <div
             key={t.id}
@@ -314,6 +322,8 @@ export default function DeckPage() {
 
         {/* Card */}
         <div
+          aria-label={`Job card: ${card.title} at ${card.company}`}
+          aria-roledescription="swipeable job card"
           className="relative border-2 border-ink rounded-lg overflow-hidden bg-white cursor-grab active:cursor-grabbing"
           style={{
             transform: `translateX(${tx}px) translateY(${ty}px) rotate(${rotate}deg)`,
@@ -406,6 +416,7 @@ export default function DeckPage() {
               type="button"
               aria-label={`View details for ${card.title} at ${card.company}`}
               aria-haspopup="dialog"
+              aria-expanded={detailOpen}
               onClick={e => { e.stopPropagation(); setDetailOpen(true) }}
               className="text-xs font-bold text-muted tracking-wide bg-transparent border-none cursor-pointer font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink rounded"
             >
