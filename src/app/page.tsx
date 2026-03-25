@@ -2,11 +2,6 @@ import Link from 'next/link'
 import Button from '@/components/ui/Button'
 
 const FEATURES = ['Smart Feed', 'Match Scores', 'App Coach', 'Timeline']
-const STATS = [
-  ['12.4k', 'Students'],
-  ['850+', 'Employers'],
-  ['94%', 'Match Rate'],
-]
 
 export default function LandingPage() {
   return (
@@ -45,15 +40,9 @@ export default function LandingPage() {
 
         <p className="text-xs text-faint mt-4">Free for university students</p>
 
-        {/* Stats */}
-        <div className="flex justify-around mt-9 pt-4 border-t border-hairline">
-          {STATS.map(([n, l]) => (
-            <div key={l} className="text-center">
-              <div className="text-lg font-bold text-ink">{n}</div>
-              <div className="text-[10px] text-faint uppercase tracking-wide">{l}</div>
-            </div>
-          ))}
-        </div>
+        <p className="text-xs text-faint mt-9 pt-4 border-t border-hairline">
+          Built for students, by students.
+        </p>
 
       </div>
     </div>
