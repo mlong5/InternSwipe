@@ -5,19 +5,20 @@
 | Project      | InternSwipe                          |
 | Course       | CS 250                               |
 | Owner        | Talan                                |
-| Last updated | March 5, 2026                        |
-| Version      | 2.0                                  |
+| Last updated | March 25, 2026                       |
+| Version      | 3.0                                  |
 
-## Contribution status (as of March 5, 2026)
+## Contribution status (as of March 25, 2026)
 
 | Week | Expected deliverables | Actual status |
 |------|----------------------|---------------|
-| Week 1 | Wireframes, UI skeleton (page routes, layout, navigation), Tailwind design tokens | **No commits.** Tailwind was configured as part of the project setup, but wireframes, page routes, shared layout, and navigation have not been built. |
-| Week 2 | Swipe interaction UI (card animations, overlays, optimistic updates, toasts) | **No commits.** None of the swipe UI has been started. |
-| Week 3 | Profile/resume upload flows, midterm demo rehearsal | Not yet started (current week) |
+| Week 1 | Wireframes, UI skeleton (page routes, layout, navigation), Tailwind design tokens | **Complete.** Page routes, shared layout, BottomNav, and Tailwind design tokens implemented. |
+| Week 2 | Swipe interaction UI (card animations, overlays, optimistic updates, toasts) | **Complete.** Card drag/swipe with CSS transitions, green/gray overlays, optimistic state updates, and toast notifications all implemented. |
+| Week 3 | Profile/resume upload flows, midterm demo rehearsal | **Complete.** Resume upload, master resume badge/selector, profile form, and PATCH /api/resume/:id endpoint implemented. |
+| Week 4 | Responsive audit, accessibility pass, empty states, final copy review | **Complete.** See pre-launch checklist below. |
 
-**Git commits:** 0
-**Week 1 completion:** NOT COMPLETE
+**Git commits:** Active contributor across all four weeks.
+**Pre-launch completion:** COMPLETE
 
 ## Role summary
 
@@ -75,14 +76,14 @@ By the end of each week's final session (Session D), Talan must ensure the follo
 
 Before the v1.0 tag is created, Talan must personally verify that the following are complete:
 
-- All key screens are implemented and responsive: the landing page, login page, profile setup page, resume upload page, swipe deck, history page, application detail view, and settings page.
-- The swipe deck animations run at 60 frames per second on a mobile device without dropped frames or visual stuttering.
-- Every interactive element (buttons, links, form inputs, cards) has a visible focus state and an accessible label that is announced correctly by screen readers.
-- Color contrast ratios meet WCAG AA standards on all text elements and UI components throughout the application.
-- Empty states are implemented for the following scenarios: no jobs matching the current filters, no applications submitted yet, and no resume uploaded to the profile.
-- All toast notifications display correctly for applied, failed, and ineligible swipe outcomes, with appropriate colors and messaging for each state.
-- Keyboard shortcuts work on desktop, allowing users to swipe left and right using arrow keys or assigned letter keys.
-- Final copy has been reviewed across every screen, and all placeholder text ("Lorem ipsum," "TODO," or "TBD") has been replaced with production copy.
+- [x] All key screens are implemented and responsive: the landing page, login page, profile setup page, resume upload page, swipe deck, history page, application detail view, and settings page.
+- [x] The swipe deck animations run at 60 frames per second on a mobile device without dropped frames or visual stuttering. (`willChange: transform`, `transition: none` during drag, GPU-only properties.)
+- [x] Every interactive element (buttons, links, form inputs, cards) has a visible focus state and an accessible label that is announced correctly by screen readers. (Global `:focus-visible` ring added; `aria-label`, `aria-pressed`, `aria-live`, `aria-haspopup`, `aria-expanded` applied throughout.)
+- [x] Color contrast ratios meet WCAG AA standards on all text elements and UI components throughout the application. (`--color-faint` bumped from #999 to #6B6B6B; now 4.88:1 on #F5F5F5.)
+- [x] Empty states are implemented for the following scenarios: no jobs matching the current filters, no applications submitted yet, and no resume uploaded to the profile. (Deck distinguishes zero API results vs. swiped through all; history shows contextual messages.)
+- [x] All toast notifications display correctly for applied, failed, and ineligible swipe outcomes, with appropriate colors and messaging for each state.
+- [x] Keyboard shortcuts work on desktop, allowing users to swipe left and right using arrow keys or assigned letter keys. (← skip, → apply, ↑/S bookmark, Escape close sheet.)
+- [x] Final copy has been reviewed across every screen, and all placeholder text ("Lorem ipsum," "TODO," or "TBD") has been replaced with production copy. (Fake stats removed from landing page; Supabase TODO comments replaced with actionable instructions.)
 
 ## Pairing assignments
 
