@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Button from '@/components/ui/Button'
 
 const FEATURES = ['Smart Feed', 'Match Scores', 'App Coach', 'Timeline']
+const VALUES = ['Built for students', 'AI-powered matching', 'One-swipe applications']
 
 export default function LandingPage() {
   return (

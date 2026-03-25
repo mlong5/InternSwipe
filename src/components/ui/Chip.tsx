@@ -1,3 +1,5 @@
+import type { KeyboardEvent } from 'react'
+
 interface ChipProps {
   label: string
   active?: boolean
@@ -5,6 +7,13 @@ interface ChipProps {
 }
 
 export default function Chip({ label, active = false, onClick }: ChipProps) {
+  const handleKeyDown = (e: KeyboardEvent<HTMLSpanElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onClick?.()
+    }
+  }
+
   return (
     <button
       type="button"

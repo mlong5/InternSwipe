@@ -39,6 +39,7 @@ export default function DeckPage() {
       requestAnimationFrame(() => detailCloseRef.current?.focus())
     }
   }, [detailOpen])
+  const dialogRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     async function load() {
@@ -245,6 +246,7 @@ export default function DeckPage() {
           onClick={handleCloseDetail}
         >
           <div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label={`${card.title} at ${card.company} — job details`}
