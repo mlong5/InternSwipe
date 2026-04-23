@@ -90,14 +90,15 @@ export default function DeckPage() {
 
     if (dir === 'right') addToast('Applied!', 'apply')
     else if (dir === 'left') addToast('Skipped', 'skip')
-    else addToast('Saved for later', 'save')
+    else addToast('Saved for later', 'save') //Where save for later actually occurs
 
     // Record swipe in DB (fire-and-forget)
-    if (dir === 'left' || dir === 'right') {
+    if (dir === 'left' || dir === 'right' || dir === 'bookmark') {
+      const action = dir === 'right' ? 'RIGHT' : dir === 'left' ? 'LEFT' : 'BOOKMARK'
       fetch('/api/swipe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jobId: card.id, action: dir === 'right' ? 'RIGHT' : 'LEFT' }),
+        body: JSON.stringify({ jobId: card.id, action }),
       }).catch(() => {})
     }
 

@@ -19,6 +19,7 @@ enum EligibilityStatus {
 enum SwipeDirection {
   LEFT
   RIGHT
+  BOOKMARK
 }
 
 enum ApplicationStatus {

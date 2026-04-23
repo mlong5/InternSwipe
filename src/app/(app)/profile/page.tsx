@@ -128,7 +128,7 @@ export default function ProfilePage() {
       return
     }
 
-    setUploadError(null)
+    setUploadError(null) //this is odd to me
     setUploadProgress(0)
 
     const fd = new FormData()
