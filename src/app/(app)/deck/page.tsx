@@ -164,8 +164,8 @@ export default function DeckPage() {
       e.currentTarget.querySelectorAll<HTMLElement>('button, a[href]')
     ).filter(el => !el.hasAttribute('disabled'))
     if (focusable.length === 0) return
-    const first = focusable[0]
-    const last = focusable[focusable.length - 1]
+    const first = focusable[0]!
+    const last = focusable[focusable.length - 1]!
     if (e.shiftKey) {
       if (document.activeElement === first) { e.preventDefault(); last.focus() }
     } else {
