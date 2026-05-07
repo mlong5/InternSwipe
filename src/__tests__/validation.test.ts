@@ -130,6 +130,14 @@ describe('swipeSchema', () => {
     expect(result.success).toBe(true)
   })
 
+  it('accepts BOOKMARK', () => {
+    const result = swipeSchema.safeParse({
+      jobId: '550e8400-e29b-41d4-a716-446655440000',
+      action: 'BOOKMARK',
+    })
+    expect(result.success).toBe(true)
+  })
+
   it('rejects invalid action', () => {
     const result = swipeSchema.safeParse({
       jobId: '550e8400-e29b-41d4-a716-446655440000',

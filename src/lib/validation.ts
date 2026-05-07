@@ -19,7 +19,7 @@ export const profileUpdateSchema = z.object({
 
 export const swipeSchema = z.object({
   jobId: z.string().uuid('A valid job ID is required'),
-  action: z.enum(['LEFT', 'RIGHT']),
+  action: z.enum(['LEFT', 'RIGHT', 'BOOKMARK']),
 })
 
 export const applySchema = z.object({

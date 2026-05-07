@@ -90,7 +90,7 @@ export default function DeckPage() {
 
     if (dir === 'right') addToast('Applied!', 'apply')
     else if (dir === 'left') addToast('Skipped', 'skip')
-    else addToast('Saved for later', 'save')
+    else addToast('Saved for later', 'save') //Where save for later actually occurs
 
     // Record swipe in DB — bookmark maps to LEFT so the card doesn't reappear next session
     fetch('/api/swipe', {
