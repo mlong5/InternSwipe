@@ -127,7 +127,6 @@ describe("upsertJobs", () => {
         summary: "Build services",
         url: "https://example.com/job/4",
         eligibilityStatus: "ELIGIBLE",
-        updatedAt: expect.any(Date),
       },
       create: {
         title: "Platform Intern",

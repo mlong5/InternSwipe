@@ -102,7 +102,6 @@ export async function upsertJobs(
           summary: entry.job_description || "",
           url: entry.url,
           eligibilityStatus,
-          updatedAt: new Date(),
         },
         create: {
           title: entry.job_title,
