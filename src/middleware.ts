@@ -25,7 +25,6 @@ export async function middleware(request: NextRequest) {
     },
   )
 
-  // Refresh the session so it stays alive
   await supabase.auth.getUser()
 
   return supabaseResponse

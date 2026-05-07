@@ -12,8 +12,8 @@ export async function DELETE(): Promise<NextResponse<ApiResponse<{ message: stri
 
     const userId = auth.user.id
 
-    // Delete all user data from the database first (cascade handles related records)
-    await prisma.profile.deleteMany({ where: { userId } })
+    // Deleting the User cascades to Profile, Resume, SwipeAction, Application, and SubmissionLog
+    await prisma.user.delete({ where: { id: userId } })
 
     // Delete the Supabase auth user (service role required)
     const supabaseAdmin = createClient(

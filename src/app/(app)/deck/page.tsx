@@ -92,15 +92,12 @@ export default function DeckPage() {
     else if (dir === 'left') addToast('Skipped', 'skip')
     else addToast('Saved for later', 'save') //Where save for later actually occurs
 
-    // Record swipe in DB (fire-and-forget)
-    if (dir === 'left' || dir === 'right' || dir === 'bookmark') {
-      const action = dir === 'right' ? 'RIGHT' : dir === 'left' ? 'LEFT' : 'BOOKMARK'
-      fetch('/api/swipe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jobId: card.id, action }),
-      }).catch(() => {})
-    }
+    // Record swipe in DB — bookmark maps to LEFT so the card doesn't reappear next session
+    fetch('/api/swipe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jobId: card.id, action: dir === 'right' ? 'RIGHT' : 'LEFT' }),
+    }).catch(() => {})
 
     // Submit application on right-swipe
     if (dir === 'right') {
@@ -333,6 +330,7 @@ export default function DeckPage() {
               ? 'none'
               : 'transform 0.32s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.32s ease',
             willChange: 'transform, opacity',
+            touchAction: 'none',
           }}
           onMouseDown={e => onDragStart(e.clientX)}
           onMouseMove={e => onDragMove(e.clientX)}
