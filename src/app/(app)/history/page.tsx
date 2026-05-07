@@ -115,11 +115,12 @@ export default function HistoryPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ jobId: item.job.id, resumeId: masterResumeId }),
       })
-      const { error } = await res.json()
+      const { data, error } = await res.json()
       if (!res.ok || error) {
         showToast(error ?? 'Could not apply. Please try again.', false)
       } else {
-        setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: 'APPLIED' } : i))
+        const appId: string = data?.application?.id ?? item.id
+        setItems(prev => prev.map(i => i.id === item.id ? { ...i, id: appId, status: 'APPLIED' } : i))
         showToast(`Applied to ${item.job.title}!`, true)
       }
     } catch {
