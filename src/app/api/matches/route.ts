@@ -21,24 +21,37 @@ interface MatchItem {
 }
 
 function computeScore(
+  skills: string[],
+  jobTitle: string,
+  jobSummary: string | null,
   eligibilityStatus: string,
   applicationStatus: string | null,
-  jobId: string,
 ): number {
-  // Deterministic jitter (0–10) so the same job always shows the same score
-  const jitter = jobId.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) % 11
-  let score = 55
-  if (eligibilityStatus === 'ELIGIBLE') score += 20
-  if (applicationStatus === 'APPLIED') score += 15
-  else if (applicationStatus === 'PENDING') score += 8
-  else if (applicationStatus === 'FAILED') score -= 10
-  return Math.min(100, Math.max(0, score + jitter))
+  let score = 30
+
+  if (skills.length > 0) {
+    const jobText = `${jobTitle} ${jobSummary ?? ''}`.toLowerCase()
+    const matched = skills.filter(s => jobText.includes(s.toLowerCase().trim()))
+    score += Math.round((matched.length / skills.length) * 55)
+  } else {
+    score += 25
+  }
+
+  if (eligibilityStatus === 'ELIGIBLE') score += 15
+  if (applicationStatus === 'APPLIED') score = Math.min(100, score + 5)
+  else if (applicationStatus === 'FAILED') score = Math.max(0, score - 10)
+
+  return Math.min(100, Math.max(0, score))
 }
 
 export async function GET(): Promise<NextResponse<ApiResponse<MatchItem[]>>> {
   try {
     const auth = await requireAuth()
     if (auth.response) return auth.response
+
+    const profile = await prisma.profile.findUnique({ where: { userId: auth.user.id } })
+    const prefs = profile?.preferencesJson as { skills?: string[] } | null
+    const skills = prefs?.skills ?? []
 
     const swipes = await prisma.swipeAction.findMany({
       where: { userId: auth.user.id, action: 'RIGHT' },
@@ -81,7 +94,7 @@ export async function GET(): Promise<NextResponse<ApiResponse<MatchItem[]>>> {
         return {
           id: s.id,
           createdAt: s.createdAt.toISOString(),
-          score: computeScore(s.job.eligibilityStatus, appStatus, s.job.id),
+          score: computeScore(skills, s.job.title, s.job.summary, s.job.eligibilityStatus, appStatus),
           job: {
             id: s.job.id,
             company: s.job.company,

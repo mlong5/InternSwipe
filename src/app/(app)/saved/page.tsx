@@ -18,6 +18,13 @@ interface BookmarkItem {
   job: Job
 }
 
+function formatTimestamp(dateStr: string) {
+  const d = new Date(dateStr)
+  const hh = String(d.getHours()).padStart(2, '0')
+  const mm = String(d.getMinutes()).padStart(2, '0')
+  return `${hh}:${mm} ${d.toLocaleString('en-US', { month: 'long' })} ${d.getDate()}, ${d.getFullYear()}`
+}
+
 export default function SavedPage() {
   const [items, setItems] = useState<BookmarkItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -80,7 +87,7 @@ export default function SavedPage() {
                     <p className="text-xs text-faint">📍 {item.job.location ?? 'Remote'}</p>
                   </div>
                   <span className="text-[10px] text-faint shrink-0">
-                    {new Date(item.createdAt).toLocaleDateString()}
+                    {formatTimestamp(item.createdAt)}
                   </span>
                 </div>
 

@@ -80,6 +80,9 @@ export default function MatchesPage() {
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-4 font-mono">
       <div className="w-full">
         <h2 className="text-lg font-bold text-ink mb-1">Matches</h2>
+        <p className="text-[10px] text-faint mb-2 leading-relaxed">
+          Score is based on how many of your skills (set in Profile) appear in the job description, plus a bonus for quick-apply eligibility. Add more skills to improve accuracy.
+        </p>
         <p className="text-xs text-faint mb-4">
           {loading ? '...' : `${items.length} match${items.length === 1 ? '' : 'es'}`}
         </p>

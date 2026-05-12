@@ -40,6 +40,13 @@ const FILTERS = [
   { id: 'SKIPPED', label: 'Skipped' },
 ]
 
+function formatTimestamp(dateStr: string) {
+  const d = new Date(dateStr)
+  const hh = String(d.getHours()).padStart(2, '0')
+  const mm = String(d.getMinutes()).padStart(2, '0')
+  return `${hh}:${mm} ${d.toLocaleString('en-US', { month: 'long' })} ${d.getDate()}, ${d.getFullYear()}`
+}
+
 export default function HistoryPage() {
   const [items, setItems]               = useState<HistoryItem[]>([])
   const [loading, setLoading]           = useState(true)
@@ -229,6 +236,7 @@ export default function HistoryPage() {
                   <div className="text-sm font-bold text-ink truncate">{item.job.title}</div>
                   <div className="text-xs text-muted">{item.job.company}</div>
                   <div className="text-xs text-faint">📍 {item.job.location ?? 'Remote'}</div>
+                  <div className="text-[10px] text-faint mt-0.5">{formatTimestamp(item.date)}</div>
                 </div>
               )
 
