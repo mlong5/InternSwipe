@@ -65,7 +65,7 @@ Open the `.env.local` file in your editor and fill in the Supabase credentials. 
 | `DATABASE_URL` | The PostgreSQL connection string for the pooled connection. | Supabase dashboard, under Settings, then Database, then Connection string (pooled). |
 | `DIRECT_URL` | The PostgreSQL connection string for the direct connection, used by Prisma for migrations. | Supabase dashboard, under Settings, then Database, then Connection string (direct). |
 
-If you do not have access to the Supabase project, ask Bryan to add you as a team member in the Supabase dashboard.
+If you do not have access to the Supabase project, ask the current project owner to add you as a team member in the Supabase dashboard.
 
 ## Step 4: Run Prisma migrations — **done**
 

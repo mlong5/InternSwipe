@@ -107,7 +107,7 @@ The application uses 7 tables:
 - Node.js 18+
 - npm 9+
 - Git
-- Access to the shared Supabase Cloud project (ask Bryan)
+- Access to the shared Supabase Cloud project (ask the current project owner)
 
 ### Setup
 
