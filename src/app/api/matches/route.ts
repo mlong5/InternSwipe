@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { safeErrorMessage } from '@/lib/validation'
 import type { ApiResponse } from '@/types'
 
-export interface MatchItem {
+interface MatchItem {
   id: string
   createdAt: string
   score: number
