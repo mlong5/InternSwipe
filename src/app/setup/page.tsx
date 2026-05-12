@@ -6,10 +6,10 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Chip from '@/components/ui/Chip'
 
-const SKILLS = ['Python', 'JavaScript', 'React', 'SQL', 'Java', 'C++', 'Figma', 'TypeScript', 'Machine Learning', 'Data Analysis', 'Node.js', 'AWS', 'Docker', 'Git', 'Product Mgmt', 'Statistics']
-const INTERESTS = ['Software Eng', 'Data Science', 'Product Design', 'Product Mgmt', 'ML / AI', 'Cloud Infra', 'Cybersecurity', 'Fintech', 'Healthcare', 'Climate Tech', 'EdTech', 'Robotics']
+const SKILLS = ['​ Python ​', '​ JavaScript ​', '​ React ​', '​ SQL ​', '​ Java ​', '​ C++ ​', '​ Figma ​', '​ TypeScript ​', '​ Machine Learning ​', '​ Data Analysis ​', '​ Node.js ​', '​ AWS ​', '​ Docker ​', '​ Git ​', '​ Product Mgmt ​', '​ Statistics ​']
+const INTERESTS = ['​ Software Eng ​', '​ Data Science ​', '​ Product Design ​', '​ Product Mgmt ​', '​ ML / AI ​', '​ Cloud Infra ​', '​ Cybersecurity ​', '​ Fintech ​', '​ Healthcare ​', '​ Climate Tech ​', '​ EdTech ​', '​ Robotics ​']
 
-const TITLES = ['Academics', 'Skills', 'Interests']
+const TITLES = ['​ Academics', '​ Skills', '​ Interests']
 const SUBS = ['Tell us about your studies', 'Select at least 2 skills', 'What fields interest you?']
 
 export default function SetupPage() {
@@ -31,8 +31,8 @@ export default function SetupPage() {
 
   const canNext =
     step === 0 ? name.trim() && school && major && year :
-    step === 1 ? skills.length >= 2 :
-    interests.length >= 1
+      step === 1 ? skills.length >= 2 :
+        interests.length >= 1
 
   const handleFinish = async () => {
     setError(null)
@@ -60,22 +60,23 @@ export default function SetupPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-9 font-mono">
-      <div className="w-full">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-9 font-mono bg-gray-800 text-white">
+      <div className="w-full max-w-md">
 
         {/* Progress bar */}
         <div className="flex gap-1.5 mb-9">
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className={`flex-1 h-[3px] rounded-sm ${i <= step ? 'bg-ink' : 'bg-hairline'}`}
+              className={`flex-1 h-[3px] rounded-sm ${i <= step ? 'bg-hairline' : 'bg-ink'}`}
             />
           ))}
         </div>
 
-        <div className="text-[10px] text-faint uppercase tracking-widest mb-1">Step {step + 1} of 3</div>
-        <h2 className="text-2xl font-bold text-ink mb-1">{TITLES[step]}</h2>
-        <p className="text-sm text-muted mb-7">{SUBS[step]}</p>
+        <div className="text-[10px] text-faint uppercase tracking-widest mb-1">​ Step {step + 1} of 3</div>
+        <h2 className="text-2xl font-bold text-white mb-1">{TITLES[step]}</h2> <br />
+        <p className="text-sm mb-7 text-gray-300">{SUBS[step]}</p>
+
 
         {step === 0 && (
           <>
@@ -124,6 +125,8 @@ export default function SetupPage() {
         {error && (
           <p className="text-xs text-red-500 mt-4">{error}</p>
         )}
+
+        <br />
 
         <div className="flex gap-2.5 mt-9">
           {step > 0 && (
