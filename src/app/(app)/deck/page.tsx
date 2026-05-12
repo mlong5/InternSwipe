@@ -96,7 +96,7 @@ export default function DeckPage() {
     fetch('/api/swipe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jobId: card.id, action: dir === 'right' ? 'RIGHT' : 'LEFT' }),
+      body: JSON.stringify({ jobId: card.id, action: dir === 'right' ? 'RIGHT' : dir === 'left' ? 'LEFT' : 'BOOKMARK' }),
     }).catch(() => {})
 
     // Submit application on right-swipe
@@ -272,15 +272,17 @@ export default function DeckPage() {
             <p className="text-xs text-ink leading-relaxed mb-4 max-h-48 overflow-y-auto">
               {card.summary}
             </p>
-            <a
-              href={card.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-bold underline text-ink"
-              onClick={e => e.stopPropagation()}
-            >
-              View original posting →
-            </a>
+            {card.url && (
+              <a
+                href={card.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-bold underline text-ink"
+                onClick={e => e.stopPropagation()}
+              >
+                View original posting →
+              </a>
+            )}
           </div>
         </div>
       )}

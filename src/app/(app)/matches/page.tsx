@@ -2,7 +2,21 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import type { MatchItem } from '@/app/api/matches/route'
+interface MatchItem {
+  id: string
+  createdAt: string
+  score: number
+  job: {
+    id: string
+    company: string
+    title: string
+    location: string | null
+    summary: string | null
+    url: string | null
+    eligibilityStatus: 'ELIGIBLE' | 'NOT_ELIGIBLE'
+  }
+  applicationStatus: 'APPLIED' | 'FAILED' | 'PENDING' | null
+}
 
 const STATUS_LABEL: Record<string, string> = {
   APPLIED: 'APPLIED',
