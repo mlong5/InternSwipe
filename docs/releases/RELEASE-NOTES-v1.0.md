@@ -1,4 +1,8 @@
+
+
 # Release notes — InternSwipe v1.0
+
+> **Historical snapshot.** This document describes the state of InternSwipe at the v1.0 tag (March 22, 2026). It is intentionally not updated — features delivered, known limitations, and next steps reflect that moment only. For current state, see [docs/README.md](../README.md), the codebase, and `git log`. Future releases get their own dated file in this folder.
 
 | Field        | Value                                |
 |--------------|--------------------------------------|
