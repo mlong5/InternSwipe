@@ -6,6 +6,7 @@ import type { ApiResponse } from '@/types'
 import type { Resume } from '@/generated/prisma'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
+const MAX_RESUMES_PER_USER = 5
 
 /**
  * GET /api/resume
@@ -60,6 +61,19 @@ export async function POST(
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
         { data: null, error: 'File must be under 5 MB' },
+        { status: 400 },
+      )
+    }
+
+    const existingCount = await prisma.resume.count({
+      where: { userId: auth.user.id },
+    })
+    if (existingCount >= MAX_RESUMES_PER_USER) {
+      return NextResponse.json(
+        {
+          data: null,
+          error: `You can have at most ${MAX_RESUMES_PER_USER} resumes. Delete one before uploading another.`,
+        },
         { status: 400 },
       )
     }

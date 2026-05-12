@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 const NAV_ITEMS = [
   { href: '/deck',     label: 'SWIPE'    },
   { href: '/saved',    label: 'SAVED'    },
+  { href: '/matches',  label: 'MATCHES'  },
   { href: '/history',  label: 'HISTORY'  },
   { href: '/profile',  label: 'PROFILE'  },
   { href: '/settings', label: 'SETTINGS' },

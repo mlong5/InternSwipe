@@ -9,6 +9,8 @@ import type { Resume as PrismaResume } from '@/generated/prisma'
 
 type Resume = PrismaResume & { fileSize?: number | null }
 
+const MAX_RESUMES = 5
+
 function formatSize(bytes: number | null | undefined) {
   if (!bytes) return ''
   if (bytes < 1024) return `${bytes} B`
@@ -119,6 +121,10 @@ export default function ProfilePage() {
     e.target.value = ''
     if (!file) return
 
+    if (resumes.length >= MAX_RESUMES) {
+      setUploadError(`You can have at most ${MAX_RESUMES} resumes. Delete one before uploading another.`)
+      return
+    }
     if (file.type !== 'application/pdf') {
       setUploadError('Only PDF files are accepted')
       return
@@ -262,7 +268,7 @@ export default function ProfilePage() {
         <div className="border border-border rounded-md p-5">
           <div className="flex items-center justify-between mb-4">
             <span className="text-xs font-bold text-ink uppercase tracking-widest">Resumes</span>
-            <span className="text-[10px] text-faint">PDF · 5 MB max</span>
+            <span className="text-[10px] text-faint">PDF · 5 MB max · {resumes.length}/{MAX_RESUMES}</span>
           </div>
 
           {/* Upload button */}
@@ -290,9 +296,9 @@ export default function ProfilePage() {
           ) : (
             <Button
               onClick={() => fileInputRef.current?.click()}
-              disabled={uploadProgress !== null}
+              disabled={uploadProgress !== null || resumes.length >= MAX_RESUMES}
             >
-              + UPLOAD RESUME
+              {resumes.length >= MAX_RESUMES ? 'LIMIT REACHED' : '+ UPLOAD RESUME'}
             </Button>
           )}
 

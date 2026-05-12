@@ -1,57 +1,218 @@
-# Documentation index
+# InternSwipe
 
-| Field        | Value                                |
-|--------------|--------------------------------------|
-| Project      | InternSwipe                          |
-| Course       | CS 250                               |
-| Owner        | Bryan                                |
-| Last updated | March 22, 2026                       |
-| Version      | 4.0                                  |
+A Tinder-style internship discovery and application tracker built for CS 250 by a four-person team.
 
-## Purpose
+| Field | Value |
+|-------|-------|
+| Course | CS 250 |
+| Team | Bryan (Product Owner), Talan (Design/Frontend Lead), Matt (Backend Systems Lead), Brandon (Infrastructure/Quality Lead) |
+| Timeline | February 16 - March 15, 2026 |
+| Status | v1.0 shipped — post-launch maintenance |
+| Last updated | May 6, 2026 |
+| License | MIT |
 
-This folder contains all project documentation for InternSwipe, a Tinder-style internship discovery and application tracker built by a four-person team for CS 250. The documentation covers individual team member responsibilities, project-level standards, and engineering processes. Every document is written to a professional standard and can be presented to a professor, stakeholder, or new team member without modification.
+## What is InternSwipe?
 
-This documentation is maintained alongside the codebase and updated during weekly retrospectives. If any process, responsibility, or technical decision changes, the corresponding document must be updated in the same sprint.
+InternSwipe lets students discover internship opportunities by swiping through job cards -- swipe right to apply, swipe left to skip. The app tracks application status, manages resumes, and filters jobs by eligibility so students only see positions they can actually apply to.
 
-## Current project status (as of March 22, 2026)
+## Tech stack
 
-The project is past the **Week 4** deadline (March 15, 2026). The backend is complete: all 8 API routes are implemented (including resume signed URLs), the database schema is deployed with 25 seeded jobs, Supabase Auth is fully integrated, auth guards protect all routes, rate limiting is enforced on the apply endpoint, and error messages are user-safe across the board. 33 unit tests pass (rate limiter + validation). README, handoff document, and release notes are written. The frontend UI is incomplete (page routes exist but components are not built). CI pipeline is partially set up (lint, typecheck, vitest) but Playwright tests, branch protection, and Vercel deployment are not configured. See `project/milestones.md` for a detailed exit criteria checklist.
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| Framework | Next.js (App Router) | 16.1.6 |
+| Language | TypeScript (strict mode) | 5.9.3 |
+| Styling | Tailwind CSS | 4.2.0 |
+| ORM | Prisma (PrismaPg adapter) | 7.4.1 |
+| Database | PostgreSQL via Supabase | Managed |
+| Authentication | Supabase Auth | Email/password |
+| File Storage | Supabase Storage | Private bucket, signed URLs |
+| Validation | Zod | 4.3.6 |
+| Unit Testing | Vitest | Latest |
 
-## Where to start
+## Architecture
 
-If you are a new team member joining mid-project, begin by reading the following documents in order:
+```
+src/
+├── app/
+│   ├── layout.tsx                    # Root layout with metadata
+│   ├── page.tsx                      # Landing page
+│   ├── (app)/deck/page.tsx           # Swipe deck UI
+│   └── api/
+│       ├── auth/
+│       │   ├── signup/route.ts       # POST - create account
+│       │   ├── login/route.ts        # POST - sign in
+│       │   └── logout/route.ts       # POST - sign out
+│       ├── profile/route.ts          # GET/PUT - user profile
+│       ├── jobs/route.ts             # GET - paginated/filtered jobs
+│       ├── swipe/route.ts            # POST - record swipe action
+│       ├── apply/route.ts            # POST - submit application (rate limited)
+│       ├── applications/route.ts     # GET - user's applications
+│       └── resume/
+│           └── signed-url/route.ts   # GET - signed URL for resume download
+├── lib/
+│   ├── prisma.ts                     # Prisma client singleton
+│   ├── validation.ts                 # Zod schemas for all inputs
+│   ├── auth-guard.ts                 # Centralized auth guard (requireAuth)
+│   ├── rate-limit.ts                 # In-memory sliding-window rate limiter
+│   └── supabase/
+│       ├── server.ts                 # Server-side Supabase client
+│       └── client.ts                 # Browser-side Supabase client
+├── middleware.ts                     # Session refresh on every request
+└── types/
+    └── index.ts                      # ApiResponse<T> interface
 
-1. `project/tech-stack.md` to understand the technologies used and why they were chosen.
-2. `process/environment-setup.md` to set up the project locally from scratch.
-3. `process/branching-strategy.md` to understand the Git workflow and pull request rules.
-4. `project/definition-of-done.md` to understand what "done" means for every story and pull request.
-5. Your own team member document in `team/` to understand your responsibilities.
+prisma/
+├── schema.prisma                     # 7 models (see Database Schema below)
+├── seed.ts                           # Seeds 25 jobs (15 ELIGIBLE, 10 NOT_ELIGIBLE)
+└── migrations/                       # Version-controlled migrations
+```
 
-## Document index
+### Request lifecycle
 
-### Team member documentation
+1. **Middleware** (`src/middleware.ts`) intercepts every request and refreshes the Supabase session cookie.
+2. **Auth guard** (`src/lib/auth-guard.ts`) is called by each protected route handler. If no valid session exists, it returns a `401 Unauthorized` response immediately.
+3. **Validation** — request bodies are parsed with Zod schemas (`src/lib/validation.ts`) before any business logic runs.
+4. **Rate limiting** — `POST /api/apply` passes through an in-memory sliding-window rate limiter (10 req/min/user) before processing.
+5. **Business logic** — Prisma queries against PostgreSQL via Supabase.
+6. **Response** — all routes return the standard `{ data, error }` envelope via `ApiResponse<T>`.
+
+## Database schema
+
+The application uses 7 tables:
+
+| Table | Purpose |
+|-------|---------|
+| `users` | User accounts linked to Supabase Auth |
+| `profiles` | User profile data (name, phone, links, preferences) |
+| `resumes` | Resume file metadata (filename, storage path, master flag) |
+| `jobs` | Internship listings with eligibility flags |
+| `swipe_actions` | LEFT/RIGHT swipe history |
+| `applications` | Job application records (APPLIED/FAILED/PENDING) |
+| `submission_logs` | Attempt tracking per application with error messages |
+
+## Security
+
+| Feature | Implementation |
+|---------|---------------|
+| Auth guard | Centralized `requireAuth()` helper returns 401 for unauthenticated requests. Applied to all protected routes (profile, jobs, swipe, apply, applications, resume/signed-url). |
+| Rate limiting | Sliding-window in-memory limiter on `POST /api/apply`. 10 requests per minute per user. Returns 429 with `Retry-After` header. |
+| Signed URLs | `GET /api/resume/signed-url` generates 15-minute expiry URLs via Supabase Storage service role client. Validates resume ownership before generating. |
+| Session refresh | Middleware refreshes auth cookies on every request to prevent session expiry. |
+| Secrets | All credentials stored in `.env.local` (gitignored). Only placeholder values in `.env.local.example`. |
+
+## Quick start
+
+### Prerequisites
+
+- Node.js 18+
+- npm 9+
+- Docker Desktop (for local Supabase)
+- Git
+
+### Setup
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/InternSwipe/InternSwipe.git
+cd InternSwipe
+
+# 2. Install dependencies
+npm install
+
+# 3. Start local Supabase (requires Docker)
+npx supabase start
+
+# 4. Configure environment variables
+cp .env.local.example .env.local
+# The default values in .env.local.example work with local Supabase.
+# For cloud Supabase, replace with your project credentials.
+
+# 5. Run database migrations
+npx prisma migrate dev
+
+# 6. Generate Prisma client
+npx prisma generate
+
+# 7. Seed the database
+npx prisma db seed
+
+# 8. Start the development server
+npm run dev
+```
+
+The app will be available at `http://localhost:3000`.
+
+### Environment variables
+
+| Variable | Required | Description | Where to find it |
+|----------|----------|-------------|------------------|
+| `DATABASE_URL` | Yes | Pooled PostgreSQL connection string | `npx supabase status` or Supabase dashboard > Settings > Database |
+| `DIRECT_URL` | Yes | Direct PostgreSQL connection (for migrations) | Same as above (use non-pooled URL for cloud) |
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL | `npx supabase status` or Supabase dashboard > Settings > API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Anonymous public key (safe for browser) | `npx supabase status` or Supabase dashboard > Settings > API |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Service role key (server-only, never expose to browser) | `npx supabase status` or Supabase dashboard > Settings > API |
+
+## API endpoints
+
+| Method | Path | Auth | Rate Limited | Description |
+|--------|------|------|-------------|-------------|
+| POST | `/api/auth/signup` | No | No | Create a new account |
+| POST | `/api/auth/login` | No | No | Sign in with email/password |
+| POST | `/api/auth/logout` | No | No | Sign out and clear session |
+| GET | `/api/profile` | Yes | No | Get user profile |
+| PUT | `/api/profile` | Yes | No | Create or update user profile |
+| GET | `/api/jobs` | Yes | No | Get paginated/filtered/sorted jobs |
+| POST | `/api/swipe` | Yes | No | Record a swipe action (LEFT/RIGHT) |
+| POST | `/api/apply` | Yes | 10/min | Submit a job application |
+| GET | `/api/applications` | Yes | No | Get user's application history |
+| GET | `/api/resume/signed-url` | Yes | No | Get a 15-min signed URL for a resume file |
+
+### Query parameters for `GET /api/jobs`
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `page` | number | 1 | Page number (min 1) |
+| `limit` | number | 20 | Results per page (1-100) |
+| `eligibility` | string | — | Filter: `ELIGIBLE` or `NOT_ELIGIBLE` |
+| `company` | string | — | Filter by company name (case-insensitive) |
+| `search` | string | — | Search across title, company, summary, location |
+| `sort` | string | `created_at` | Sort field: `created_at`, `company`, or `title` |
+| `order` | string | `desc` | Sort order: `asc` or `desc` |
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Production build |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint on `src/` |
+| `npx vitest` | Run unit tests |
+| `npx prisma migrate dev` | Apply database migrations |
+| `npx prisma db seed` | Seed the database with jobs |
+| `npx prisma generate` | Regenerate Prisma client |
+| `npx prisma studio` | Open Prisma Studio (database GUI) |
+
+## Documentation
+
+Project documentation lives in the [`docs/`](docs/) folder, organized by topic:
 
 | Document | Description |
 |----------|-------------|
-| [team/bryan.md](team/bryan.md) | Bryan's full task breakdown covering daily, weekly, and pre-launch responsibilities as product owner, API designer, and database schema lead. |
-| [team/talan.md](team/talan.md) | Talan's full task breakdown covering daily, weekly, and pre-launch responsibilities as the swipe deck UI, profile flows, and design system lead. |
-| [team/matt.md](team/matt.md) | Matt's full task breakdown covering daily, weekly, and pre-launch responsibilities as the job ingestion pipeline, eligibility engine, and backend endpoints lead. |
-| [team/brandon.md](team/brandon.md) | Brandon's full task breakdown covering daily, weekly, and pre-launch responsibilities as the CI/CD, testing infrastructure, deployment, and security lead. |
+| [Milestones](docs/project/milestones.md) | Sprint breakdowns and exit criteria |
+| [Tech Stack](docs/project/tech-stack.md) | Technology choices and rationale |
+| [Definition of Done](docs/project/definition-of-done.md) | Story / PR / bug-fix completion checklist |
+| [Weekly Ceremonies](docs/project/weekly-ceremonies.md) | Standup, review, retro format and schedule |
+| [Environment Setup](docs/process/environment-setup.md) | Local setup guide |
+| [Branching Strategy](docs/process/branching-strategy.md) | Git workflow and PR rules |
+| [Release Checklist](docs/process/release-checklist.md) | Pre-launch verification |
+| [Release Notes](docs/RELEASE-NOTES-v1.0.md) | v1.0 feature summary |
+| [Handoff Document](docs/HANDOFF.md) | Deployment and extension guide |
+| [Team — Bryan](docs/team/bryan.md) | Product owner / API / DB schema responsibilities |
+| [Team — Talan](docs/team/talan.md) | Swipe deck UI / profile flows / design system responsibilities |
+| [Team — Matt](docs/team/matt.md) | Job ingestion / eligibility engine / backend endpoints responsibilities |
+| [Team — Brandon](docs/team/brandon.md) | CI/CD / testing / deployment / security responsibilities |
 
-### Project-level documentation
+## License
 
-| Document | Description | Status |
-|----------|-------------|--------|
-| [project/definition-of-done.md](project/definition-of-done.md) | The Definition of Done checklist that applies to every story, pull request, and bug fix across the project. | **done** — process defined |
-| [project/weekly-ceremonies.md](project/weekly-ceremonies.md) | The format, schedule, and purpose of the three recurring team ceremonies: async standup, review and demo, and retrospective. | **done** — process defined |
-| [project/milestones.md](project/milestones.md) | The four-week milestone summary with session-by-session breakdowns and exit criteria for each week. | **done** — updated with implementation status per exit criterion |
-| [project/tech-stack.md](project/tech-stack.md) | A complete reference of every technology used in the project, including version information and rationale for each choice. | **done** — updated with per-technology implementation status |
-
-### Process documentation
-
-| Document | Description | Status |
-|----------|-------------|--------|
-| [process/branching-strategy.md](process/branching-strategy.md) | The Git branch naming convention, pull request rules, commit message format, and merge policy. | **done** — process defined, repo configured |
-| [process/environment-setup.md](process/environment-setup.md) | A step-by-step guide for setting up the InternSwipe project locally from scratch, including all prerequisites and verification steps. | **done** — all setup steps implemented (steps 1-6 verified working) |
-| [process/release-checklist.md](process/release-checklist.md) | The formal pre-launch release checklist organized into code quality, security, data integrity, user experience, and launch artifact sections. | In progress — data integrity items partially done, most items pending |
+MIT -- see [LICENSE](LICENSE) for details.
