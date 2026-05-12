@@ -31,6 +31,8 @@ InternSwipe lets students discover internship opportunities by swiping through j
 
 ## Architecture
 
+_Section last updated: May 12, 2026 — synced with route handlers in `src/app/api/`._
+
 ```
 src/
 ├── app/
@@ -39,16 +41,26 @@ src/
 │   ├── (app)/deck/page.tsx           # Swipe deck UI
 │   └── api/
 │       ├── auth/
-│       │   ├── signup/route.ts       # POST - create account
-│       │   ├── login/route.ts        # POST - sign in
-│       │   └── logout/route.ts       # POST - sign out
-│       ├── profile/route.ts          # GET/PUT - user profile
-│       ├── jobs/route.ts             # GET - paginated/filtered jobs
-│       ├── swipe/route.ts            # POST - record swipe action
-│       ├── apply/route.ts            # POST - submit application (rate limited)
-│       ├── applications/route.ts     # GET - user's applications
+│       │   ├── signup/route.ts          # POST - create account
+│       │   ├── login/route.ts           # POST - sign in
+│       │   ├── logout/route.ts          # POST - sign out
+│       │   └── delete-account/route.ts  # DELETE - delete account and related data
+│       ├── profile/route.ts             # GET/PUT - user profile
+│       ├── jobs/
+│       │   ├── route.ts                 # GET - paginated/filtered jobs
+│       │   └── [id]/route.ts            # GET - single job by id
+│       ├── swipe/route.ts               # POST - record swipe action
+│       ├── swipes/route.ts              # GET - user's swipe history
+│       ├── bookmarks/route.ts           # GET - bookmarked jobs
+│       ├── matches/route.ts             # GET - matched jobs with score
+│       ├── apply/route.ts               # POST - submit application (rate limited)
+│       ├── applications/
+│       │   ├── route.ts                 # GET - user's applications
+│       │   └── [id]/route.ts            # GET - single application
 │       └── resume/
-│           └── signed-url/route.ts   # GET - signed URL for resume download
+│           ├── route.ts                 # GET/POST - list and upload resumes
+│           ├── [id]/route.ts            # PATCH/DELETE - set master or delete
+│           └── signed-url/route.ts      # GET - signed URL for resume download
 ├── lib/
 │   ├── prisma.ts                     # Prisma client singleton
 │   ├── validation.ts                 # Zod schemas for all inputs
@@ -116,21 +128,15 @@ The application uses 7 tables:
 git clone https://github.com/InternSwipe/InternSwipe.git
 cd InternSwipe
 
-# 2. Install dependencies
-npm install
-
-# 3. Configure environment variables
+# 2. Configure environment variables
 cp .env.local.example .env.local
-# Fill in the Supabase Cloud credentials from the project dashboard.
+#    Fill in the Supabase Cloud credentials in the env.local.example from the project dashboard.
 
-# 4. Run database migrations
-npx prisma migrate dev
+# 3. Install dependencies
+npm install
 
 # 5. Generate Prisma client
 npx prisma generate
-
-# 6. Seed the database
-npx prisma db seed
 
 # 7. Start the development server
 npm run dev
@@ -138,29 +144,42 @@ npm run dev
 
 The app will be available at `http://localhost:3000`.
 
-### Environment variables
+### Troubleshooting
 
-| Variable | Required | Description | Where to find it |
-|----------|----------|-------------|------------------|
-| `DATABASE_URL` | Yes | Pooled PostgreSQL connection string | Supabase dashboard > Settings > Database (Pooled) |
-| `DIRECT_URL` | Yes | Direct PostgreSQL connection (for migrations) | Supabase dashboard > Settings > Database (Direct) |
-| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL | Supabase dashboard > Settings > API |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Anonymous public key (safe for browser) | Supabase dashboard > Settings > API |
-| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Service role key (server-only, never expose to browser) | Supabase dashboard > Settings > API |
+| Problem | Solution |
+|---------|----------|
+| `npm install` fails with permission errors. | Do not use `sudo` with npm. If you see permission errors, fix your Node.js installation or use a version manager such as `nvm`. |
+| Prisma client import fails with `Can't resolve '@/generated/prisma'`. | Run `npx prisma generate` — the client output dir (`src/generated/prisma`) is gitignored and must be generated locally. |
+| App crashes at startup with "Your project's URL and Key are required to create a Supabase client". | `.env.local` is missing or has empty Supabase values. Confirm all five env vars are filled in. |
+| Prisma operations fail with a connection error. | Verify `DATABASE_URL` and `DIRECT_URL` in `.env.local` are correct, and that your IP isn't blocked in Supabase's network settings. |
+| The development server starts but the page shows a blank screen. | Open the browser developer console and check for JavaScript errors. Verify that `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set correctly. |
+| Sign-up does not work. | Verify that email authentication is enabled in the Supabase dashboard under Authentication → Providers. |
 
 ## API endpoints
+
+_Section last updated: May 12, 2026 — synced with route handlers in `src/app/api/`._
 
 | Method | Path | Auth | Rate Limited | Description |
 |--------|------|------|-------------|-------------|
 | POST | `/api/auth/signup` | No | No | Create a new account |
 | POST | `/api/auth/login` | No | No | Sign in with email/password |
 | POST | `/api/auth/logout` | No | No | Sign out and clear session |
+| DELETE | `/api/auth/delete-account` | Yes | No | Delete the authenticated user's account and all related data |
 | GET | `/api/profile` | Yes | No | Get user profile |
 | PUT | `/api/profile` | Yes | No | Create or update user profile |
 | GET | `/api/jobs` | Yes | No | Get paginated/filtered/sorted jobs |
+| GET | `/api/jobs/[id]` | Yes | No | Get a single job by id |
 | POST | `/api/swipe` | Yes | No | Record a swipe action (LEFT/RIGHT) |
+| GET | `/api/swipes` | Yes | No | List the user's swipe history |
+| GET | `/api/bookmarks` | Yes | No | List jobs the user bookmarked (swipe action = BOOKMARK) |
+| GET | `/api/matches` | Yes | No | List matched jobs with computed score and application status |
 | POST | `/api/apply` | Yes | 10/min | Submit a job application |
 | GET | `/api/applications` | Yes | No | Get user's application history |
+| GET | `/api/applications/[id]` | Yes | No | Get a single application with job, resume, and submission logs |
+| GET | `/api/resume` | Yes | No | List the authenticated user's resumes |
+| POST | `/api/resume` | Yes | No | Upload a new resume (PDF, max 5 MB, max 5 per user) |
+| PATCH | `/api/resume/[id]` | Yes | No | Set a resume as the user's master (primary) |
+| DELETE | `/api/resume/[id]` | Yes | No | Delete one of the user's resumes |
 | GET | `/api/resume/signed-url` | Yes | No | Get a 15-min signed URL for a resume file |
 
 ### Query parameters for `GET /api/jobs`
@@ -199,10 +218,9 @@ Project documentation lives in the [`docs/`](docs/) folder, organized by topic:
 | [Tech Stack](docs/project/tech-stack.md) | Technology choices and rationale |
 | [Definition of Done](docs/project/definition-of-done.md) | Story / PR / bug-fix completion checklist |
 | [Weekly Ceremonies](docs/project/weekly-ceremonies.md) | Standup, review, retro format and schedule |
-| [Environment Setup](docs/process/environment-setup.md) | Local setup guide |
 | [Branching Strategy](docs/process/branching-strategy.md) | Git workflow and PR rules |
 | [Release Checklist](docs/process/release-checklist.md) | Pre-launch verification |
-| [Release Notes](docs/RELEASE-NOTES-v1.0.md) | v1.0 feature summary |
+| [Release Notes — v1.0](docs/releases/RELEASE-NOTES-v1.0.md) | v1.0 feature summary (historical snapshot) |
 | [Handoff Document](docs/HANDOFF.md) | Deployment and extension guide |
 | [Team — Bryan](docs/team/bryan.md) | Product owner / API / DB schema responsibilities |
 | [Team — Talan](docs/team/talan.md) | Swipe deck UI / profile flows / design system responsibilities |

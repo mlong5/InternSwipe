@@ -1,5 +1,7 @@
 # Release checklist
 
+> **Historical snapshot.** This checklist describes the pre-launch criteria for InternSwipe v1.0 (March 22, 2026). It is intentionally not updated. Future releases should copy this file as a starting template (e.g., `v2.0-release-checklist.md`) and revise the items there.
+
 | Field        | Value                                |
 |--------------|--------------------------------------|
 | Project      | InternSwipe                          |
