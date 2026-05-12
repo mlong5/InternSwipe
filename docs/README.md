@@ -106,8 +106,8 @@ The application uses 7 tables:
 
 - Node.js 18+
 - npm 9+
-- Docker Desktop (for local Supabase)
 - Git
+- Access to the shared Supabase Cloud project (ask Bryan)
 
 ### Setup
 
@@ -119,24 +119,20 @@ cd InternSwipe
 # 2. Install dependencies
 npm install
 
-# 3. Start local Supabase (requires Docker)
-npx supabase start
-
-# 4. Configure environment variables
+# 3. Configure environment variables
 cp .env.local.example .env.local
-# The default values in .env.local.example work with local Supabase.
-# For cloud Supabase, replace with your project credentials.
+# Fill in the Supabase Cloud credentials from the project dashboard.
 
-# 5. Run database migrations
+# 4. Run database migrations
 npx prisma migrate dev
 
-# 6. Generate Prisma client
+# 5. Generate Prisma client
 npx prisma generate
 
-# 7. Seed the database
+# 6. Seed the database
 npx prisma db seed
 
-# 8. Start the development server
+# 7. Start the development server
 npm run dev
 ```
 
@@ -146,11 +142,11 @@ The app will be available at `http://localhost:3000`.
 
 | Variable | Required | Description | Where to find it |
 |----------|----------|-------------|------------------|
-| `DATABASE_URL` | Yes | Pooled PostgreSQL connection string | `npx supabase status` or Supabase dashboard > Settings > Database |
-| `DIRECT_URL` | Yes | Direct PostgreSQL connection (for migrations) | Same as above (use non-pooled URL for cloud) |
-| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL | `npx supabase status` or Supabase dashboard > Settings > API |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Anonymous public key (safe for browser) | `npx supabase status` or Supabase dashboard > Settings > API |
-| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Service role key (server-only, never expose to browser) | `npx supabase status` or Supabase dashboard > Settings > API |
+| `DATABASE_URL` | Yes | Pooled PostgreSQL connection string | Supabase dashboard > Settings > Database (Pooled) |
+| `DIRECT_URL` | Yes | Direct PostgreSQL connection (for migrations) | Supabase dashboard > Settings > Database (Direct) |
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL | Supabase dashboard > Settings > API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Anonymous public key (safe for browser) | Supabase dashboard > Settings > API |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Service role key (server-only, never expose to browser) | Supabase dashboard > Settings > API |
 
 ## API endpoints
 
