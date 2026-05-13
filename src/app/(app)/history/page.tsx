@@ -51,7 +51,6 @@ export default function HistoryPage() {
   const [items, setItems]               = useState<HistoryItem[]>([])
   const [loading, setLoading]           = useState(true)
   const [filter, setFilter]             = useState('all')
-  const [masterResumeId, setMasterResumeId] = useState<string | null>(null)
   const [applyingId, setApplyingId]     = useState<string | null>(null)
   const [toast, setToast]               = useState<{ msg: string; ok: boolean } | null>(null)
   const [clearing, setClearing]         = useState(false)
@@ -64,43 +63,40 @@ export default function HistoryPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [appsRes, swipesRes, resumeRes] = await Promise.all([
+        const [appsRes, swipesRes] = await Promise.all([
           fetch('/api/applications'),
           fetch('/api/swipes'),
-          fetch('/api/resume'),
         ])
 
+        // Track legacy application records by jobId so a RIGHT swipe for the same job doesn't duplicate
         const appItems: HistoryItem[] = []
+        const appliedJobIds = new Set<string>()
         if (appsRes.ok) {
           const { data } = await appsRes.json()
           if (Array.isArray(data)) {
             data.forEach((a: { id: string; status: string; appliedAt: string; job: Job }) => {
               appItems.push({ id: a.id, status: a.status as HistoryStatus, date: a.appliedAt, job: a.job })
+              appliedJobIds.add(a.job.id)
             })
           }
         }
 
+        const matchItems: HistoryItem[] = []
         const skipItems: HistoryItem[] = []
         if (swipesRes.ok) {
           const { data } = await swipesRes.json()
           if (Array.isArray(data)) {
-            data
-              .filter((s: { action: string }) => s.action === 'LEFT')
-              .forEach((s: { id: string; createdAt: string; job: Job }) => {
+            data.forEach((s: { id: string; action: string; createdAt: string; job: Job }) => {
+              if (s.action === 'LEFT') {
                 skipItems.push({ id: s.id, status: 'SKIPPED', date: s.createdAt, job: s.job })
-              })
+              } else if (s.action === 'RIGHT' && !appliedJobIds.has(s.job.id)) {
+                matchItems.push({ id: s.id, status: 'APPLIED', date: s.createdAt, job: s.job })
+              }
+            })
           }
         }
 
-        if (resumeRes.ok) {
-          const { data } = await resumeRes.json()
-          if (Array.isArray(data) && data.length > 0) {
-            const master = data.find((r: { isMaster: boolean }) => r.isMaster)
-            setMasterResumeId(master ? master.id : data[0].id)
-          }
-        }
-
-        const merged = [...appItems, ...skipItems].sort(
+        const merged = [...appItems, ...matchItems, ...skipItems].sort(
           (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         )
         setItems(merged)
@@ -112,25 +108,35 @@ export default function HistoryPage() {
   }, [])
 
   async function handleApply(item: HistoryItem) {
-    if (!masterResumeId) {
-      showToast('Upload a resume on your Profile page first.', false)
-      return
-    }
     setApplyingId(item.id)
     try {
-      const res = await fetch('/api/apply', {
+      // Delete the LEFT swipe that's keeping this job in skipped state, then create a RIGHT swipe.
+      // Right-swipe = match under the current flow (auto-apply is reserved for a future release).
+      const delRes = await fetch('/api/swipe', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobId: item.job.id }),
+      })
+      if (!delRes.ok) {
+        const payload = await delRes.json().catch(() => null)
+        showToast(payload?.error ?? 'Could not match. Please try again.', false)
+        return
+      }
+
+      const matchRes = await fetch('/api/swipe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jobId: item.job.id, resumeId: masterResumeId }),
+        body: JSON.stringify({ jobId: item.job.id, action: 'RIGHT' }),
       })
-      const { data, error } = await res.json()
-      if (!res.ok || error) {
-        showToast(error ?? 'Could not apply. Please try again.', false)
-      } else {
-        const appId: string = data?.application?.id ?? item.id
-        setItems(prev => prev.map(i => i.id === item.id ? { ...i, id: appId, status: 'APPLIED' } : i))
-        showToast(`Applied to ${item.job.title}!`, true)
+      const { data, error } = await matchRes.json()
+      if (!matchRes.ok || error) {
+        showToast(error ?? 'Could not match. Please try again.', false)
+        return
       }
+
+      const swipeId: string = data?.id ?? item.id
+      setItems(prev => prev.map(i => i.id === item.id ? { ...i, id: swipeId, status: 'APPLIED', date: data?.createdAt ?? i.date } : i))
+      showToast(`Matched with ${item.job.title}!`, true)
     } catch {
       showToast('Something went wrong. Please try again.', false)
     } finally {
@@ -230,13 +236,13 @@ export default function HistoryPage() {
                     type="button"
                     onClick={() => handleApply(item)}
                     disabled={isApplying}
-                    aria-label={`Apply to ${item.job.title} at ${item.job.company}`}
+                    aria-label={`Match with ${item.job.title} at ${item.job.company}`}
                     className="w-7 h-7 rounded-full border border-border-dark flex items-center justify-center text-sm font-bold mx-auto mb-0.5 cursor-pointer hover:border-ink hover:text-ink transition-colors disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
                   >
                     {isApplying ? '…' : '↩'}
                   </button>
                   <div className="text-[9px] text-faint font-bold tracking-wide">
-                    {isApplying ? 'APPLYING' : 'APPLY'}
+                    {isApplying ? 'MATCHING' : 'MATCH'}
                   </div>
                 </div>
               ) : (

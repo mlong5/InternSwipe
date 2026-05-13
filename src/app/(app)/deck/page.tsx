@@ -20,7 +20,6 @@ const SWIPE_EXIT_X = 380
 export default function DeckPage() {
   const [jobs, setJobs] = useState<Job[]>([])
   const [loading, setLoading] = useState(true)
-  const [masterResumeId, setMasterResumeId] = useState<string | null>(null)
   const [idx, setIdx] = useState(0)
   const [detailOpen, setDetailOpen] = useState(false)
   const [exitDir, setExitDir] = useState<'left' | 'right' | 'bookmark' | null>(null)
@@ -44,20 +43,10 @@ export default function DeckPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [jobsRes, resumeRes] = await Promise.all([
-          fetch('/api/jobs?excludeSwiped=true'),
-          fetch('/api/resume'),
-        ])
+        const jobsRes = await fetch('/api/jobs?excludeSwiped=true')
         if (jobsRes.ok) {
           const { data } = await jobsRes.json()
           setJobs(data?.jobs ?? [])
-        }
-        if (resumeRes.ok) {
-          const { data } = await resumeRes.json()
-          if (Array.isArray(data) && data.length > 0) {
-            const master = data.find((r: { isMaster: boolean; id: string }) => r.isMaster)
-            setMasterResumeId(master ? master.id : data[0].id)
-          }
         }
       } finally {
         setLoading(false)
@@ -78,46 +67,26 @@ export default function DeckPage() {
   const commitSwipe = useCallback((dir: 'left' | 'right' | 'bookmark') => {
     if (!card) return
 
-    // Block right-swipe on NOT_ELIGIBLE at UI level
-    if (dir === 'right' && card.eligibilityStatus === 'NOT_ELIGIBLE') {
-      addToast('Direct apply required — visit the company portal', 'error')
-      setDragX(0)
-      return
-    }
-
     setExitDir(dir)
     setDragX(0)
 
-    if (dir === 'right') addToast('Applied!', 'apply')
+    if (dir === 'right') addToast('Matched!', 'apply')
     else if (dir === 'left') addToast('Skipped', 'skip')
-    else addToast('Saved for later', 'save') //Where save for later actually occurs
+    else addToast('Saved for later', 'save')
 
-    // Record swipe in DB — bookmark maps to LEFT so the card doesn't reappear next session
+    // Record swipe in DB
     fetch('/api/swipe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ jobId: card.id, action: dir === 'right' ? 'RIGHT' : dir === 'left' ? 'LEFT' : 'BOOKMARK' }),
     }).catch(() => {})
 
-    // Submit application on right-swipe
-    if (dir === 'right') {
-      if (masterResumeId) {
-        fetch('/api/apply', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ jobId: card.id, resumeId: masterResumeId }),
-        }).catch(() => {})
-      } else {
-        addToast('Upload a resume on your profile to apply', 'error')
-      }
-    }
-
     setTimeout(() => {
       setExitDir(null)
       setDetailOpen(false)
       setIdx(i => i + 1)
     }, 320)
-  }, [card, masterResumeId, addToast])
+  }, [card, addToast])
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -229,8 +198,6 @@ export default function DeckPage() {
 
   if (!card) return null
 
-  const isEligible = card.eligibilityStatus === 'ELIGIBLE'
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-4 font-mono select-none">
 
@@ -263,9 +230,6 @@ export default function DeckPage() {
                 <span aria-hidden="true">×</span>
               </button>
             </div>
-            <span className={`text-[10px] font-bold tracking-widest px-2 py-0.5 border rounded-sm inline-block mb-3 ${isEligible ? 'border-green-600 text-green-700' : 'border-red-400 text-red-600'}`}>
-              {isEligible ? 'QUICK APPLY' : 'DIRECT APPLY ONLY'}
-            </span>
             <p className="text-xs text-ink leading-relaxed mb-4 max-h-48 overflow-y-auto">
               {card.summary}
             </p>
@@ -340,7 +304,7 @@ export default function DeckPage() {
           onTouchEnd={onDragEnd}
         >
           {/* Apply overlay (green) */}
-          {overlayDir === 'right' && isEligible && (
+          {overlayDir === 'right' && (
             <div
               className="absolute inset-0 z-10 flex items-center justify-center rounded-lg pointer-events-none"
               style={{ background: `rgba(22,163,74,${0.18 + overlayOpacity * 0.22})` }}
@@ -349,22 +313,7 @@ export default function DeckPage() {
                 className="border-[3px] border-green-600 text-green-600 font-bold text-2xl tracking-widest px-4 py-1 rounded rotate-[-12deg]"
                 style={{ opacity: overlayOpacity }}
               >
-                APPLY
-              </span>
-            </div>
-          )}
-
-          {/* Blocked overlay (red) for NOT_ELIGIBLE right swipe */}
-          {overlayDir === 'right' && !isEligible && (
-            <div
-              className="absolute inset-0 z-10 flex items-center justify-center rounded-lg pointer-events-none"
-              style={{ background: `rgba(220,38,38,${0.18 + overlayOpacity * 0.22})` }}
-            >
-              <span
-                className="border-[3px] border-red-600 text-red-600 font-bold text-2xl tracking-widest px-4 py-1 rounded rotate-[-12deg]"
-                style={{ opacity: overlayOpacity }}
-              >
-                BLOCKED
+                MATCH
               </span>
             </div>
           )}
@@ -387,15 +336,8 @@ export default function DeckPage() {
           {/* Accent strip */}
           <div className="h-1 bg-gradient-to-r from-accent to-violet-500" />
 
-          {/* Eligibility tag */}
-          <div className="px-6 pt-7 flex justify-between items-start">
-            <span className={`text-[10px] font-bold tracking-widest px-2 py-0.5 border rounded-sm ${isEligible ? 'border-green-600 text-green-700' : 'border-red-400 text-red-600'}`}>
-              {isEligible ? 'QUICK APPLY' : 'DIRECT APPLY ONLY'}
-            </span>
-          </div>
-
           {/* Role + company */}
-          <div className="px-6 pt-5">
+          <div className="px-6 pt-7">
             <h3 className="text-base font-bold text-ink mb-1.5 leading-snug">{card.title}</h3>
             <p className="text-sm text-muted mb-2.5">{card.company}</p>
             <div className="flex gap-3.5 text-xs text-faint">
@@ -447,13 +389,13 @@ export default function DeckPage() {
             <span className="text-[10px] font-bold tracking-widest">SAVE</span>
           </button>
           <button
-            aria-label={!isEligible ? 'Direct apply only — visit the company portal' : 'Apply to this job'}
+            aria-label="Match with this job"
             onClick={() => commitSwipe('right')}
-            disabled={!!exitDir || !isEligible}
+            disabled={!!exitDir}
             className="aspect-square rounded-xl border-2 border-ink bg-card text-ink flex flex-col items-center justify-center gap-2 cursor-pointer disabled:opacity-40 transition-all active:scale-95 hover:border-green-500 hover:bg-green-50 hover:text-green-500 hover:shadow-md hover:shadow-green-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
           >
             <span aria-hidden="true" className="text-4xl leading-none">✓</span>
-            <span className="text-[10px] font-bold tracking-widest">{isEligible ? 'APPLY' : 'LOCKED'}</span>
+            <span className="text-[10px] font-bold tracking-widest">APPLY</span>
           </button>
         </div>
 

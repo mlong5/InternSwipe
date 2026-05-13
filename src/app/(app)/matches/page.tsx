@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+
 interface MatchItem {
   id: string
   createdAt: string
@@ -13,21 +14,7 @@ interface MatchItem {
     location: string | null
     summary: string | null
     url: string | null
-    eligibilityStatus: 'ELIGIBLE' | 'NOT_ELIGIBLE'
   }
-  applicationStatus: 'APPLIED' | 'FAILED' | 'PENDING' | null
-}
-
-const STATUS_LABEL: Record<string, string> = {
-  APPLIED: 'APPLIED',
-  FAILED: 'FAILED',
-  PENDING: 'PENDING',
-}
-
-const STATUS_COLOR: Record<string, string> = {
-  APPLIED: 'text-green-700 border-green-600',
-  FAILED: 'text-red-600 border-red-400',
-  PENDING: 'text-amber-600 border-amber-500',
 }
 
 function ScoreBar({ score }: { score: number }) {
@@ -100,14 +87,12 @@ export default function MatchesPage() {
       ? Math.round(items.reduce((sum, i) => sum + i.score, 0) / items.length)
       : null
 
-  const appliedCount = items.filter(i => i.applicationStatus === 'APPLIED').length
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-4 font-mono">
       <div className="w-full">
         <h2 className="text-lg font-bold text-ink mb-1">Matches</h2>
         <p className="text-[10px] text-faint mb-2 leading-relaxed">
-          Score is based on how many of your skills (set in Profile) appear in the job description, plus a bonus for quick-apply eligibility. Add more skills to improve accuracy.
+          Score is based on how many of your skills (set in Profile) appear in the job description. Add more skills to improve accuracy.
         </p>
         <p className="text-xs text-faint mb-4">
           {loading ? '...' : `${items.length} match${items.length === 1 ? '' : 'es'}`}
@@ -118,7 +103,6 @@ export default function MatchesPage() {
             {[
               { label: 'Matches', count: items.length },
               { label: 'Avg Score', count: `${avgScore}%` },
-              { label: 'Applied', count: appliedCount },
             ].map(s => (
               <div key={s.label} className="flex-1 py-2.5 border border-border rounded text-center">
                 <div className="text-xl font-bold text-ink">{s.count}</div>
@@ -148,26 +132,10 @@ export default function MatchesPage() {
                 className="px-3.5 py-3 border border-border rounded-xl bg-card shadow-sm"
                 aria-label={`${item.job.title} at ${item.job.company}`}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-ink truncate">{item.job.title}</h3>
-                    <p className="text-xs text-muted truncate">{item.job.company}</p>
-                    <p className="text-xs text-faint">📍 {item.job.location ?? 'Remote'}</p>
-                  </div>
-                  <div className="flex flex-col items-end gap-1 shrink-0">
-                    {item.applicationStatus && (
-                      <span
-                        className={`text-[9px] font-bold tracking-widest px-1.5 py-0.5 border rounded-sm ${STATUS_COLOR[item.applicationStatus] ?? ''}`}
-                      >
-                        {STATUS_LABEL[item.applicationStatus]}
-                      </span>
-                    )}
-                    <span
-                      className={`text-[9px] font-bold tracking-widest px-1.5 py-0.5 border rounded-sm ${item.job.eligibilityStatus === 'ELIGIBLE' ? 'border-green-600 text-green-700' : 'border-red-400 text-red-600'}`}
-                    >
-                      {item.job.eligibilityStatus === 'ELIGIBLE' ? 'QUICK APPLY' : 'DIRECT'}
-                    </span>
-                  </div>
+                <div className="min-w-0">
+                  <h3 className="text-sm font-bold text-ink truncate">{item.job.title}</h3>
+                  <p className="text-xs text-muted truncate">{item.job.company}</p>
+                  <p className="text-xs text-faint">📍 {item.job.location ?? 'Remote'}</p>
                 </div>
 
                 <ScoreBar score={item.score} />

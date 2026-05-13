@@ -173,8 +173,8 @@ _Section last updated: May 12, 2026 — synced with route handlers in `src/app/a
 | GET | `/api/swipes` | Yes | No | List the user's swipe history |
 | GET | `/api/bookmarks` | Yes | No | List jobs the user bookmarked (swipe action = BOOKMARK) |
 | GET | `/api/matches` | Yes | No | List matched jobs with computed score and application status |
-| POST | `/api/apply` | Yes | 10/min | Submit a job application |
-| GET | `/api/applications` | Yes | No | Get user's application history |
+| POST | `/api/apply` | Yes | 10/min | Submit a job application. **Reserved — not wired up to the UI as of v1.2.** Right-swipe currently only creates a match record; auto-submission is planned for a future release. Endpoint kept intact so the existing rate-limiter, validation, and submission-log plumbing don't have to be rebuilt when the feature returns. |
+| GET | `/api/applications` | Yes | No | Get user's application history. Returns legacy quick-apply submissions; no new rows are written under the current match-only flow. |
 | GET | `/api/applications/[id]` | Yes | No | Get a single application with job, resume, and submission logs |
 | GET | `/api/resume` | Yes | No | List the authenticated user's resumes |
 | POST | `/api/resume` | Yes | No | Upload a new resume (PDF, max 5 MB, max 5 per user) |
