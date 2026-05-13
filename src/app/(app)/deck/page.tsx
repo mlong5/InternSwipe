@@ -78,7 +78,7 @@ export default function DeckPage() {
   const commitSwipe = useCallback((dir: 'left' | 'right' | 'bookmark') => {
     if (!card) return
 
-    // Block right-swipe on NOT_ELIGIBLE at UI level
+    // Block right-swipe on NOT_ELIGIBLE at UI level 
     if (dir === 'right' && card.eligibilityStatus === 'NOT_ELIGIBLE') {
       addToast('Direct apply required — visit the company portal', 'error')
       setDragX(0)
@@ -430,7 +430,7 @@ export default function DeckPage() {
             aria-label="Skip this job"
             onClick={() => commitSwipe('left')}
             disabled={!!exitDir}
-            className="w-14 h-14 rounded-full border-2 border-ink bg-white flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="w-14 h-14 rounded-full border-2 border-ink bg-gray-300 flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
             <span aria-hidden="true">✕</span>
           </button>
@@ -438,7 +438,7 @@ export default function DeckPage() {
             aria-label="Save for later"
             onClick={() => commitSwipe('bookmark')}
             disabled={!!exitDir}
-            className="w-11 h-11 rounded-full border-2 border-border-dark bg-white flex items-center justify-center text-base cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="w-11 h-11 rounded-full border-2 border-border-dark bg-gray-300 flex items-center justify-center text-base cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
             <span aria-hidden="true">☆</span>
           </button>
@@ -446,19 +446,19 @@ export default function DeckPage() {
             aria-label={!isEligible ? 'Direct apply only — visit the company portal' : 'Apply to this job'}
             onClick={() => commitSwipe('right')}
             disabled={!!exitDir || !isEligible}
-            className="w-14 h-14 rounded-full border-2 border-ink bg-ink text-white flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="w-14 h-14 rounded-full border-2 border-ink bg-gray-300 text-ink flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             <span aria-hidden="true">✓</span>
           </button>
         </div>
 
-        <div className="flex justify-center gap-8 mt-2 text-[10px] text-faint font-bold tracking-wide" aria-hidden="true">
+        <div className="flex justify-center gap-8 mt-2 text-[10px] text-gray-400 font-bold tracking-wide" aria-hidden="true">
           <span className="w-14 text-center">PASS</span>
           <span className="w-11 text-center">SAVE</span>
           <span className="w-14 text-center">{isEligible ? 'APPLY' : 'LOCKED'}</span>
         </div>
 
-        <p className="text-center text-[9px] text-faint mt-3 tracking-wide hidden md:block" aria-hidden="true">
+        <p className="text-center text-[9px] text-gray-400 mt-3 tracking-wide hidden md:block" aria-hidden="true">
           ← SKIP · → APPLY · ↑ / S SAVE · ESC CLOSE
         </p>
       </div>

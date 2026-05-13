@@ -26,7 +26,7 @@ export default function BottomNav() {
               aria-current={active ? 'page' : undefined}
               className={`flex-1 py-3 text-center text-[10px] font-bold tracking-widest font-mono border-b-[3px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ink
                 ${active
-                  ? 'text-white border-gray-400'
+                  ? 'text-white border-gray-300'
                   : 'text-gray-400 border-transparent'
                 }`}
             >

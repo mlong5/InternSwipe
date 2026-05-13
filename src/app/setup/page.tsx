@@ -6,6 +6,7 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Chip from '@/components/ui/Chip'
 
+// zero character width symbol is used to add space between the text and the edges of the button
 const SKILLS = ['​ Python ​', '​ JavaScript ​', '​ React ​', '​ SQL ​', '​ Java ​', '​ C++ ​', '​ Figma ​', '​ TypeScript ​', '​ Machine Learning ​', '​ Data Analysis ​', '​ Node.js ​', '​ AWS ​', '​ Docker ​', '​ Git ​', '​ Product Mgmt ​', '​ Statistics ​']
 const INTERESTS = ['​ Software Eng ​', '​ Data Science ​', '​ Product Design ​', '​ Product Mgmt ​', '​ ML / AI ​', '​ Cloud Infra ​', '​ Cybersecurity ​', '​ Fintech ​', '​ Healthcare ​', '​ Climate Tech ​', '​ EdTech ​', '​ Robotics ​']
 

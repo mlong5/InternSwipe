@@ -26,6 +26,7 @@ const STATUS_LABEL: Record<HistoryStatus, string> = {
   PENDING: 'PENDING',
   SKIPPED: 'SKIPPED',
 }
+
 const STATUS_ICON: Record<HistoryStatus, string> = {
   APPLIED: '✓',
   FAILED: '✕',

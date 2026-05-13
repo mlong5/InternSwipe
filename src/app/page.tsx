@@ -8,6 +8,7 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-10 font-mono bg-gray-800 text-white">
       <div className="w-full text-center">
 
+        {/* logo removed because it looked like a non-functional button */}
         {/* Logo */}
         {/* <div className="w-12 h-12 border-2 border-ink rounded-lg flex items-center justify-center text-base font-bold text-ink mx-auto mb-8" aria-hidden="true">
           IS

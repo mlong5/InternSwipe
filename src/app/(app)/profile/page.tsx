@@ -342,6 +342,7 @@ export default function ProfilePage() {
                           {settingMasterId === r.id ? '...' : 'Set primary'}
                         </button>
                       )}
+
                       <button
                         aria-label={`Delete ${r.filename}`}
                         onClick={() => handleDelete(r.id)}

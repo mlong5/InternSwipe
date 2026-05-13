@@ -45,6 +45,7 @@ export default function SavedPage() {
     load()
   }, [])
 
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-4 font-mono bg-gray-800 text-gray-300">
       <div className="w-full">

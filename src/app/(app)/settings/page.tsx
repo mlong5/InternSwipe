@@ -102,7 +102,7 @@ export default function SettingsPage() {
         setDeleteError(error ?? 'Could not delete account. Please try again.')
         return
       }
-      // Sign out client-side session and redirect to landing page
+      // Sign out client-side session and redirect to landing page 
       const supabase = createSupabaseBrowserClient()
       await supabase.auth.signOut()
       router.push('/')
