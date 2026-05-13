@@ -237,7 +237,7 @@ export default function DeckPage() {
       {/* Job detail bottom sheet */}
       {detailOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 flex items-end justify-center"
+          className="fixed inset-0 z-40 bg-black/40 flex items-center justify-center"
           onClick={handleCloseDetail}
         >
           <div
@@ -245,7 +245,7 @@ export default function DeckPage() {
             role="dialog"
             aria-modal="true"
             aria-label={`${card.title} at ${card.company} — job details`}
-            className="w-full max-w-[400px] bg-white border-t-2 border-ink rounded-t-lg p-5 pb-8"
+            className="w-full max-w-[400px] bg-white border-2 border-ink rounded-lg p-5 pb-8 mx-4"
             onClick={e => e.stopPropagation()}
             onKeyDown={handleDialogKeyDown}
           >
@@ -440,7 +440,7 @@ export default function DeckPage() {
             aria-label="Save for later"
             onClick={() => commitSwipe('bookmark')}
             disabled={!!exitDir}
-            className="w-11 h-11 rounded-full border-2 border-border-dark bg-white flex items-center justify-center text-base cursor-pointer disabled:opacity-40 transition-all active:scale-90 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-500 hover:shadow-md hover:shadow-blue-400/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+            className="w-11 h-11 rounded-full border-2 border-border-dark bg-white flex items-center justify-center text-base cursor-pointer disabled:opacity-40 transition-all active:scale-90 hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-500 hover:shadow-md hover:shadow-yellow-400/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400"
           >
             <span aria-hidden="true">☆</span>
           </button>
