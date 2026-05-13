@@ -10,7 +10,7 @@ export default function LandingPage() {
       <div className="w-full text-center">
 
         {/* Logo */}
-        <div className="w-12 h-12 border-2 border-ink rounded-lg flex items-center justify-center text-base font-bold text-ink mx-auto mb-8" aria-hidden="true">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-violet-600 flex items-center justify-center text-white text-lg font-bold mx-auto mb-8 shadow-lg shadow-accent/30" aria-hidden="true">
           IS
         </div>
 
@@ -18,7 +18,7 @@ export default function LandingPage() {
         <p className="text-xs text-faint uppercase tracking-widest mb-7">Swipe. Match. Intern.</p>
 
         {/* Value prop */}
-        <div className="border border-dashed border-border rounded-md p-6 mb-7">
+        <div className="rounded-2xl bg-gradient-to-br from-indigo-50 via-white to-violet-50 border border-indigo-100 p-6 mb-7">
           <p className="text-sm text-muted leading-relaxed">
             AI-powered internship matching.<br />
             Swipe through personalized opportunities.<br />
@@ -28,8 +28,8 @@ export default function LandingPage() {
 
         {/* Feature pills */}
         <div className="flex flex-wrap justify-center gap-2 mb-8">
-          {FEATURES.map((f) => (
-            <span key={f} className="px-3 py-1 border border-border rounded-full text-xs text-muted">
+          {FEATURES.map((f, i) => (
+            <span key={f} className={`px-3 py-1.5 rounded-full text-xs font-bold border ${i === 0 ? 'bg-accent text-white border-accent' : 'bg-white border-border text-muted'}`}>
               {f}
             </span>
           ))}

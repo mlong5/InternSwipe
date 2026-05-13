@@ -214,9 +214,6 @@ export default function DeckPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-6 font-mono">
         <div className="text-center max-w-[300px]">
-          <div className="w-14 h-14 rounded-full border-2 border-ink flex items-center justify-center text-xl mx-auto mb-5">
-            {noJobsAtAll ? '○' : '✓'}
-          </div>
           <h2 className="text-xl font-bold text-ink mb-2">
             {noJobsAtAll ? 'No internships yet' : 'All caught up'}
           </h2>
@@ -324,7 +321,7 @@ export default function DeckPage() {
         <div
           aria-label={`Job card: ${card.title} at ${card.company}`}
           aria-roledescription="swipeable job card"
-          className="relative border-2 border-ink rounded-lg overflow-hidden bg-white cursor-grab active:cursor-grabbing"
+          className="relative border border-border rounded-2xl overflow-hidden bg-white cursor-grab active:cursor-grabbing shadow-xl shadow-black/10"
           style={{
             transform: `translateX(${tx}px) translateY(${ty}px) rotate(${rotate}deg)`,
             opacity: cardOpacity,
@@ -387,6 +384,9 @@ export default function DeckPage() {
             </div>
           )}
 
+          {/* Accent strip */}
+          <div className="h-1 bg-gradient-to-r from-accent to-violet-500" />
+
           {/* Eligibility tag */}
           <div className="px-4 pt-4 flex justify-between items-start">
             <span className={`text-[10px] font-bold tracking-widest px-2 py-0.5 border rounded-sm ${isEligible ? 'border-green-600 text-green-700' : 'border-red-400 text-red-600'}`}>
@@ -432,7 +432,7 @@ export default function DeckPage() {
             aria-label="Skip this job"
             onClick={() => commitSwipe('left')}
             disabled={!!exitDir}
-            className="w-14 h-14 rounded-full border-2 border-ink bg-white flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="w-14 h-14 rounded-full border-2 border-ink bg-white flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-all active:scale-90 hover:border-red-500 hover:bg-red-50 hover:text-red-500 hover:shadow-md hover:shadow-red-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
           >
             <span aria-hidden="true">✕</span>
           </button>
@@ -440,7 +440,7 @@ export default function DeckPage() {
             aria-label="Save for later"
             onClick={() => commitSwipe('bookmark')}
             disabled={!!exitDir}
-            className="w-11 h-11 rounded-full border-2 border-border-dark bg-white flex items-center justify-center text-base cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="w-11 h-11 rounded-full border-2 border-border-dark bg-white flex items-center justify-center text-base cursor-pointer disabled:opacity-40 transition-all active:scale-90 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-500 hover:shadow-md hover:shadow-blue-400/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
           >
             <span aria-hidden="true">☆</span>
           </button>
@@ -448,7 +448,7 @@ export default function DeckPage() {
             aria-label={!isEligible ? 'Direct apply only — visit the company portal' : 'Apply to this job'}
             onClick={() => commitSwipe('right')}
             disabled={!!exitDir || !isEligible}
-            className="w-14 h-14 rounded-full border-2 border-ink bg-ink text-white flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="w-14 h-14 rounded-full border-2 border-ink bg-white text-ink flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-all active:scale-90 hover:border-green-500 hover:bg-green-50 hover:text-green-500 hover:shadow-md hover:shadow-green-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
           >
             <span aria-hidden="true">✓</span>
           </button>

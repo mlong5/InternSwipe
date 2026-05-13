@@ -80,6 +80,9 @@ export default function MatchesPage() {
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-4 font-mono">
       <div className="w-full">
         <h2 className="text-lg font-bold text-ink mb-1">Matches</h2>
+        <p className="text-[10px] text-faint mb-2 leading-relaxed">
+          Score is based on how many of your skills (set in Profile) appear in the job description, plus a bonus for quick-apply eligibility. Add more skills to improve accuracy.
+        </p>
         <p className="text-xs text-faint mb-4">
           {loading ? '...' : `${items.length} match${items.length === 1 ? '' : 'es'}`}
         </p>
@@ -116,7 +119,7 @@ export default function MatchesPage() {
             {items.map(item => (
               <article
                 key={item.id}
-                className="px-3.5 py-3 border border-border rounded-md bg-white"
+                className="px-3.5 py-3 border border-border rounded-xl bg-white shadow-sm"
                 aria-label={`${item.job.title} at ${item.job.company}`}
               >
                 <div className="flex items-start justify-between gap-3">
