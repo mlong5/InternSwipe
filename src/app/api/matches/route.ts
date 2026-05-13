@@ -44,6 +44,7 @@ export async function GET(): Promise<NextResponse<ApiResponse<MatchItem[]>>> {
             summary: true,
             url: true,
             eligibilityStatus: true,
+            keywords: true,
           },
         },
       },
@@ -70,7 +71,12 @@ export async function GET(): Promise<NextResponse<ApiResponse<MatchItem[]>>> {
     const items: MatchItem[] = swipes
       .map(s => {
         const appStatus = (latestStatusByJob.get(s.jobId) ?? null) as MatchItem['applicationStatus']
-        const { score, jobKeywords, matched } = computeKeywordScore(s.job.title, s.job.summary, userSelections)
+        const { score, jobKeywords, matched } = computeKeywordScore(
+          s.job.title,
+          s.job.summary,
+          userSelections,
+          s.job.keywords,
+        )
         return {
           id: s.id,
           createdAt: s.createdAt.toISOString(),

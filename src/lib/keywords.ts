@@ -42,13 +42,19 @@ export function extractJobKeywords(title: string, summary: string | null): strin
 //   - 0 user keywords overlap the job's → 30 (low fit, but never an alarming 0%)
 //   - all of the job's keywords match the user's → 100
 //
+// Pass `storedKeywords` to use the keywords column from the jobs table; otherwise
+// the keywords are extracted on the fly from title + summary as a fallback.
 // Returns the score plus the keyword breakdown so callers can debug / display it.
 export function computeKeywordScore(
   jobTitle: string,
   jobSummary: string | null,
   userSelections: string[],
+  storedKeywords?: string[] | null,
 ): { score: number; jobKeywords: string[]; matched: string[] } {
-  const jobKeywords = extractJobKeywords(jobTitle, jobSummary)
+  const jobKeywords =
+    storedKeywords && storedKeywords.length > 0
+      ? storedKeywords
+      : extractJobKeywords(jobTitle, jobSummary)
   const selectionSet = new Set(userSelections.map(s => s.toLowerCase().trim()).filter(Boolean))
 
   if (jobKeywords.length === 0 || selectionSet.size === 0) {

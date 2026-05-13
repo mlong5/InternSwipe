@@ -1,5 +1,6 @@
 import { PrismaClient } from "../src/generated/prisma";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { extractJobKeywords } from "../src/lib/keywords";
 
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
@@ -230,23 +231,27 @@ export async function upsertJobs(
   for (const entry of unique) {
     try {
       const eligibilityStatus = determineEligibility(entry);
+      const summary = entry.job_description ?? "";
+      const keywords = extractJobKeywords(entry.job_title, summary);
 
       await prismaClient.job.upsert({
         where: { title_company: { title: entry.job_title, company: entry.company_name } },
         update: {
           location: entry.location,
-          summary: entry.job_description ?? "",
+          summary,
           url: entry.url,
           eligibilityStatus,
+          keywords,
         },
         create: {
           title: entry.job_title,
           company: entry.company_name,
           location: entry.location,
-          summary: entry.job_description ?? "",
+          summary,
           url: entry.url,
           source: entry.source,
           eligibilityStatus,
+          keywords,
         },
       });
 
