@@ -9,14 +9,14 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 const APP_VERSION = '1.0.0'
 
 const SKILLS = [
-  'Python', 'JavaScript', 'React', 'SQL', 'Java', 'C++', 'Figma',
-  'TypeScript', 'Machine Learning', 'Data Analysis', 'Node.js', 'AWS',
-  'Docker', 'Git', 'Product Mgmt', 'Statistics',
+  '​ Python ​', '​ JavaScript ​', '​ React ​', '​ SQL ​', '​ Java ​', '​ C++ ​', '​ Figma ​',
+  '​ TypeScript ​', '​ Machine Learning ​', '​ Data Analysis ​', '​ Node.js ​', '​ AWS ​',
+  '​ Docker ​', '​ Git ​', '​ Product Mgmt ​', '​ Statistics ​',
 ]
 const INTERESTS = [
-  'Software Eng', 'Data Science', 'Product Design', 'Product Mgmt',
-  'ML / AI', 'Cloud Infra', 'Cybersecurity', 'Fintech', 'Healthcare',
-  'Climate Tech', 'EdTech', 'Robotics',
+  '​ Software Eng ​', '​ Data Science ​', '​ Product Design ​', '​ Product Mgmt ​',
+  '​ ML / AI ​', '​ Cloud Infra ​', '​ Cybersecurity ​', '​ Fintech ​', '​ Healthcare ​',
+  '​ Climate Tech ​', '​ EdTech ​', '​ Robotics ​',
 ]
 
 export default function SettingsPage() {
@@ -102,7 +102,7 @@ export default function SettingsPage() {
         setDeleteError(error ?? 'Could not delete account. Please try again.')
         return
       }
-      // Sign out client-side session and redirect to landing page
+      // Sign out client-side session and redirect to landing page 
       const supabase = createSupabaseBrowserClient()
       await supabase.auth.signOut()
       router.push('/')
@@ -113,32 +113,32 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center font-mono text-sm text-muted">
+      <div className="min-h-screen flex items-center justify-center font-mono text-sm text-muted bg-gray-800 text-gray-300">
         Loading...
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 py-8 font-mono">
+    <div className="min-h-screen flex flex-col items-center px-4 py-8 font-mono border-10 border-gray-800 bg-gray-800 text-white">
       <div className="w-full space-y-4">
 
-        <h2 className="text-lg font-bold text-ink">Settings</h2>
+        <h2 className="text-lg font-bold text-white">Settings</h2>
 
         {/* ── Notifications ── */}
         <section className="border border-border rounded-md p-5" aria-label="Notification settings">
-          <h3 className="text-xs font-bold text-ink uppercase tracking-widest mb-4">Notifications</h3>
+          <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-4">​ Notifications</h3>
           <button
             type="button"
             role="switch"
             aria-checked={emailAlerts}
             onClick={() => { setEmailAlerts(v => !v); setSaved(false) }}
-            className="w-full flex items-center justify-between text-sm text-ink font-mono cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink rounded"
+            className="w-full flex items-center justify-between text-sm text-gray-300 font-mono cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink rounded"
           >
-            <span>Email alerts for new matches</span>
+            <span>​ Email alerts for new matches</span>
             <span
               aria-hidden="true"
-              className={`w-9 h-5 rounded-full border-2 border-ink flex items-center transition-colors ${emailAlerts ? 'bg-ink' : 'bg-white'}`}
+              className={`w-9 h-5 rounded-full border-2 border-ink flex items-center transition-colors ${emailAlerts ? 'bg-gray-200' : 'bg-ink'}`}
             >
               <span className={`w-3.5 h-3.5 rounded-full bg-white border border-ink transition-transform mx-0.5 ${emailAlerts ? 'translate-x-4' : 'translate-x-0'}`} />
             </span>
@@ -147,8 +147,8 @@ export default function SettingsPage() {
 
         {/* ── Job match preferences ── */}
         <section className="border border-border rounded-md p-5" aria-label="Skills preferences">
-          <h3 className="text-xs font-bold text-ink uppercase tracking-widest mb-1">Skills</h3>
-          <p className="text-[11px] text-faint mb-3">Update your skills to improve job matching.</p>
+          <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-1">​ Skills</h3>
+          <p className="text-[11px] text-gray-400 mb-3">​ Update your skills to improve job matching.</p>
           <div className="flex flex-wrap gap-1.5">
             {SKILLS.map(s => (
               <Chip key={s} label={s} active={skills.includes(s)} onClick={() => toggleSkill(s)} />
@@ -157,8 +157,8 @@ export default function SettingsPage() {
         </section>
 
         <section className="border border-border rounded-md p-5" aria-label="Interest preferences">
-          <h3 className="text-xs font-bold text-ink uppercase tracking-widest mb-1">Interests</h3>
-          <p className="text-[11px] text-faint mb-3">Update your areas of interest for better recommendations.</p>
+          <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-1">​ Interests</h3>
+          <p className="text-[11px] text-gray-400 mb-3">​ Update your areas of interest for better recommendations.</p>
           <div className="flex flex-wrap gap-1.5">
             {INTERESTS.map(i => (
               <Chip key={i} label={i} active={interests.includes(i)} onClick={() => toggleInterest(i)} />
@@ -175,19 +175,19 @@ export default function SettingsPage() {
 
         {/* ── Account ── */}
         <section className="border border-border rounded-md p-5" aria-label="Account management">
-          <h3 className="text-xs font-bold text-ink uppercase tracking-widest mb-4">Account</h3>
+          <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-4">​ Account</h3>
 
           {!deleteConfirm ? (
             <button
               type="button"
               onClick={() => setDeleteConfirm(true)}
-              className="w-full text-left text-sm text-red-600 font-mono cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 rounded"
+              className="w-full border-5 border-gray-800 text-left text-sm text-red-600 font-mono cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 rounded"
             >
-              Delete account →
+              <strong>Delete account →</strong>
             </button>
           ) : (
             <div className="space-y-3">
-              <p className="text-xs text-ink leading-relaxed">
+              <p className="text-xs text-gray-400 leading-relaxed">
                 This will permanently delete your account, all applications, and uploaded resumes.
                 <strong> This cannot be undone.</strong>
               </p>
@@ -216,19 +216,19 @@ export default function SettingsPage() {
 
         {/* ── App info ── */}
         <section className="border border-border rounded-md p-5" aria-label="App information">
-          <h3 className="text-xs font-bold text-ink uppercase tracking-widest mb-3">About</h3>
+          <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-3">​ About</h3>
           <dl className="space-y-2">
             <div className="flex justify-between text-xs">
-              <dt className="text-faint">App</dt>
-              <dd className="text-ink font-bold">InternSwipe</dd>
+              <dt className="text-gray-300">​ App</dt>
+              <dd className="text-gray-400 font-bold">InternSwipe ​</dd>
             </div>
             <div className="flex justify-between text-xs">
-              <dt className="text-faint">Version</dt>
-              <dd className="text-ink">{APP_VERSION}</dd>
+              <dt className="text-gray-300">​ Version</dt>
+              <dd className="text-gray-400">{APP_VERSION} ​</dd>
             </div>
             <div className="flex justify-between text-xs">
-              <dt className="text-faint">Platform</dt>
-              <dd className="text-ink">Web</dd>
+              <dt className="text-gray-300">​ Platform</dt>
+              <dd className="text-gray-400">Web ​</dd>
             </div>
           </dl>
         </section>

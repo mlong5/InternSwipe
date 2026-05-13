@@ -210,7 +210,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center font-mono text-sm text-muted">
+      <div className="min-h-screen flex items-center justify-center font-mono text-sm text-muted bg-gray-800 text-gray-300">
         Loading...
       </div>
     )
@@ -224,14 +224,14 @@ export default function ProfilePage() {
     .join('')
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 py-8 font-mono">
+    <div className="min-h-screen flex flex-col items-center px-4 py-8 font-mono bg-gray-800 text-gray-300">
       <div className="w-full space-y-4">
 
-        <h2 className="text-lg font-bold text-ink">Profile</h2>
+        <h2 className="text-lg font-bold text-white">​ Profile</h2>
 
         {/* ── Profile form ── */}
-        <div className="border border-border rounded-md p-5">
-          <div className="w-12 h-12 rounded-full border-2 border-ink flex items-center justify-center text-sm font-bold text-ink mx-auto mb-4">
+        <div className="border-10 border-gray-800 border-border rounded-md p-5">
+          <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center text-sm font-bold text-gray-300 bg-gray-700 mx-auto mb-4">
             {initials || '?'}
           </div>
 
@@ -288,10 +288,10 @@ export default function ProfilePage() {
         </div>
 
         {/* ── Resumes ── */}
-        <div className="border border-border rounded-md p-5">
+        <div className="border-10 border-gray-800 border-border rounded-md p-5">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-bold text-ink uppercase tracking-widest">Resumes</span>
-            <span className="text-[10px] text-faint">PDF · 5 MB max · {resumes.length}/{MAX_RESUMES}</span>
+            <span className="text-xs font-bold text-white uppercase tracking-widest">Resumes</span>
+            <span className="text-[10px] text-gray-400">PDF · 5 MB max · {resumes.length}/{MAX_RESUMES}</span>
           </div>
 
           {/* Upload button */}
@@ -365,6 +365,7 @@ export default function ProfilePage() {
                           {settingMasterId === r.id ? '...' : 'Set primary'}
                         </button>
                       )}
+
                       <button
                         aria-label={`Delete ${r.filename}`}
                         onClick={() => handleDelete(r.id)}

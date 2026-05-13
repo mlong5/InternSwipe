@@ -16,7 +16,7 @@ export default function BottomNav() {
   const pathname = usePathname()
 
   return (
-    <nav aria-label="Main navigation" className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-t border-hairline flex justify-center shadow-[0_-1px_12px_rgba(0,0,0,0.06)]">
+    <nav aria-label="Main navigation" className="fixed bottom-0 left-0 right-0 z-50 bg-gray-900 border-t-2 border-ink flex justify-center">
       <div className="flex w-full max-w-[400px]">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href
@@ -25,8 +25,11 @@ export default function BottomNav() {
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={`flex-1 py-2.5 flex flex-col items-center gap-0.5 text-[9px] font-bold tracking-widest font-mono transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent
-                ${active ? 'text-accent' : 'text-faint'}`}
+              className={`flex-1 py-3 text-center font-bold tracking-widest font-mono border-b-[3px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ink
+                ${active
+                  ? 'text-white border-gray-300 text-[12px]'
+                  : 'text-gray-400 border-transparent text-[10px]'
+                }`}
             >
               <span className={`text-base leading-none ${active ? 'text-accent' : 'text-faint'}`} aria-hidden="true">
                 {item.icon}
