@@ -240,7 +240,7 @@ export default function DeckPage() {
       {/* Job detail bottom sheet */}
       {detailOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 flex items-end justify-center"
+          className="fixed inset-0 z-40 bg-black/40 flex items-center justify-center"
           onClick={handleCloseDetail}
         >
           <div
@@ -248,7 +248,7 @@ export default function DeckPage() {
             role="dialog"
             aria-modal="true"
             aria-label={`${card.title} at ${card.company} — job details`}
-            className="w-full max-w-[400px] bg-white border-t-2 border-ink rounded-t-lg p-5 pb-8"
+            className="w-full max-w-[400px] bg-white border-2 border-ink rounded-lg p-5 pb-8 mx-4"
             onClick={e => e.stopPropagation()}
             onKeyDown={handleDialogKeyDown}
           >
@@ -430,7 +430,9 @@ export default function DeckPage() {
             aria-label="Skip this job"
             onClick={() => commitSwipe('left')}
             disabled={!!exitDir}
-            className="w-14 h-14 rounded-full border-2 border-ink bg-gray-300 flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="w-14 h-14 rounded-full border-2 border-ink bg-gray-300 flex items-center justify-center text-xl 
+            cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 
+            focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
             <span aria-hidden="true">✕</span>
           </button>
@@ -438,7 +440,9 @@ export default function DeckPage() {
             aria-label="Save for later"
             onClick={() => commitSwipe('bookmark')}
             disabled={!!exitDir}
-            className="w-11 h-11 rounded-full border-2 border-border-dark bg-gray-300 flex items-center justify-center text-base cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="w-11 h-11 rounded-full border-2 border-border-dark bg-gray-300 flex items-center justify-center 
+            text-base cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 
+            focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
             <span aria-hidden="true">☆</span>
           </button>
@@ -446,7 +450,9 @@ export default function DeckPage() {
             aria-label={!isEligible ? 'Direct apply only — visit the company portal' : 'Apply to this job'}
             onClick={() => commitSwipe('right')}
             disabled={!!exitDir || !isEligible}
-            className="w-14 h-14 rounded-full border-2 border-ink bg-gray-300 text-ink flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="w-14 h-14 rounded-full border-2 border-ink bg-gray-300 text-ink flex items-center justify-center 
+            text-xl cursor-pointer disabled:opacity-40 transition-transform active:scale-90 focus-visible:outline-2 
+            focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             <span aria-hidden="true">✓</span>
           </button>

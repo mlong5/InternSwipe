@@ -24,10 +24,10 @@ export default function BottomNav() {
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={`flex-1 py-3 text-center text-[10px] font-bold tracking-widest font-mono border-b-[3px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ink
+              className={`flex-1 py-3 text-center font-bold tracking-widest font-mono border-b-[3px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-ink
                 ${active
-                  ? 'text-white border-gray-300'
-                  : 'text-gray-400 border-transparent'
+                  ? 'text-white border-gray-300 text-[12px]'
+                  : 'text-gray-400 border-transparent text-[10px]'
                 }`}
             >
               {item.label}
