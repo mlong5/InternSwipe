@@ -4,11 +4,12 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const NAV_ITEMS = [
-  { href: '/deck', label: 'SWIPE' },
-  { href: '/saved', label: 'SAVED' },
-  { href: '/history', label: 'HISTORY' },
-  { href: '/profile', label: 'PROFILE' },
-  { href: '/settings', label: 'SETTINGS' },
+  { href: '/deck',     label: 'SWIPE',    icon: '⟺' },
+  { href: '/saved',    label: 'SAVED',    icon: '☆'  },
+  { href: '/matches',  label: 'MATCHES',  icon: '◇'  },
+  { href: '/history',  label: 'HISTORY',  icon: '≡'  },
+  { href: '/profile',  label: 'PROFILE',  icon: '◯'  },
+  { href: '/settings', label: 'SETTINGS', icon: '⊙'  },
 ]
 
 export default function BottomNav() {
@@ -30,6 +31,9 @@ export default function BottomNav() {
                   : 'text-gray-400 border-transparent text-[10px]'
                 }`}
             >
+              <span className={`text-base leading-none ${active ? 'text-accent' : 'text-faint'}`} aria-hidden="true">
+                {item.icon}
+              </span>
               {item.label}
             </Link>
           )

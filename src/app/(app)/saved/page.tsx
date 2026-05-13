@@ -18,6 +18,13 @@ interface BookmarkItem {
   job: Job
 }
 
+function formatTimestamp(dateStr: string) {
+  const d = new Date(dateStr)
+  const hh = String(d.getHours()).padStart(2, '0')
+  const mm = String(d.getMinutes()).padStart(2, '0')
+  return `${hh}:${mm} ${d.toLocaleString('en-US', { month: 'long' })} ${d.getDate()}, ${d.getFullYear()}`
+}
+
 export default function SavedPage() {
   const [items, setItems] = useState<BookmarkItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -71,7 +78,7 @@ export default function SavedPage() {
             {items.map((item) => (
               <article
                 key={item.id}
-                className="px-3.5 py-3 border border-border rounded-md bg-white"
+                className="px-3.5 py-3 border border-border rounded-xl bg-white shadow-sm"
                 aria-label={`${item.job.title} at ${item.job.company}`}
               >
                 <div className="flex items-start justify-between gap-3">

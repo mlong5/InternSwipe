@@ -27,6 +27,7 @@ export default function ProfilePage() {
   const [email, setEmail] = useState('')
   const [originalEmail, setOriginalEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [skills, setSkills] = useState('')
   const [errors, setErrors] = useState<{ name?: string; email?: string; phone?: string }>({})
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState<'saved' | 'confirm-email' | false>(false)
@@ -58,6 +59,8 @@ export default function ProfilePage() {
         const { data } = await profileRes.json()
         setName(data?.name ?? '')
         setPhone(data?.phone ?? '')
+        const savedSkills = (data?.preferencesJson as { skills?: string[] } | null)?.skills ?? []
+        setSkills(savedSkills.join(', '))
       }
 
       if (resumesRes.ok) {
@@ -97,7 +100,13 @@ export default function ProfilePage() {
       const res = await fetch('/api/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), phone: phone.trim() }),
+        body: JSON.stringify({
+        name: name.trim(),
+        phone: phone.trim(),
+        preferencesJson: {
+          skills: skills.split(',').map(s => s.trim()).filter(Boolean),
+        },
+      }),
       })
       const { error } = await res.json()
       if (error) { setSaveError(error); return }
@@ -248,6 +257,20 @@ export default function ProfilePage() {
             onChange={(e) => { setPhone(e.target.value); setErrors(({ phone: _, ...rest }) => rest) }}
             error={errors.phone}
           />
+
+          <div className="mb-4">
+            <label className="block text-xs font-bold text-ink mb-1 uppercase tracking-widest">
+              Skills & Technologies
+            </label>
+            <textarea
+              placeholder="e.g. React, Python, TypeScript, Machine Learning"
+              value={skills}
+              onChange={e => setSkills(e.target.value)}
+              rows={3}
+              className="w-full border border-border rounded px-3 py-2 text-xs font-mono text-ink placeholder:text-faint resize-none focus:outline-none focus:border-ink"
+            />
+            <p className="text-[10px] text-faint mt-1">Comma-separated. Used to score how well job postings match your background.</p>
+          </div>
 
           {saveError && (
             <p className="text-xs text-red-500 mb-3">{saveError}</p>

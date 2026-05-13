@@ -96,8 +96,8 @@ export default function DeckPage() {
     fetch('/api/swipe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jobId: card.id, action: dir === 'right' ? 'RIGHT' : 'LEFT' }),
-    }).catch(() => { })
+      body: JSON.stringify({ jobId: card.id, action: dir === 'right' ? 'RIGHT' : dir === 'left' ? 'LEFT' : 'BOOKMARK' }),
+    }).catch(() => {})
 
     // Submit application on right-swipe
     if (dir === 'right') {
@@ -214,9 +214,6 @@ export default function DeckPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-6 font-mono">
         <div className="text-center max-w-[300px]">
-          <div className="w-14 h-14 rounded-full border-2 border-ink flex items-center justify-center text-xl mx-auto mb-5">
-            {noJobsAtAll ? '○' : '✓'}
-          </div>
           <h2 className="text-xl font-bold text-ink mb-2">
             {noJobsAtAll ? 'No internships yet' : 'All caught up'}
           </h2>
@@ -272,15 +269,17 @@ export default function DeckPage() {
             <p className="text-xs text-ink leading-relaxed mb-4 max-h-48 overflow-y-auto">
               {card.summary}
             </p>
-            <a
-              href={card.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-bold underline text-ink"
-              onClick={e => e.stopPropagation()}
-            >
-              View original posting →
-            </a>
+            {card.url && (
+              <a
+                href={card.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-bold underline text-ink"
+                onClick={e => e.stopPropagation()}
+              >
+                View original posting →
+              </a>
+            )}
           </div>
         </div>
       )}
@@ -384,6 +383,9 @@ export default function DeckPage() {
               </span>
             </div>
           )}
+
+          {/* Accent strip */}
+          <div className="h-1 bg-gradient-to-r from-accent to-violet-500" />
 
           {/* Eligibility tag */}
           <div className="px-4 pt-4 flex justify-between items-start">

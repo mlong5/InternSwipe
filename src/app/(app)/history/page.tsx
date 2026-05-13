@@ -41,6 +41,13 @@ const FILTERS = [
   { id: 'SKIPPED', label: 'Skipped' },
 ]
 
+function formatTimestamp(dateStr: string) {
+  const d = new Date(dateStr)
+  const hh = String(d.getHours()).padStart(2, '0')
+  const mm = String(d.getMinutes()).padStart(2, '0')
+  return `${hh}:${mm} ${d.toLocaleString('en-US', { month: 'long' })} ${d.getDate()}, ${d.getFullYear()}`
+}
+
 export default function HistoryPage() {
   const [items, setItems] = useState<HistoryItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -230,13 +237,14 @@ export default function HistoryPage() {
                   <div className="text-sm font-bold text-white truncate">{item.job.title}</div>
                   <div className="text-xs text-muted">{item.job.company}</div>
                   <div className="text-xs text-gray-500">📍 {item.job.location ?? 'Remote'}</div>
+                  <div className="text-[10px] text-gray-500 mt-0.5">{formatTimestamp(item.date)}</div>
                 </div>
               )
 
               return isSkipped ? (
                 <div
                   key={item.id}
-                  className="flex items-center gap-3 px-3.5 py-3 border border-border rounded-md"
+                  className="flex items-center gap-3 px-3.5 py-3 border border-border rounded-xl shadow-sm"
                 >
                   {jobInfo}
                   {statusBadge}
@@ -245,7 +253,7 @@ export default function HistoryPage() {
                 <Link
                   key={item.id}
                   href={`/history/${item.id}`}
-                  className="flex items-center gap-3 px-3.5 py-3 border border-border rounded-md hover:border-ink transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                  className="flex items-center gap-3 px-3.5 py-3 border border-border rounded-xl shadow-sm hover:border-accent hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                   aria-label={`${item.job.title} at ${item.job.company} — ${STATUS_LABEL[item.status]}`}
                 >
                   {jobInfo}
