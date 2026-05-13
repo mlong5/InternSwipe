@@ -29,6 +29,7 @@ export default function SavedPage() {
   const [items, setItems] = useState<BookmarkItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [unsavingIds, setUnsavingIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     async function load() {
@@ -52,13 +53,37 @@ export default function SavedPage() {
     load()
   }, [])
 
+  async function handleUnsave(itemId: string, jobId: string, title: string, company: string) {
+    if (!window.confirm(`Unsave ${title} at ${company}? It will reappear in your swipe deck.`)) return
+    setUnsavingIds(prev => new Set(prev).add(itemId))
+    try {
+      const res = await fetch('/api/swipe', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobId }),
+      })
+      if (!res.ok) {
+        const payload = await res.json().catch(() => null)
+        throw new Error(payload?.error ?? 'Could not unsave.')
+      }
+      setItems(prev => prev.filter(i => i.id !== itemId))
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Could not unsave.')
+    } finally {
+      setUnsavingIds(prev => {
+        const next = new Set(prev)
+        next.delete(itemId)
+        return next
+      })
+    }
+  }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-4 font-mono bg-gray-800 text-gray-300">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-4 font-mono">
       <div className="w-full">
-        <h2 className="text-lg font-bold text-white mb-1"> ​ Saved</h2>
+        <h2 className="text-lg font-bold text-ink mb-1">Saved</h2>
         <p className="text-xs text-faint mb-4">
-          {loading ? '...' : ` ​  ​ ${items.length} saved internship${items.length === 1 ? '' : 's'}`}
+          {loading ? '...' : `${items.length} saved internship${items.length === 1 ? '' : 's'}`}
         </p>
 
         {loading ? (
@@ -68,7 +93,7 @@ export default function SavedPage() {
         ) : items.length === 0 ? (
           <div className="text-center py-12 text-sm text-faint">
             No saved internships yet. Save one from the{' '}
-            <Link href="/deck" className="underline text-white">
+            <Link href="/deck" className="underline text-ink">
               Swipe deck
             </Link>
             .
@@ -78,34 +103,47 @@ export default function SavedPage() {
             {items.map((item) => (
               <article
                 key={item.id}
-                className="px-3.5 py-3 border border-border rounded-xl bg-white shadow-sm"
+                className="px-3.5 py-3 border border-border rounded-xl bg-card shadow-sm"
                 aria-label={`${item.job.title} at ${item.job.company}`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-white truncate">{item.job.title}</h3>
-                    <p className="text-xs text-gray-400 truncate">{item.job.company}</p>
-                    <p className="text-xs text-gray-300">📍 {item.job.location ?? 'Remote'}</p>
+                    <h3 className="text-sm font-bold text-ink truncate">{item.job.title}</h3>
+                    <p className="text-xs text-muted truncate">{item.job.company}</p>
+                    <p className="text-xs text-faint">📍 {item.job.location ?? 'Remote'}</p>
                   </div>
-                  <span className="text-[10px] text-gray-300 shrink-0">
-                    {new Date(item.createdAt).toLocaleDateString()}
+                  <span className="text-[10px] text-faint shrink-0">
+                    {formatTimestamp(item.createdAt)}
                   </span>
                 </div>
 
                 {item.job.summary && (
-                  <p className="text-xs text-gray-400 mt-2 line-clamp-2">{item.job.summary}</p>
+                  <p className="text-xs text-muted mt-2 line-clamp-2">{item.job.summary}</p>
                 )}
 
-                {item.job.url && (
-                  <a
-                    href={item.job.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-block mt-2 text-xs font-bold text-white underline"
+                <div className="mt-2 flex items-center justify-between gap-3">
+                  {item.job.url ? (
+                    <a
+                      href={item.job.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs font-bold text-ink underline"
+                    >
+                      Open listing
+                    </a>
+                  ) : (
+                    <span />
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => handleUnsave(item.id, item.job.id, item.job.title, item.job.company)}
+                    disabled={unsavingIds.has(item.id)}
+                    aria-label={`Unsave ${item.job.title} at ${item.job.company}`}
+                    className="text-[10px] font-bold tracking-widest px-2 py-1 border border-border rounded text-faint hover:border-red-500 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
                   >
-                    Open listing
-                  </a>
-                )}
+                    {unsavingIds.has(item.id) ? 'UNSAVING…' : '✕ UNSAVE'}
+                  </button>
+                </div>
               </article>
             ))}
           </div>

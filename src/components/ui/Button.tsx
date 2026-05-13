@@ -19,7 +19,7 @@ export default function Button({
     'w-full py-3 px-6 rounded-lg text-sm font-bold tracking-wide border-2 transition-all cursor-pointer font-mono text-center'
   const variants = {
     primary: 'bg-accent border-accent text-white hover:bg-accent-dark hover:border-accent-dark shadow-sm',
-    secondary: 'bg-white text-ink border-border hover:border-ink hover:shadow-sm',
+    secondary: 'bg-card text-ink border-border hover:border-ink hover:shadow-sm',
   }
 
   return (

@@ -20,3 +20,23 @@ export async function GET(): Promise<NextResponse<ApiResponse<unknown>>> {
     return NextResponse.json({ data: null, error: message }, { status: 500 })
   }
 }
+
+export async function DELETE(): Promise<NextResponse<ApiResponse<{ swipes: number; applications: number }>>> {
+  try {
+    const auth = await requireAuth()
+    if (auth.response) return auth.response
+
+    const [apps, swipes] = await prisma.$transaction([
+      prisma.application.deleteMany({ where: { userId: auth.user.id } }),
+      prisma.swipeAction.deleteMany({ where: { userId: auth.user.id } }),
+    ])
+
+    return NextResponse.json(
+      { data: { swipes: swipes.count, applications: apps.count }, error: null },
+      { status: 200 },
+    )
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'An unexpected error occurred'
+    return NextResponse.json({ data: null, error: message }, { status: 500 })
+  }
+}

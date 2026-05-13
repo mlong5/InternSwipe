@@ -20,7 +20,7 @@ export default function Input({ label, placeholder, value, onChange, type = 'tex
         value={value}
         onChange={onChange}
         readOnly={readOnly}
-        className={`w-full px-3 py-2.5 rounded-lg border bg-white text-ink text-sm font-mono outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20 ${
+        className={`w-full px-3 py-2.5 rounded-lg border bg-card text-ink text-sm font-mono outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20 ${
           error ? 'border-red-400' : 'border-border'
         } ${readOnly ? 'opacity-60 cursor-default' : ''}`}
       />

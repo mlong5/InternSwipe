@@ -1,40 +1,46 @@
 @import "tailwindcss";
 
 @theme {
-  --color-surface: #F5F5F5;
-  --color-ink: #1A1A1A;
-  --color-muted: #666666;
+  --color-surface: #F5F5F7;
+  --color-card: #FFFFFF;
+  --color-ink: #111111;
+  --color-muted: #555555;
   --color-faint: #6B6B6B;
-  /* was #999 — bumped to pass WCAG AA 4.5:1 on #F5F5F5 (4.88:1) */
-  --color-hairline: #E0E0E0;
-  --color-border: #D0D0D0;
-  --color-border-dark: #999999;
-  /* border only — contrast requirement does not apply */
+  --color-hairline: #E5E5E7;
+  --color-border: #D1D1D6;
+  --color-border-dark: #8E8E93;
   --color-accent: #6366f1;
   --color-accent-dark: #4f46e5;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@layer base {
+  .dark {
+    --color-surface: #0A0A0B;
+    --color-card: #18181B;
+    --color-ink: #F4F4F5;
+    --color-muted: #A1A1AA;
+    --color-faint: #71717A;
+    --color-hairline: #27272A;
+    --color-border: #3F3F46;
+    --color-border-dark: #71717A;
+    --color-accent: #818CF8;
+    --color-accent-dark: #6366F1;
+  }
 }
 
 body {
-  background: #1c1d1d;
+  background: var(--color-surface);
   font-family: 'Courier New', Courier, monospace;
+  color: var(--color-ink);
 }
 
 input::placeholder {
-  color: #6B6B6B;
-  /* matches --color-faint — passes WCAG AA */
+  color: var(--color-faint);
 }
 
 /* Global focus-visible ring — WCAG 2.4.7 */
 :focus-visible {
-  outline: 2px solid #1A1A1A;
+  outline: 2px solid var(--color-ink);
   outline-offset: 2px;
 }
 

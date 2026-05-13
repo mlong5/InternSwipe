@@ -145,7 +145,7 @@ export default function ApplicationDetailPage() {
   const { job, resume, submissionLogs } = app
   const isEligible  = job.eligibilityStatus === 'ELIGIBLE'
   const isFailed    = app.status === 'FAILED'
-  const statusStyle = STATUS_STYLE[app.status] ?? 'text-muted border-border bg-white'
+  const statusStyle = STATUS_STYLE[app.status] ?? 'text-muted border-border bg-card'
   const appliedDate = new Date(app.appliedAt).toLocaleDateString('en-US', {
     month: 'short', day: 'numeric', year: 'numeric',
   })
@@ -207,7 +207,7 @@ export default function ApplicationDetailPage() {
               onClick={handleRetry}
               disabled={retrying}
               aria-label="Retry this application"
-              className="w-full py-2.5 bg-ink text-white text-xs font-bold tracking-widest rounded border-2 border-ink cursor-pointer disabled:opacity-50 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink font-mono"
+              className="w-full py-2.5 bg-ink text-card text-xs font-bold tracking-widest rounded border-2 border-ink cursor-pointer disabled:opacity-50 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink font-mono"
             >
               {retrying ? 'RETRYING...' : 'RETRY APPLICATION'}
             </button>

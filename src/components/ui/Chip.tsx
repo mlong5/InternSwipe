@@ -21,8 +21,8 @@ export default function Chip({ label, active = false, onClick }: ChipProps) {
       aria-pressed={active}
       className={`inline-block px-3 py-1 rounded-full text-xs font-mono cursor-pointer select-none border transition-colors
         ${active
-          ? 'bg-ink text-white border-ink font-bold'
-          : 'bg-white text-muted border-border'
+          ? 'bg-ink text-card border-ink font-bold'
+          : 'bg-card text-muted border-border'
         }`}
     >
       {label}

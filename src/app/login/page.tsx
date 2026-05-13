@@ -25,7 +25,7 @@ export default function LoginPage() {
         if (authError) { setError(authError.message); return }
         router.push('/deck')
       } else {
-        // Sign up via our API so the Prisma user record is created alongside the auth user 
+        // Sign up via our API so the Prisma user record is created alongside the auth user
         const res = await fetch('/api/auth/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
