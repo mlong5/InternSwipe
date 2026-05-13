@@ -16,10 +16,10 @@ export default function Button({
   className = '',
 }: ButtonProps) {
   const base =
-    'w-full py-3 px-6 rounded-md text-sm font-bold tracking-wide border-2 border-ink transition-opacity cursor-pointer font-mono text-center'
+    'w-full py-3 px-6 rounded-lg text-sm font-bold tracking-wide border-2 transition-all cursor-pointer font-mono text-center'
   const variants = {
-    primary: 'bg-ink text-white',
-    secondary: 'bg-white text-ink',
+    primary: 'bg-accent border-accent text-white hover:bg-accent-dark hover:border-accent-dark shadow-sm',
+    secondary: 'bg-white text-ink border-border hover:border-ink hover:shadow-sm',
   }
 
   return (

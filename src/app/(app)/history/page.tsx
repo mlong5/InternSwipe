@@ -243,7 +243,7 @@ export default function HistoryPage() {
               return isSkipped ? (
                 <div
                   key={item.id}
-                  className="flex items-center gap-3 px-3.5 py-3 border border-border rounded-md"
+                  className="flex items-center gap-3 px-3.5 py-3 border border-border rounded-xl shadow-sm"
                 >
                   {jobInfo}
                   {statusBadge}
@@ -252,7 +252,7 @@ export default function HistoryPage() {
                 <Link
                   key={item.id}
                   href={`/history/${item.id}`}
-                  className="flex items-center gap-3 px-3.5 py-3 border border-border rounded-md hover:border-ink transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                  className="flex items-center gap-3 px-3.5 py-3 border border-border rounded-xl shadow-sm hover:border-accent hover:shadow-md transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                   aria-label={`${item.job.title} at ${item.job.company} — ${STATUS_LABEL[item.status]}`}
                 >
                   {jobInfo}
