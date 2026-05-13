@@ -207,6 +207,7 @@ _Section last updated: May 12, 2026 — synced with route handlers in `src/app/a
 | `npx prisma db seed` | Seed the database with jobs |
 | `npx prisma generate` | Regenerate Prisma client |
 | `npx prisma studio` | Open Prisma Studio (database GUI) |
+| `npm run ingest:jobs` | Seeds from ingest-jobs.ts |
 
 ## Documentation
 

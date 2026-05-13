@@ -2,12 +2,15 @@ import { NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth-guard'
 import { prisma } from '@/lib/prisma'
 import { safeErrorMessage } from '@/lib/validation'
+import { computeKeywordScore } from '@/lib/keywords'
 import type { ApiResponse } from '@/types'
 
 interface MatchItem {
   id: string
   createdAt: string
   score: number
+  matchedKeywords: string[]
+  jobKeywords: string[]
   job: {
     id: string
     company: string
@@ -20,38 +23,14 @@ interface MatchItem {
   applicationStatus: 'APPLIED' | 'FAILED' | 'PENDING' | null
 }
 
-function computeScore(
-  skills: string[],
-  jobTitle: string,
-  jobSummary: string | null,
-  eligibilityStatus: string,
-  applicationStatus: string | null,
-): number {
-  let score = 30
-
-  if (skills.length > 0) {
-    const jobText = `${jobTitle} ${jobSummary ?? ''}`.toLowerCase()
-    const matched = skills.filter(s => jobText.includes(s.toLowerCase().trim()))
-    score += Math.round((matched.length / skills.length) * 55)
-  } else {
-    score += 25
-  }
-
-  if (eligibilityStatus === 'ELIGIBLE') score += 15
-  if (applicationStatus === 'APPLIED') score = Math.min(100, score + 5)
-  else if (applicationStatus === 'FAILED') score = Math.max(0, score - 10)
-
-  return Math.min(100, Math.max(0, score))
-}
-
 export async function GET(): Promise<NextResponse<ApiResponse<MatchItem[]>>> {
   try {
     const auth = await requireAuth()
     if (auth.response) return auth.response
 
     const profile = await prisma.profile.findUnique({ where: { userId: auth.user.id } })
-    const prefs = profile?.preferencesJson as { skills?: string[] } | null
-    const skills = prefs?.skills ?? []
+    const prefs = profile?.preferencesJson as { skills?: string[]; interests?: string[] } | null
+    const userSelections = [...(prefs?.skills ?? []), ...(prefs?.interests ?? [])]
 
     const swipes = await prisma.swipeAction.findMany({
       where: { userId: auth.user.id, action: 'RIGHT' },
@@ -65,6 +44,7 @@ export async function GET(): Promise<NextResponse<ApiResponse<MatchItem[]>>> {
             summary: true,
             url: true,
             eligibilityStatus: true,
+            keywords: true,
           },
         },
       },
@@ -80,7 +60,7 @@ export async function GET(): Promise<NextResponse<ApiResponse<MatchItem[]>>> {
         })
       : []
 
-    // Keep only the most recent application status per job
+    // Keep only the most recent application status per job (legacy quick-apply records).
     const latestStatusByJob = new Map<string, string>()
     for (const app of applications) {
       if (!latestStatusByJob.has(app.jobId)) {
@@ -91,10 +71,18 @@ export async function GET(): Promise<NextResponse<ApiResponse<MatchItem[]>>> {
     const items: MatchItem[] = swipes
       .map(s => {
         const appStatus = (latestStatusByJob.get(s.jobId) ?? null) as MatchItem['applicationStatus']
+        const { score, jobKeywords, matched } = computeKeywordScore(
+          s.job.title,
+          s.job.summary,
+          userSelections,
+          s.job.keywords,
+        )
         return {
           id: s.id,
           createdAt: s.createdAt.toISOString(),
-          score: computeScore(skills, s.job.title, s.job.summary, s.job.eligibilityStatus, appStatus),
+          score,
+          jobKeywords,
+          matchedKeywords: matched,
           job: {
             id: s.job.id,
             company: s.job.company,

@@ -5,19 +5,12 @@ import { useRouter } from 'next/navigation'
 import Button from '@/components/ui/Button'
 import Chip from '@/components/ui/Chip'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
+import { SKILL_KEYWORDS, INTEREST_KEYWORDS } from '@/lib/keywords'
 
 const APP_VERSION = '1.2.1'
 
-const SKILLS = [
-  'Python', 'JavaScript', 'React', 'SQL', 'Java', 'C++', 'Figma',
-  'TypeScript', 'Machine Learning', 'Data Analysis', 'Node.js', 'AWS',
-  'Docker', 'Git', 'Product Mgmt', 'Statistics',
-]
-const INTERESTS = [
-  'Software Eng', 'Data Science', 'Product Design', 'Product Mgmt',
-  'ML / AI', 'Cloud Infra', 'Cybersecurity', 'Fintech', 'Healthcare',
-  'Climate Tech', 'EdTech', 'Robotics',
-]
+const SKILLS = SKILL_KEYWORDS
+const INTERESTS = INTEREST_KEYWORDS
 
 export default function SettingsPage() {
   const router = useRouter()

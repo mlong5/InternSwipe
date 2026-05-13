@@ -83,6 +83,7 @@ model Job {
   summary           String?
   url               String?
   eligibilityStatus EligibilityStatus @map("eligibility_status")
+  keywords          String[]          @default([])
   createdAt         DateTime          @default(now()) @map("created_at")
 
   swipeActions SwipeAction[]

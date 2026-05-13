@@ -7,6 +7,8 @@ interface MatchItem {
   id: string
   createdAt: string
   score: number
+  jobKeywords?: string[]
+  matchedKeywords?: string[]
   job: {
     id: string
     company: string
@@ -92,7 +94,7 @@ export default function MatchesPage() {
       <div className="w-full">
         <h2 className="text-lg font-bold text-ink mb-1">Matches</h2>
         <p className="text-[10px] text-faint mb-2 leading-relaxed">
-          Score is based on how many of your skills (set in Profile) appear in the job description. Add more skills to improve accuracy.
+          Score is the percentage of each job's recognized keywords that match the skills and interests you selected in Settings. 50% means we couldn't read keywords from the posting or you haven't picked any yet.
         </p>
         <p className="text-xs text-faint mb-4">
           {loading ? '...' : `${items.length} match${items.length === 1 ? '' : 'es'}`}
@@ -139,6 +141,22 @@ export default function MatchesPage() {
                 </div>
 
                 <ScoreBar score={item.score} />
+
+                {item.jobKeywords && item.jobKeywords.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {item.jobKeywords.map(kw => {
+                      const isMatch = item.matchedKeywords?.includes(kw)
+                      return (
+                        <span
+                          key={kw}
+                          className={`text-[9px] font-bold tracking-wide px-1.5 py-0.5 rounded-sm border ${isMatch ? 'bg-green-50 border-green-600 text-green-700' : 'border-border text-faint'}`}
+                        >
+                          {kw}
+                        </span>
+                      )
+                    })}
+                  </div>
+                )}
 
                 <div className="mt-2 flex items-center justify-between gap-3">
                   {item.job.url ? (
