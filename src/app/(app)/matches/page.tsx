@@ -49,6 +49,7 @@ export default function MatchesPage() {
   const [items, setItems] = useState<MatchItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [unmatchingIds, setUnmatchingIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     async function load() {
@@ -68,6 +69,31 @@ export default function MatchesPage() {
     }
     load()
   }, [])
+
+  async function handleUnmatch(matchId: string, jobId: string, title: string, company: string) {
+    if (!window.confirm(`Unmatch with ${title} at ${company}? It will reappear in your swipe deck.`)) return
+    setUnmatchingIds(prev => new Set(prev).add(matchId))
+    try {
+      const res = await fetch('/api/swipe', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobId }),
+      })
+      if (!res.ok) {
+        const payload = await res.json().catch(() => null)
+        throw new Error(payload?.error ?? 'Could not unmatch.')
+      }
+      setItems(prev => prev.filter(i => i.id !== matchId))
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Could not unmatch.')
+    } finally {
+      setUnmatchingIds(prev => {
+        const next = new Set(prev)
+        next.delete(matchId)
+        return next
+      })
+    }
+  }
 
   const avgScore =
     items.length > 0
@@ -146,16 +172,29 @@ export default function MatchesPage() {
 
                 <ScoreBar score={item.score} />
 
-                {item.job.url && (
-                  <a
-                    href={item.job.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-block mt-2 text-xs font-bold text-ink underline"
+                <div className="mt-2 flex items-center justify-between gap-3">
+                  {item.job.url ? (
+                    <a
+                      href={item.job.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs font-bold text-ink underline"
+                    >
+                      Open listing
+                    </a>
+                  ) : (
+                    <span />
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => handleUnmatch(item.id, item.job.id, item.job.title, item.job.company)}
+                    disabled={unmatchingIds.has(item.id)}
+                    aria-label={`Unmatch with ${item.job.title} at ${item.job.company}`}
+                    className="text-[10px] font-bold tracking-widest px-2 py-1 border border-border rounded text-faint hover:border-red-500 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
                   >
-                    Open listing
-                  </a>
-                )}
+                    {unmatchingIds.has(item.id) ? 'UNMATCHING…' : '✕ UNMATCH'}
+                  </button>
+                </div>
               </article>
             ))}
           </div>

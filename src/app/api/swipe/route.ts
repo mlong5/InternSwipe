@@ -37,3 +37,26 @@ export async function POST(
     return NextResponse.json({ data: null, error: safeErrorMessage(err) }, { status: 500 })
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+): Promise<NextResponse<ApiResponse<{ deleted: number }>>> {
+  try {
+    const auth = await requireAuth()
+    if (auth.response) return auth.response
+
+    const body = (await request.json().catch(() => null)) as { jobId?: unknown } | null
+    const jobId = body?.jobId
+    if (typeof jobId !== 'string' || jobId.length === 0) {
+      return NextResponse.json({ data: null, error: 'jobId required' }, { status: 400 })
+    }
+
+    const result = await prisma.swipeAction.deleteMany({
+      where: { userId: auth.user.id, jobId },
+    })
+
+    return NextResponse.json({ data: { deleted: result.count }, error: null }, { status: 200 })
+  } catch (err) {
+    return NextResponse.json({ data: null, error: safeErrorMessage(err) }, { status: 500 })
+  }
+}

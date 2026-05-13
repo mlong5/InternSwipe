@@ -237,7 +237,7 @@ export default function DeckPage() {
       {/* Job detail bottom sheet */}
       {detailOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 flex items-end justify-center"
+          className="fixed inset-0 z-40 bg-black/40 flex items-center justify-center px-4"
           onClick={handleCloseDetail}
         >
           <div
@@ -245,7 +245,7 @@ export default function DeckPage() {
             role="dialog"
             aria-modal="true"
             aria-label={`${card.title} at ${card.company} — job details`}
-            className="w-full max-w-[400px] bg-white border-t-2 border-ink rounded-t-lg p-5 pb-8"
+            className="w-full max-w-[400px] bg-white border-2 border-ink rounded-lg p-5"
             onClick={e => e.stopPropagation()}
             onKeyDown={handleDialogKeyDown}
           >
@@ -310,7 +310,7 @@ export default function DeckPage() {
         ))}
       </div>
 
-      <div className="w-full max-w-[400px] mx-auto">
+      <div className="w-full max-w-[500px] mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-3.5">
           <h2 className="text-lg font-bold text-ink">InternSwipe</h2>
@@ -388,30 +388,30 @@ export default function DeckPage() {
           <div className="h-1 bg-gradient-to-r from-accent to-violet-500" />
 
           {/* Eligibility tag */}
-          <div className="px-4 pt-4 flex justify-between items-start">
+          <div className="px-6 pt-7 flex justify-between items-start">
             <span className={`text-[10px] font-bold tracking-widest px-2 py-0.5 border rounded-sm ${isEligible ? 'border-green-600 text-green-700' : 'border-red-400 text-red-600'}`}>
               {isEligible ? 'QUICK APPLY' : 'DIRECT APPLY ONLY'}
             </span>
           </div>
 
           {/* Role + company */}
-          <div className="px-4 pt-3">
-            <h3 className="text-xl font-bold text-ink mb-0.5">{card.title}</h3>
-            <p className="text-sm text-muted mb-1.5">{card.company}</p>
+          <div className="px-6 pt-5">
+            <h3 className="text-base font-bold text-ink mb-1.5 leading-snug">{card.title}</h3>
+            <p className="text-sm text-muted mb-2.5">{card.company}</p>
             <div className="flex gap-3.5 text-xs text-faint">
               <span>📍 {card.location}</span>
             </div>
           </div>
 
           {/* Summary preview */}
-          <div className="px-4 py-3.5">
+          <div className="px-6 pt-6 pb-6">
             <p className="text-xs text-muted leading-relaxed" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
               {card.summary}
             </p>
           </div>
 
           {/* View details toggle */}
-          <div className="border-t border-hairline px-4 py-2.5">
+          <div className="border-t border-hairline px-6 py-4">
             <button
               ref={detailTriggerRef}
               type="button"
@@ -427,37 +427,34 @@ export default function DeckPage() {
         </div>
 
         {/* Action buttons */}
-        <div className="flex justify-center items-center gap-5 mt-5" role="group" aria-label="Swipe actions">
+        <div className="grid grid-cols-3 gap-2 mt-2" role="group" aria-label="Swipe actions">
           <button
             aria-label="Skip this job"
             onClick={() => commitSwipe('left')}
             disabled={!!exitDir}
-            className="w-14 h-14 rounded-full border-2 border-ink bg-white flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-all active:scale-90 hover:border-red-500 hover:bg-red-50 hover:text-red-500 hover:shadow-md hover:shadow-red-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+            className="aspect-square rounded-xl border-2 border-ink bg-white flex flex-col items-center justify-center gap-2 cursor-pointer disabled:opacity-40 transition-all active:scale-95 hover:border-red-500 hover:bg-red-50 hover:text-red-500 hover:shadow-md hover:shadow-red-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
           >
-            <span aria-hidden="true">✕</span>
+            <span aria-hidden="true" className="text-4xl leading-none">✕</span>
+            <span className="text-[10px] font-bold tracking-widest">PASS</span>
           </button>
           <button
             aria-label="Save for later"
             onClick={() => commitSwipe('bookmark')}
             disabled={!!exitDir}
-            className="w-11 h-11 rounded-full border-2 border-border-dark bg-white flex items-center justify-center text-base cursor-pointer disabled:opacity-40 transition-all active:scale-90 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-500 hover:shadow-md hover:shadow-blue-400/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+            className="aspect-square rounded-xl border-2 border-ink bg-white flex flex-col items-center justify-center gap-2 cursor-pointer disabled:opacity-40 transition-all active:scale-95 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-500 hover:shadow-md hover:shadow-blue-400/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
           >
-            <span aria-hidden="true">☆</span>
+            <span aria-hidden="true" className="text-4xl leading-none">★</span>
+            <span className="text-[10px] font-bold tracking-widest">SAVE</span>
           </button>
           <button
             aria-label={!isEligible ? 'Direct apply only — visit the company portal' : 'Apply to this job'}
             onClick={() => commitSwipe('right')}
             disabled={!!exitDir || !isEligible}
-            className="w-14 h-14 rounded-full border-2 border-ink bg-white text-ink flex items-center justify-center text-xl cursor-pointer disabled:opacity-40 transition-all active:scale-90 hover:border-green-500 hover:bg-green-50 hover:text-green-500 hover:shadow-md hover:shadow-green-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
+            className="aspect-square rounded-xl border-2 border-ink bg-white text-ink flex flex-col items-center justify-center gap-2 cursor-pointer disabled:opacity-40 transition-all active:scale-95 hover:border-green-500 hover:bg-green-50 hover:text-green-500 hover:shadow-md hover:shadow-green-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
           >
-            <span aria-hidden="true">✓</span>
+            <span aria-hidden="true" className="text-4xl leading-none">✓</span>
+            <span className="text-[10px] font-bold tracking-widest">{isEligible ? 'APPLY' : 'LOCKED'}</span>
           </button>
-        </div>
-
-        <div className="flex justify-center gap-8 mt-2 text-[10px] text-faint font-bold tracking-wide" aria-hidden="true">
-          <span className="w-14 text-center">PASS</span>
-          <span className="w-11 text-center">SAVE</span>
-          <span className="w-14 text-center">{isEligible ? 'APPLY' : 'LOCKED'}</span>
         </div>
 
         <p className="text-center text-[9px] text-faint mt-3 tracking-wide hidden md:block" aria-hidden="true">
