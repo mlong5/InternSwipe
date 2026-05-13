@@ -145,7 +145,7 @@ export default function MatchesPage() {
             {items.map(item => (
               <article
                 key={item.id}
-                className="px-3.5 py-3 border border-border rounded-xl bg-white shadow-sm"
+                className="px-3.5 py-3 border border-border rounded-xl bg-card shadow-sm"
                 aria-label={`${item.job.title} at ${item.job.company}`}
               >
                 <div className="flex items-start justify-between gap-3">

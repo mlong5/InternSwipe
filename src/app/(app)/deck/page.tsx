@@ -245,7 +245,7 @@ export default function DeckPage() {
             role="dialog"
             aria-modal="true"
             aria-label={`${card.title} at ${card.company} — job details`}
-            className="w-full max-w-[400px] bg-white border-2 border-ink rounded-lg p-5"
+            className="w-full max-w-[400px] bg-card border-2 border-ink rounded-lg p-5"
             onClick={e => e.stopPropagation()}
             onKeyDown={handleDialogKeyDown}
           >
@@ -321,7 +321,7 @@ export default function DeckPage() {
         <div
           aria-label={`Job card: ${card.title} at ${card.company}`}
           aria-roledescription="swipeable job card"
-          className="relative border border-border rounded-2xl overflow-hidden bg-white cursor-grab active:cursor-grabbing shadow-xl shadow-black/10"
+          className="relative border border-border rounded-2xl overflow-hidden bg-card cursor-grab active:cursor-grabbing shadow-xl shadow-black/10"
           style={{
             transform: `translateX(${tx}px) translateY(${ty}px) rotate(${rotate}deg)`,
             opacity: cardOpacity,
@@ -369,14 +369,14 @@ export default function DeckPage() {
             </div>
           )}
 
-          {/* Skip overlay (gray) */}
+          {/* Skip overlay (red) */}
           {overlayDir === 'left' && (
             <div
               className="absolute inset-0 z-10 flex items-center justify-center rounded-lg pointer-events-none"
-              style={{ background: `rgba(82,82,82,${0.12 + overlayOpacity * 0.18})` }}
+              style={{ background: `rgba(239,68,68,${0.18 + overlayOpacity * 0.22})` }}
             >
               <span
-                className="border-[3px] border-neutral-500 text-neutral-500 font-bold text-2xl tracking-widest px-4 py-1 rounded rotate-[12deg]"
+                className="border-[3px] border-red-500 text-red-500 font-bold text-2xl tracking-widest px-4 py-1 rounded rotate-[12deg]"
                 style={{ opacity: overlayOpacity }}
               >
                 SKIP
@@ -432,7 +432,7 @@ export default function DeckPage() {
             aria-label="Skip this job"
             onClick={() => commitSwipe('left')}
             disabled={!!exitDir}
-            className="aspect-square rounded-xl border-2 border-ink bg-white flex flex-col items-center justify-center gap-2 cursor-pointer disabled:opacity-40 transition-all active:scale-95 hover:border-red-500 hover:bg-red-50 hover:text-red-500 hover:shadow-md hover:shadow-red-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+            className="aspect-square rounded-xl border-2 border-ink bg-card flex flex-col items-center justify-center gap-2 cursor-pointer disabled:opacity-40 transition-all active:scale-95 hover:border-red-500 hover:bg-red-50 hover:text-red-500 hover:shadow-md hover:shadow-red-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
           >
             <span aria-hidden="true" className="text-4xl leading-none">✕</span>
             <span className="text-[10px] font-bold tracking-widest">PASS</span>
@@ -441,7 +441,7 @@ export default function DeckPage() {
             aria-label="Save for later"
             onClick={() => commitSwipe('bookmark')}
             disabled={!!exitDir}
-            className="aspect-square rounded-xl border-2 border-ink bg-white flex flex-col items-center justify-center gap-2 cursor-pointer disabled:opacity-40 transition-all active:scale-95 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-500 hover:shadow-md hover:shadow-blue-400/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+            className="aspect-square rounded-xl border-2 border-ink bg-card flex flex-col items-center justify-center gap-2 cursor-pointer disabled:opacity-40 transition-all active:scale-95 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-500 hover:shadow-md hover:shadow-blue-400/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
           >
             <span aria-hidden="true" className="text-4xl leading-none">★</span>
             <span className="text-[10px] font-bold tracking-widest">SAVE</span>
@@ -450,7 +450,7 @@ export default function DeckPage() {
             aria-label={!isEligible ? 'Direct apply only — visit the company portal' : 'Apply to this job'}
             onClick={() => commitSwipe('right')}
             disabled={!!exitDir || !isEligible}
-            className="aspect-square rounded-xl border-2 border-ink bg-white text-ink flex flex-col items-center justify-center gap-2 cursor-pointer disabled:opacity-40 transition-all active:scale-95 hover:border-green-500 hover:bg-green-50 hover:text-green-500 hover:shadow-md hover:shadow-green-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
+            className="aspect-square rounded-xl border-2 border-ink bg-card text-ink flex flex-col items-center justify-center gap-2 cursor-pointer disabled:opacity-40 transition-all active:scale-95 hover:border-green-500 hover:bg-green-50 hover:text-green-500 hover:shadow-md hover:shadow-green-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
           >
             <span aria-hidden="true" className="text-4xl leading-none">✓</span>
             <span className="text-[10px] font-bold tracking-widest">{isEligible ? 'APPLY' : 'LOCKED'}</span>

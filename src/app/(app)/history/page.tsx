@@ -54,6 +54,7 @@ export default function HistoryPage() {
   const [masterResumeId, setMasterResumeId] = useState<string | null>(null)
   const [applyingId, setApplyingId]     = useState<string | null>(null)
   const [toast, setToast]               = useState<{ msg: string; ok: boolean } | null>(null)
+  const [clearing, setClearing]         = useState(false)
 
   const showToast = useCallback((msg: string, ok: boolean) => {
     setToast({ msg, ok })
@@ -134,6 +135,25 @@ export default function HistoryPage() {
       showToast('Something went wrong. Please try again.', false)
     } finally {
       setApplyingId(null)
+    }
+  }
+
+  async function handleClearHistory() {
+    if (!window.confirm('Clear all history? This permanently deletes every match, save, and pass — they will return to your swipe deck. This cannot be undone.')) return
+    setClearing(true)
+    try {
+      const res = await fetch('/api/swipes', { method: 'DELETE' })
+      const { error } = await res.json().catch(() => ({ error: null }))
+      if (!res.ok || error) {
+        showToast(error ?? 'Could not clear history.', false)
+        return
+      }
+      setItems([])
+      showToast('History cleared.', true)
+    } catch {
+      showToast('Could not clear history.', false)
+    } finally {
+      setClearing(false)
     }
   }
 
@@ -260,6 +280,23 @@ export default function HistoryPage() {
                 </Link>
               )
             })}
+          </div>
+        )}
+
+        {!loading && items.length > 0 && (
+          <div className="mt-6 pt-6 border-t border-hairline">
+            <button
+              type="button"
+              onClick={handleClearHistory}
+              disabled={clearing}
+              aria-label="Clear all history — deletes every match, save, and pass"
+              className="w-full py-2.5 text-xs font-bold tracking-widest border-2 border-red-500 text-red-600 rounded transition-colors hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+            >
+              {clearing ? 'CLEARING…' : '✕  CLEAR HISTORY'}
+            </button>
+            <p className="text-[10px] text-faint text-center mt-2">
+              Deletes all matches, saves, and passes. Jobs return to the swipe deck.
+            </p>
           </div>
         )}
 

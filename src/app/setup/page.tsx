@@ -88,7 +88,7 @@ export default function SetupPage() {
                 <select
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded border border-border bg-white text-ink text-sm font-mono outline-none focus:border-ink"
+                  className="w-full px-3 py-2.5 rounded border border-border bg-card text-ink text-sm font-mono outline-none focus:border-ink"
                 >
                   <option value="">Select</option>
                   <option>Freshman</option>

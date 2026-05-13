@@ -29,6 +29,7 @@ export default function SavedPage() {
   const [items, setItems] = useState<BookmarkItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [unsavingIds, setUnsavingIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     async function load() {
@@ -51,6 +52,31 @@ export default function SavedPage() {
 
     load()
   }, [])
+
+  async function handleUnsave(itemId: string, jobId: string, title: string, company: string) {
+    if (!window.confirm(`Unsave ${title} at ${company}? It will reappear in your swipe deck.`)) return
+    setUnsavingIds(prev => new Set(prev).add(itemId))
+    try {
+      const res = await fetch('/api/swipe', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobId }),
+      })
+      if (!res.ok) {
+        const payload = await res.json().catch(() => null)
+        throw new Error(payload?.error ?? 'Could not unsave.')
+      }
+      setItems(prev => prev.filter(i => i.id !== itemId))
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Could not unsave.')
+    } finally {
+      setUnsavingIds(prev => {
+        const next = new Set(prev)
+        next.delete(itemId)
+        return next
+      })
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-4 font-mono">
@@ -77,7 +103,7 @@ export default function SavedPage() {
             {items.map((item) => (
               <article
                 key={item.id}
-                className="px-3.5 py-3 border border-border rounded-xl bg-white shadow-sm"
+                className="px-3.5 py-3 border border-border rounded-xl bg-card shadow-sm"
                 aria-label={`${item.job.title} at ${item.job.company}`}
               >
                 <div className="flex items-start justify-between gap-3">
@@ -95,16 +121,29 @@ export default function SavedPage() {
                   <p className="text-xs text-muted mt-2 line-clamp-2">{item.job.summary}</p>
                 )}
 
-                {item.job.url && (
-                  <a
-                    href={item.job.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-block mt-2 text-xs font-bold text-ink underline"
+                <div className="mt-2 flex items-center justify-between gap-3">
+                  {item.job.url ? (
+                    <a
+                      href={item.job.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs font-bold text-ink underline"
+                    >
+                      Open listing
+                    </a>
+                  ) : (
+                    <span />
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => handleUnsave(item.id, item.job.id, item.job.title, item.job.company)}
+                    disabled={unsavingIds.has(item.id)}
+                    aria-label={`Unsave ${item.job.title} at ${item.job.company}`}
+                    className="text-[10px] font-bold tracking-widest px-2 py-1 border border-border rounded text-faint hover:border-red-500 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
                   >
-                    Open listing
-                  </a>
-                )}
+                    {unsavingIds.has(item.id) ? 'UNSAVING…' : '✕ UNSAVE'}
+                  </button>
+                </div>
               </article>
             ))}
           </div>

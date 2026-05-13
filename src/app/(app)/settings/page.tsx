@@ -6,7 +6,7 @@ import Button from '@/components/ui/Button'
 import Chip from '@/components/ui/Chip'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 
-const APP_VERSION = '1.0.0'
+const APP_VERSION = '1.2.1'
 
 const SKILLS = [
   'Python', 'JavaScript', 'React', 'SQL', 'Java', 'C++', 'Figma',
@@ -24,6 +24,24 @@ export default function SettingsPage() {
 
   // Notification preferences
   const [emailAlerts, setEmailAlerts] = useState(true)
+
+  // Appearance
+  const [darkMode, setDarkMode] = useState(false)
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      setDarkMode(document.documentElement.classList.contains('dark'))
+    }
+  }, [])
+  function applyTheme(next: boolean) {
+    setDarkMode(next)
+    if (next) {
+      document.documentElement.classList.add('dark')
+      try { localStorage.setItem('theme', 'dark') } catch {}
+    } else {
+      document.documentElement.classList.remove('dark')
+      try { localStorage.setItem('theme', 'light') } catch {}
+    }
+  }
 
   // Job match preferences
   const [skills, setSkills] = useState<string[]>([])
@@ -138,11 +156,32 @@ export default function SettingsPage() {
             <span>Email alerts for new matches</span>
             <span
               aria-hidden="true"
-              className={`w-9 h-5 rounded-full border-2 border-ink flex items-center transition-colors ${emailAlerts ? 'bg-ink' : 'bg-white'}`}
+              className={`w-9 h-5 rounded-full border-2 border-ink flex items-center transition-colors ${emailAlerts ? 'bg-ink' : 'bg-card'}`}
             >
-              <span className={`w-3.5 h-3.5 rounded-full bg-white border border-ink transition-transform mx-0.5 ${emailAlerts ? 'translate-x-4' : 'translate-x-0'}`} />
+              <span className={`w-3.5 h-3.5 rounded-full bg-card border border-ink transition-transform mx-0.5 ${emailAlerts ? 'translate-x-4' : 'translate-x-0'}`} />
             </span>
           </button>
+        </section>
+
+        {/* ── Appearance ── */}
+        <section className="border border-border rounded-md p-5" aria-label="Appearance settings">
+          <h3 className="text-xs font-bold text-ink uppercase tracking-widest mb-4">Appearance</h3>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={darkMode}
+            onClick={() => applyTheme(!darkMode)}
+            className="w-full flex items-center justify-between text-sm text-ink font-mono cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink rounded"
+          >
+            <span>Dark mode</span>
+            <span
+              aria-hidden="true"
+              className={`w-9 h-5 rounded-full border-2 border-ink flex items-center transition-colors ${darkMode ? 'bg-ink' : 'bg-card'}`}
+            >
+              <span className={`w-3.5 h-3.5 rounded-full bg-card border border-ink transition-transform mx-0.5 ${darkMode ? 'translate-x-4' : 'translate-x-0'}`} />
+            </span>
+          </button>
+          <p className="text-[11px] text-faint mt-2">Easier on the eyes at night. Applies immediately.</p>
         </section>
 
         {/* ── Job match preferences ── */}
